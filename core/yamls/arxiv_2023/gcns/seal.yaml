@@ -19,7 +19,7 @@ train:
   auto_resume: False
   final_eval: False
   finetune: False
-  dynamic_train: False
+  dynamic_train: True
 
 model:
   type: SEAL
