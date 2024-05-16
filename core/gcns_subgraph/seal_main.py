@@ -30,7 +30,7 @@ class SEALDataset(InMemoryDataset):
         self.max_nodes_per_hop = max_nodes_per_hop
         self.directed = directed
         super(SEALDataset, self).__init__(os.path.dirname(__file__))
-        self._data, self.slices = torch.load(self.processed_paths[0])
+        self.data, self.slices = torch.load(self.processed_paths[0])
         self.pos_edge_label = data[split].pos_edge_label
         self.neg_edge_label = data[split].neg_edge_label
         self.pos_edge_label_index = data[split].pos_edge_label_index
@@ -51,7 +51,6 @@ class SEALDataset(InMemoryDataset):
                                                self.data.edge_index,
                                                self.data.num_nodes,
                                                self.percent)
-
         if 'edge_weight' in self.data:
             edge_weight = self.data.edge_weight.view(-1)
         else:
@@ -154,7 +153,7 @@ if __name__ == "__main__":
     cfg.merge_from_list(args.opts)
 
     torch.set_num_threads(cfg.num_threads)
-    batch_sizes = [1024]  # [8, 16, 32, 64]
+    batch_sizes = [cfg.train.batch_size]  # [8, 16, 32, 64]
 
     best_acc = 0
     best_params = {}
@@ -169,30 +168,55 @@ if __name__ == "__main__":
             seed_everything(cfg.seed)
             auto_select_device()
             splits, text = load_data_lp[cfg.data.name](cfg.data)
+            splits['test'].edge_index = torch.cat([splits['test'].pos_edge_label_index, splits['test'].neg_edge_label_index],dim = -1)
+            splits['valid'].edge_index = torch.cat([splits['valid'].pos_edge_label_index, splits['valid'].neg_edge_label_index],dim = -1)
 
             dataset = {}
 
-            dataset['train'] = SEALDynamicDataset(
-                splits,
-                num_hops=cfg.model.num_hops,
-                split='train',
-                node_label= cfg.model.node_label,
-                directed=cfg.data.undirected,
-            )
-            dataset['valid'] = SEALDynamicDataset(
-                splits,
-                num_hops=cfg.model.num_hops,
-                split='valid',
-                node_label= cfg.model.node_label,
-                directed=cfg.data.undirected,
-            )
-            dataset['test'] = SEALDynamicDataset(
-                splits,
-                num_hops=cfg.model.num_hops,
-                split='test',
-                node_label= cfg.model.node_label,
-                directed=cfg.data.undirected,
-            )
+            if cfg.train.dynamic_train == True:
+                dataset['train'] = SEALDynamicDataset(
+                    splits,
+                    num_hops=cfg.model.num_hops,
+                    split='train',
+                    node_label= cfg.model.node_label,
+                    directed=cfg.data.undirected,
+                )
+                dataset['valid'] = SEALDynamicDataset(
+                    splits,
+                    num_hops=cfg.model.num_hops,
+                    split='valid',
+                    node_label= cfg.model.node_label,
+                    directed=cfg.data.undirected,
+                )
+                dataset['test'] = SEALDynamicDataset(
+                    splits,
+                    num_hops=cfg.model.num_hops,
+                    split='test',
+                    node_label= cfg.model.node_label,
+                    directed=cfg.data.undirected,
+                )
+            else:
+                dataset['train'] = SEALDataset(
+                    splits,
+                    num_hops=cfg.model.num_hops,
+                    split='train',
+                    node_label= cfg.model.node_label,
+                    directed=cfg.data.undirected,
+                )
+                dataset['valid'] = SEALDataset(
+                    splits,
+                    num_hops=cfg.model.num_hops,
+                    split='valid',
+                    node_label= cfg.model.node_label,
+                    directed=cfg.data.undirected,
+                )
+                dataset['test'] = SEALDataset(
+                    splits,
+                    num_hops=cfg.model.num_hops,
+                    split='test',
+                    node_label= cfg.model.node_label,
+                    directed=cfg.data.undirected,
+                )
             model = DGCNN(cfg.model.hidden_channels, cfg.model.num_layers, cfg.model.max_z, cfg.model.k,
                           dataset['train'], False, use_feature=True)
             optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
@@ -211,6 +235,14 @@ if __name__ == "__main__":
             start = time.time()
             trainer.train()
             end = time.time()
+            print('Training time: ', end - start)
 
-    print("Best Parameters Found:")
-    print(best_params)
+        print('All runs:')
+
+        result_dict = {}
+        for key in loggers:
+            print(key)
+            _, _, _, valid_test, _, _ = trainer.loggers[key].calc_all_stats()
+            result_dict.update({key: valid_test})
+
+        trainer.save_result(result_dict)

@@ -14,11 +14,12 @@ train:
   mode: custom
   batch_size: 1024
   eval_period: 1
-  epochs: 200
+  epochs: 50
   device: 0
   auto_resume: False
   final_eval: False
   finetune: False
+  dynamic_train: False
 
 model:
   type: SEAL
@@ -27,7 +28,7 @@ model:
   hidden_channels: 32
   num_layers: 3
   sortpooling_k: 0.6
-  num_hops: 2
+  num_hops: 3
   node_label: 'drnl'
   max_z: 1000
   k: 0.6
@@ -47,5 +48,5 @@ data:
 
 optimizer:
   type: adam
-  base_lr: 0.01
+  base_lr: 0.0001
   weight_decay: 0.0005
