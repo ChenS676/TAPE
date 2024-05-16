@@ -320,7 +320,7 @@ class Trainer_SEAL(Trainer):
         for epoch in range(1, self.epochs + 1):
             loss = self._train_seal()
 
-            if epoch % 1 == 0:
+            if epoch % 10 == 0:
                 results_rank = self.merge_result_rank()
                 print(results_rank)
 

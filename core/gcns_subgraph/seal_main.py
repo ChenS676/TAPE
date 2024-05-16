@@ -154,7 +154,7 @@ if __name__ == "__main__":
     cfg.merge_from_list(args.opts)
 
     torch.set_num_threads(cfg.num_threads)
-    batch_sizes = [64]  # [8, 16, 32, 64]
+    batch_sizes = [1024]  # [8, 16, 32, 64]
 
     best_acc = 0
     best_params = {}
