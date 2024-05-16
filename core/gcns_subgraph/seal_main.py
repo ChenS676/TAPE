@@ -14,7 +14,7 @@ from torch_geometric.graphgym.utils.device import auto_select_device
 from utils import set_cfg, parse_args, get_git_repo_root_path, custom_set_run_dir, set_printing, run_loop_settings, create_optimizer, config_device, \
     create_logger
 from gcns_subgraph.SEAL.utils import *
-from torch_geometric.data import InMemoryDataset
+from torch_geometric.data import InMemoryDataset, Dataset
 
 
 class SEALDataset(InMemoryDataset):
@@ -82,6 +82,66 @@ class SEALDataset(InMemoryDataset):
         del pos_list, neg_list
 
 
+class SEALDynamicDataset(Dataset):
+    def __init__(self, data, num_hops, percent=100, split='train',
+                 use_coalesce=False, node_label='drnl', ratio_per_hop=1.0,
+                 max_nodes_per_hop=None, directed=False, **kwargs):
+        self.data = data[split]
+        self.split_edge = do_edge_split(data)
+        self.num_hops = num_hops
+        self.percent = percent
+        self.use_coalesce = use_coalesce
+        self.node_label = node_label
+        self.ratio_per_hop = ratio_per_hop
+        self.max_nodes_per_hop = max_nodes_per_hop
+        self.directed = directed
+        super(SEALDynamicDataset, self).__init__(os.path.dirname(__file__))
+        self.pos_edge_label = data[split].pos_edge_label
+        self.neg_edge_label = data[split].neg_edge_label
+        self.pos_edge_label_index = data[split].pos_edge_label_index
+        self.neg_edge_label_index = data[split].neg_edge_label_index
+
+        pos_edge, neg_edge = get_pos_neg_edges(split, self.split_edge,
+                                               self.data.edge_index,
+                                               self.data.num_nodes,
+                                               self.percent)
+        self.links = torch.cat([pos_edge, neg_edge], 1).t().tolist()
+        self.labels = [1] * pos_edge.size(1) + [0] * neg_edge.size(1)
+
+        if self.use_coalesce:  # compress mutli-edge into edge with weight
+            self.data.edge_index, self.data.edge_weight = coalesce(
+                self.data.edge_index, self.data.edge_weight,
+                self.data.num_nodes, self.data.num_nodes)
+
+        if 'edge_weight' in self.data:
+            edge_weight = self.data.edge_weight.view(-1)
+        else:
+            edge_weight = torch.ones(self.data.edge_index.size(1), dtype=int)
+        self.A = ssp.csr_matrix(
+            (edge_weight, (self.data.edge_index[0], self.data.edge_index[1])),
+            shape=(self.data.num_nodes, self.data.num_nodes)
+        )
+        if self.directed:
+            self.A_csc = self.A.tocsc()
+        else:
+            self.A_csc = None
+
+    def __len__(self):
+        return len(self.links)
+
+    def len(self):
+        return self.__len__()
+
+    def get(self, idx):
+        src, dst = self.links[idx]
+        y = self.labels[idx]
+        tmp = k_hop_subgraph(src, dst, self.num_hops, self.A, self.ratio_per_hop,
+                             self.max_nodes_per_hop, node_features=self.data.x,
+                             y=y, directed=self.directed, A_csc=self.A_csc)
+        data = construct_pyg_graph(*tmp, self.node_label)
+
+        return data
+
 
 if __name__ == "__main__":
     FILE_PATH = get_git_repo_root_path() + '/'
@@ -109,21 +169,21 @@ if __name__ == "__main__":
 
             dataset = {}
 
-            dataset['train'] = SEALDataset(
+            dataset['train'] = SEALDynamicDataset(
                 splits,
                 num_hops=cfg.model.num_hops,
                 split='train',
                 node_label= cfg.model.node_label,
                 directed=cfg.data.undirected,
             )
-            dataset['valid'] = SEALDataset(
+            dataset['valid'] = SEALDynamicDataset(
                 splits,
                 num_hops=cfg.model.num_hops,
                 split='valid',
                 node_label= cfg.model.node_label,
                 directed=cfg.data.undirected,
             )
-            dataset['test'] = SEALDataset(
+            dataset['test'] = SEALDynamicDataset(
                 splits,
                 num_hops=cfg.model.num_hops,
                 split='test',
