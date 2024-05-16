@@ -56,8 +56,12 @@ class SEALDataset(InMemoryDataset):
             edge_weight = self.data.edge_weight.view(-1)
         else:
             edge_weight = torch.ones(self.data.edge_index.size(1), dtype=int)
+
+        edge_weight_cpu = edge_weight.cpu()
+        edge_index_cpu = self.data.edge_index.cpu()
+
         A = ssp.csr_matrix(
-            (edge_weight, (self.data.edge_index[0], self.data.edge_index[1])),
+            (edge_weight_cpu, (edge_index_cpu[0], edge_index_cpu[1])),
             shape=(self.data.num_nodes, self.data.num_nodes)
         )
 
