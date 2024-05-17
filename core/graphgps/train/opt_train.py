@@ -306,8 +306,8 @@ class Trainer_SEAL(Trainer):
             data = data.to(self.device)
             self.optimizer.zero_grad()
             x = data.x
-            edge_weight = data.edge_weight
-            node_id = data.node_id
+            edge_weight = None
+            node_id = None
             logits = self.model(data.z, data.edge_index, data.batch, x, edge_weight, node_id)
             loss = BCEWithLogitsLoss()(logits.view(-1), data.y.to(torch.float))
             loss.backward()
@@ -321,7 +321,7 @@ class Trainer_SEAL(Trainer):
             print(f'Epoch: {epoch}','start training...')
             loss = self._train_seal()
             print(f'Loss: {loss}')
-            if epoch % 10 == 0:
+            if epoch % 1 == 0:
                 results_rank = self.merge_result_rank()
                 print(results_rank)
 
@@ -372,7 +372,7 @@ class Trainer_SEAL(Trainer):
         y_true = torch.cat(y_true, dim=0)
         y_pred, y_true = y_pred.cpu(), y_true.cpu()
 
-        hard_thres = torch.sort(y_pred)[0][int((y_true == 0).float().mean().item() * len(y_pred)) - 1]
+        hard_thres = (y_pred.max() + y_pred.min())/2
 
         pos_pred, neg_pred = y_pred[y_true == 1].cpu(), y_pred[y_true == 0].cpu()
         y_pred = torch.where(y_pred >= hard_thres, torch.tensor(1), torch.tensor(0))

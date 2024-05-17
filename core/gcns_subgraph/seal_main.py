@@ -1,3 +1,4 @@
+import copy
 import os, sys
 import warnings
 
@@ -15,13 +16,18 @@ from utils import set_cfg, parse_args, get_git_repo_root_path, custom_set_run_di
     create_logger
 from gcns_subgraph.SEAL.utils import *
 from torch_geometric.data import InMemoryDataset, Dataset
-
+from data_utils.load_data_nc import load_tag_cora, load_tag_pubmed, \
+                            load_tag_product, load_tag_ogbn_arxiv, load_tag_product, \
+                            load_tag_arxiv23, load_graph_cora, load_graph_pubmed, \
+                            load_graph_arxiv23, load_graph_ogbn_arxiv, load_text_cora, \
+                            load_text_pubmed, load_text_arxiv23, load_text_ogbn_arxiv, \
+                            load_text_product
 
 class SEALDataset(InMemoryDataset):
-    def __init__(self, data, num_hops, percent=100, split='train',node_label='drnl', ratio_per_hop=1.0,
+    def __init__(self, data, splits, num_hops, percent=100, split='train',node_label='drnl', ratio_per_hop=1.0,
                  max_nodes_per_hop=None, directed=False):
-        self.data = data[split]
-        self.split_edge = do_edge_split(data)
+        self.data = data
+        self.split_edge = splits
         self.num_hops = num_hops
         self.percent = int(percent) if percent >= 1.0 else percent
         self.split = split
@@ -31,10 +37,6 @@ class SEALDataset(InMemoryDataset):
         self.directed = directed
         super(SEALDataset, self).__init__(os.path.dirname(__file__))
         self.data, self.slices = torch.load(self.processed_paths[0])
-        self.pos_edge_label = data[split].pos_edge_label
-        self.neg_edge_label = data[split].neg_edge_label
-        self.pos_edge_label_index = data[split].pos_edge_label_index
-        self.neg_edge_label_index = data[split].neg_edge_label_index
 
 
     @property
@@ -82,11 +84,11 @@ class SEALDataset(InMemoryDataset):
 
 
 class SEALDynamicDataset(Dataset):
-    def __init__(self, data, num_hops, percent=100, split='train',
+    def __init__(self, data, splits, num_hops, percent=100, split='train',
                  use_coalesce=False, node_label='drnl', ratio_per_hop=1.0,
                  max_nodes_per_hop=None, directed=False, **kwargs):
-        self.data = data[split]
-        self.split_edge = do_edge_split(data)
+        self.data = data
+        self.split_edge = splits
         self.num_hops = num_hops
         self.percent = percent
         self.use_coalesce = use_coalesce
@@ -155,6 +157,13 @@ if __name__ == "__main__":
     torch.set_num_threads(cfg.num_threads)
     batch_sizes = [cfg.train.batch_size]  # [8, 16, 32, 64]
 
+    load_data_funcs = {
+        'cora': load_graph_cora,
+        'pubmed': load_graph_pubmed,
+        'arxiv23': load_graph_arxiv23,
+        'ogbn_arxiv': load_graph_ogbn_arxiv
+    }
+
     best_acc = 0
     best_params = {}
     loggers = create_logger(args.repeat)
@@ -167,59 +176,64 @@ if __name__ == "__main__":
             cfg.run_id = run_id
             seed_everything(cfg.seed)
             auto_select_device()
-            splits, text = load_data_lp[cfg.data.name](cfg.data)
-            '''splits['test'].edge_index = torch.cat([splits['test'].pos_edge_label_index, splits['test'].neg_edge_label_index],dim = -1)
-            splits['valid'].edge_index = torch.cat([splits['valid'].pos_edge_label_index, splits['valid'].neg_edge_label_index],dim = -1)
-'''
+            data_func = load_data_funcs[cfg.data.name]
+            data, _ = data_func(cfg.data)
+            splits = do_edge_split(copy.deepcopy(data), cfg.data.val_pct, cfg.data.test_pct)
             dataset = {}
 
             if cfg.train.dynamic_train == True:
                 dataset['train'] = SEALDynamicDataset(
+                    data,
                     splits,
                     num_hops=cfg.model.num_hops,
                     split='train',
                     node_label= cfg.model.node_label,
-                    directed=cfg.data.undirected,
+                    directed=not cfg.data.undirected,
                 )
                 dataset['valid'] = SEALDynamicDataset(
+                    data,
                     splits,
                     num_hops=cfg.model.num_hops,
                     split='valid',
                     node_label= cfg.model.node_label,
-                    directed=cfg.data.undirected,
+                    directed=not cfg.data.undirected,
                 )
                 dataset['test'] = SEALDynamicDataset(
+                    data,
                     splits,
                     num_hops=cfg.model.num_hops,
                     split='test',
                     node_label= cfg.model.node_label,
-                    directed=cfg.data.undirected,
+                    directed=not cfg.data.undirected,
                 )
             else:
                 dataset['train'] = SEALDataset(
+                    data,
                     splits,
                     num_hops=cfg.model.num_hops,
                     split='train',
                     node_label= cfg.model.node_label,
-                    directed=cfg.data.undirected,
+                    directed=not cfg.data.undirected,
                 )
                 dataset['valid'] = SEALDataset(
+                    data,
                     splits,
                     num_hops=cfg.model.num_hops,
                     split='valid',
                     node_label= cfg.model.node_label,
-                    directed=cfg.data.undirected,
+                    directed=not cfg.data.undirected,
                 )
                 dataset['test'] = SEALDataset(
+                    data,
                     splits,
                     num_hops=cfg.model.num_hops,
                     split='test',
                     node_label= cfg.model.node_label,
-                    directed=cfg.data.undirected,
+                    directed=not cfg.data.undirected,
                 )
             model = DGCNN(cfg.model.hidden_channels, cfg.model.num_layers, cfg.model.max_z, cfg.model.k,
                           dataset['train'], False, use_feature=True)
-            optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+            optimizer = torch.optim.Adam(model.parameters(), lr=cfg.optimizer.base_lr)
 
             # Execute experiment
             trainer = Trainer_SEAL(FILE_PATH,

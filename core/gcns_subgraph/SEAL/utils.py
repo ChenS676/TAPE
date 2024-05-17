@@ -144,7 +144,7 @@ def de_node_labeling(adj, src, dst, max_dist=3):
 
 
 
-def do_edge_split(data):
+'''def do_edge_split(data):
     split_edge = {}
 
     for split in ['train', 'valid', 'test']:
@@ -153,11 +153,28 @@ def do_edge_split(data):
             'edge_neg': data[split].neg_edge_label_index.t()
         }
 
+    return split_edge'''
+
+def do_edge_split(data, val_ratio, test_ratio):
+    data = train_test_split_edges(data, val_ratio, test_ratio)
+    edge_index, _ = add_self_loops(data.train_pos_edge_index)
+    data.train_neg_edge_index = negative_sampling(
+        edge_index, num_nodes=data.num_nodes,
+        num_neg_samples=data.train_pos_edge_index.size(1))
+
+    split_edge = {'train': {}, 'valid': {}, 'test': {}}
+    split_edge['train']['edge'] = data.train_pos_edge_index.t()
+    split_edge['train']['edge_neg'] = data.train_neg_edge_index.t()
+    split_edge['valid']['edge'] = data.val_pos_edge_index.t()
+    split_edge['valid']['edge_neg'] = data.val_neg_edge_index.t()
+    split_edge['test']['edge'] = data.test_pos_edge_index.t()
+    split_edge['test']['edge_neg'] = data.test_neg_edge_index.t()
+
     return split_edge
 
 
 def get_pos_neg_edges(split, split_edge, edge_index, num_nodes, percent=100):
-    if 'edge' in split_edge['train'] or 'edge' in split_edge['valid'] or 'edge' in split_edge['test']:
+    if 'edge' in split_edge['train']:
         pos_edge = split_edge[split]['edge'].t()
 
         if 'edge_neg' in split_edge[split]:
@@ -182,7 +199,7 @@ def get_pos_neg_edges(split, split_edge, edge_index, num_nodes, percent=100):
         perm = perm[:int(percent / 100 * num_neg)]
         neg_edge = neg_edge[:, perm]
 
-    elif 'source_node' in split_edge['train'] or 'source_node' in split_edge['valid'] or 'source_node' in split_edge['test']:
+    elif 'source_node' in split_edge['train']:
         source = split_edge[split]['source_node']
         target = split_edge[split]['target_node']
         if split == 'train' or split == 'valid' or split == 'test':
