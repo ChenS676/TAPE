@@ -372,7 +372,7 @@ class Trainer_SEAL(Trainer):
         y_true = torch.cat(y_true, dim=0)
         y_pred, y_true = y_pred.cpu(), y_true.cpu()
 
-        hard_thres = (y_pred.max() + y_pred.min()) / 2
+        hard_thres = torch.sort(y_pred)[0][int((y_true == 0).float().mean().item() * len(y_pred)) - 1]
 
         pos_pred, neg_pred = y_pred[y_true == 1].cpu(), y_pred[y_true == 0].cpu()
         y_pred = torch.where(y_pred >= hard_thres, torch.tensor(1), torch.tensor(0))
