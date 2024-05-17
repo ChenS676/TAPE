@@ -318,8 +318,9 @@ class Trainer_SEAL(Trainer):
     def train(self):
         best_auc, best_hits, best_hit100 = 0, 0, 0
         for epoch in range(1, self.epochs + 1):
+            print(f'Epoch: {epoch}','start training...')
             loss = self._train_seal()
-
+            print(f'Loss: {loss}')
             if epoch % 10 == 0:
                 results_rank = self.merge_result_rank()
                 print(results_rank)

@@ -28,7 +28,7 @@ model:
   hidden_channels: 256 # {32, 64, 128, 256, 512}
   num_layers: 3
   sortpooling_k: 0.6
-  num_hops: 3 # {1, 2, 3}
+  num_hops: 2 # {1, 2, 3}
   node_label: 'drnl'
   max_z: 1000
   k: 0.6
@@ -48,5 +48,5 @@ data:
 
 optimizer:
   type: adam
-  base_lr: 0.0001
+  base_lr: 0.01
   weight_decay: 0.0005

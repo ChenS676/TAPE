@@ -168,9 +168,9 @@ if __name__ == "__main__":
             seed_everything(cfg.seed)
             auto_select_device()
             splits, text = load_data_lp[cfg.data.name](cfg.data)
-            splits['test'].edge_index = torch.cat([splits['test'].pos_edge_label_index, splits['test'].neg_edge_label_index],dim = -1)
+            '''splits['test'].edge_index = torch.cat([splits['test'].pos_edge_label_index, splits['test'].neg_edge_label_index],dim = -1)
             splits['valid'].edge_index = torch.cat([splits['valid'].pos_edge_label_index, splits['valid'].neg_edge_label_index],dim = -1)
-
+'''
             dataset = {}
 
             if cfg.train.dynamic_train == True:
