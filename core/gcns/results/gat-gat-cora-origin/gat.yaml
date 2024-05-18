@@ -1,35 +1,57 @@
-cfg_dest: gat.yaml
-data:
-  include_negatives: true
-  name: cora
-  num_features: 1433
-  split_labels: true
-  test_pct: 0.05
-  undirected: true
-  val_pct: 0.15
+# line.yaml
+
+out_dir: results
 metric_best: acc
-model:
-  dropout: 0
-  heads: 1
-  hidden_channels: 8
-  in_channels: 12
-  negative_slope: 0.2
-  num_layers: 2
-  out_channels: 1433
-  type: GAT
-num_threads: 11
-out_dir: results/gat-gat-cora-origin
+cfg_dest: gat.yaml
 print: file
-run_multiple_splits: None
-seed: 0
-train:
-  auto_resume: false
-  batch_size: 256
-  device: 1
-  epochs: 100
-  eval_period: 1
-  mode: custom
+
+run:
+  seed: 0
+  num_threads: 11
+  multiple_splits: None
+
+
 wandb:
-  name_tag: gat-cora-origin
+  use: True
   project: gtblueprint
-  use: true
+  name_tag: gat-cora-origin
+
+
+num_threads: 11
+
+train:
+  mode: custom
+  batch_size: 2048
+  eval_period: 1
+  epochs: 2000
+  device: 1
+  auto_resume: False
+  final_eval: False
+  finetune: False
+
+
+model:
+  type: GAT
+  in_channels: None
+  out_channels: 128
+  heads: 4
+  hidden_channels: 32
+  negative_slope: 0.2
+  dropout: 0
+  num_layers: 2
+
+num_threads: 11
+
+data:
+  name: cora
+  undirected: True
+  include_negatives: True
+  val_pct: 0.15
+  test_pct: 0.05
+  split_labels: True
+  split_index: [0.8, 0.15, 0.05]
+
+optimizer:
+  type: adam
+  base_lr: 0.001
+  weight_decay: 0.0005

@@ -1,0 +1,107 @@
+Metric,Hits@1,Hits@3,Hits@10,Hits@20,Hits@50,Hits@100,MRR,mrr_hit1,mrr_hit3,mrr_hit10,mrr_hit20,mrr_hit50,mrr_hit100,AUC,AP,acc
+ogbn-products_bey8z8du_GAE,0.00 ± nan,0.01 ± nan,0.10 ± nan,0.38 ± nan,2.30 ± nan,5.05 ± nan,0.21 ± nan,0.00 ± nan,0.01 ± nan,0.10 ± nan,0.38 ± nan,2.30 ± nan,5.05 ± nan,69.71 ± nan,74.51 ± nan,64.37 ± nan
+ogbn-products_8pj3g3kx_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_6utzu8iy_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.77 ± nan
+ogbn-products_95ih6ng1_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_gdo2qv7f_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.77 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_rsmm1h1j_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_u7cnmka7_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_faerkasq_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_82t18kpe_GAE,0.00 ± nan,0.02 ± nan,0.18 ± nan,0.90 ± nan,2.42 ± nan,4.66 ± nan,0.24 ± nan,0.00 ± nan,0.02 ± nan,0.18 ± nan,0.90 ± nan,2.42 ± nan,4.66 ± nan,69.95 ± nan,74.06 ± nan,63.40 ± nan
+ogbn-products_8qfsgbam_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.77 ± nan
+ogbn-products_5l9tqv0i_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.77 ± nan
+ogbn-products_ihxctkb3_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_zuvpfi55_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_kpmnfj2z_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.77 ± nan
+ogbn-products_lzcw0drp_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_kbl4v38e_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_iv7lcfej_GAE,0.03 ± nan,0.05 ± nan,0.21 ± nan,0.90 ± nan,2.42 ± nan,4.68 ± nan,0.29 ± nan,0.03 ± nan,0.05 ± nan,0.21 ± nan,0.90 ± nan,2.42 ± nan,4.68 ± nan,69.89 ± nan,74.14 ± nan,63.19 ± nan
+ogbn-products_nwq1oped_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.36 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.36 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_qgfsr32l_GAE,0.01 ± nan,0.02 ± nan,0.24 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.24 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_dzbezt6o_GAE,0.00 ± nan,0.03 ± nan,0.33 ± nan,0.84 ± nan,2.24 ± nan,4.40 ± nan,0.23 ± nan,0.00 ± nan,0.03 ± nan,0.33 ± nan,0.84 ± nan,2.24 ± nan,4.40 ± nan,70.58 ± nan,74.38 ± nan,63.56 ± nan
+ogbn-products_xzkagawh_GAE,0.01 ± nan,0.02 ± nan,0.10 ± nan,0.35 ± nan,2.28 ± nan,4.71 ± nan,0.22 ± nan,0.01 ± nan,0.02 ± nan,0.10 ± nan,0.35 ± nan,2.28 ± nan,4.71 ± nan,70.30 ± nan,74.34 ± nan,63.48 ± nan
+ogbn-products_37plfdkn_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.77 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_nfy6bu9o_GAE,0.00 ± nan,0.02 ± nan,0.07 ± nan,0.47 ± nan,1.99 ± nan,4.57 ± nan,0.20 ± nan,0.00 ± nan,0.02 ± nan,0.07 ± nan,0.47 ± nan,1.99 ± nan,4.57 ± nan,70.77 ± nan,74.60 ± nan,64.02 ± nan
+ogbn-products_snvsewaq_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_nybs77sw_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_awqhwji6_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_z3nhkzko_GAE,0.00 ± nan,0.02 ± nan,0.15 ± nan,0.36 ± nan,1.79 ± nan,4.01 ± nan,0.19 ± nan,0.00 ± nan,0.02 ± nan,0.15 ± nan,0.36 ± nan,1.79 ± nan,4.01 ± nan,70.55 ± nan,74.43 ± nan,63.70 ± nan
+ogbn-products_onxkt797_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.77 ± nan
+ogbn-products_uoy94919_GAE,0.00 ± nan,0.02 ± nan,0.07 ± nan,0.34 ± nan,1.87 ± nan,4.22 ± nan,0.19 ± nan,0.00 ± nan,0.02 ± nan,0.07 ± nan,0.34 ± nan,1.87 ± nan,4.22 ± nan,69.83 ± nan,73.96 ± nan,63.58 ± nan
+ogbn-products_4w6e86qr_GAE,0.00 ± nan,0.06 ± nan,0.21 ± nan,0.69 ± nan,2.80 ± nan,4.97 ± nan,0.25 ± nan,0.00 ± nan,0.06 ± nan,0.21 ± nan,0.69 ± nan,2.80 ± nan,4.97 ± nan,70.18 ± nan,74.30 ± nan,63.70 ± nan
+ogbn-products_b3gd5jpl_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.77 ± nan
+ogbn-products_yfvn0kx1_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_bl2ph5u5_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_k2x36wsz_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_urekptor_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_5jh7dz06_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.36 ± nan,1.78 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.36 ± nan,1.78 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_nmq043jv_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_c8fn4by5_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.77 ± nan
+ogbn-products_aprk208y_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_wpox60ht_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.36 ± nan,1.77 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.36 ± nan,1.77 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_q77qu4jh_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_j21ozel9_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_fa06ze20_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.77 ± nan
+ogbn-products_zf4op10u_GAE,0.01 ± nan,0.02 ± nan,0.29 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.29 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_sh8w7sh9_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_4vk4rkak_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.77 ± nan
+ogbn-products_hrfrrw55_GAE,0.01 ± nan,0.02 ± nan,0.16 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.16 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_2a57mvqg_GAE,0.01 ± nan,0.02 ± nan,0.35 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.35 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_fs3if564_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.77 ± nan
+ogbn-products_ojkzt7x5_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.77 ± nan
+ogbn-products_j0ox05b5_GAE,0.01 ± nan,0.02 ± nan,0.24 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.24 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_d4913m2b_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_w0sl88s8_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.77 ± nan
+ogbn-products_yannsx4a_GAE,0.02 ± nan,0.07 ± nan,0.27 ± nan,0.68 ± nan,2.47 ± nan,4.60 ± nan,0.25 ± nan,0.02 ± nan,0.07 ± nan,0.27 ± nan,0.68 ± nan,2.47 ± nan,4.60 ± nan,69.10 ± nan,73.75 ± nan,63.87 ± nan
+ogbn-products_eju39ch3_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.36 ± nan,1.78 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.36 ± nan,1.78 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_wy3q1s1b_GAE,0.01 ± nan,0.02 ± nan,0.29 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.29 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_9865d4ts_GAE,0.01 ± nan,0.02 ± nan,0.16 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.16 ± nan,0.39 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_fnpt490b_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_h0m1ow75_GAE,0.01 ± nan,0.02 ± nan,0.16 ± nan,0.37 ± nan,1.62 ± nan,3.64 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.16 ± nan,0.37 ± nan,1.62 ± nan,3.64 ± nan,70.77 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_m0efbeph_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_5bxrgdqj_GAE,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,0.20 ± nan,0.01 ± nan,0.02 ± nan,0.15 ± nan,0.39 ± nan,1.62 ± nan,3.63 ± nan,70.78 ± nan,74.63 ± nan,63.76 ± nan
+ogbn-products_10xm2i0w_GAE,0.02 ± nan,0.02 ± nan,0.16 ± nan,0.49 ± nan,2.08 ± nan,4.09 ± nan,0.22 ± nan,0.02 ± nan,0.02 ± nan,0.16 ± nan,0.49 ± nan,2.08 ± nan,4.09 ± nan,79.31 ± nan,75.71 ± nan,62.98 ± nan
+ogbn-products_597auili_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_p439ccqf_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_ut4kdbbo_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_w7k5rcht_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_c8qps2ef_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_lsjnvdyj_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_th7ssy0i_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_8btk6zry_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_h3w9i7ng_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_0mx0mu1f_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_y2un92uu_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_o29zrz59_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_rcce4s5v_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_nnh9rtrt_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_igiy3cnu_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_kt5lqcn9_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_omgb6drv_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_mhzdbums_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_wdecv8fj_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_n04vje0v_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_s897qj5c_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_73pdox5n_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_zyncg1g8_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_76sfa0xh_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_i66owqy2_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_9fp8uxxr_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_emti1pdk_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_r3mqv43c_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_hemsp95e_GAE,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,0.21 ± nan,0.04 ± nan,0.03 ± nan,0.10 ± nan,0.40 ± nan,1.90 ± nan,3.84 ± nan,79.97 ± nan,75.11 ± nan,64.32 ± nan
+ogbn-products_73nj2oqo_VGAE,0.3,0.61,3.46,7.66,16.74,23.71,1.77,0.3,0.61,3.46,7.66,16.74,23.71,89.6,85.83,83.19
+ogbn-products_z1nxzmfs_VGAE,0.3,0.61,3.46,7.66,16.74,23.71,1.77,0.3,0.61,3.46,7.66,16.74,23.71,89.6,85.83,83.19
+ogbn-products_wondbftq_VGAE,0.3,0.61,3.46,7.33,16.74,23.07,1.8,0.3,0.61,3.46,7.33,16.74,23.07,89.6,85.83,83.26
+ogbn-products_8oo8bnnw_VGAE,0.3,0.61,3.46,7.33,16.74,23.07,1.8,0.3,0.61,3.46,7.33,16.74,23.07,89.6,85.83,83.26
+ogbn-products_swpdek2w_VGAE,0.3,0.61,3.46,7.33,16.74,23.02,1.8,0.3,0.61,3.46,7.33,16.74,23.02,89.6,85.83,83.93
+ogbn-products_8l3bieq8_VGAE,0.3,0.61,3.46,7.33,16.74,23.02,1.8,0.3,0.61,3.46,7.33,16.74,23.02,89.6,85.83,83.93
+ogbn-products_37vge57l_VGAE,0.3,0.61,3.46,7.33,16.74,23.02,1.8,0.3,0.61,3.46,7.33,16.74,23.02,89.66,85.83,83.93
+ogbn-products_gu9w7ueo_VGAE,0.3,0.61,3.46,7.33,16.74,23.02,1.8,0.3,0.61,3.46,7.33,16.74,23.02,89.66,85.83,83.93
+ogbn-products_l2k5h4ws_VGAE,0.3,0.61,3.76,7.33,17.12,23.02,1.8,0.3,0.61,3.76,7.33,17.12,23.02,89.66,85.83,83.93
+ogbn-products_p7lch491_VGAE,0.3,0.61,3.76,7.33,17.12,23.02,1.8,0.3,0.61,3.76,7.33,17.12,23.02,89.66,85.83,83.93
+ogbn-products_ciks42qz_VGAE,0.3,0.41,3.54,7.33,17.12,23.02,1.8,0.3,0.41,3.54,7.33,17.12,23.02,89.66,85.83,85.01
+ogbn-products_4s8l8ovq_VGAE,0.3,0.97,3.26,7.33,17.12,23.02,1.8,0.3,0.97,3.26,7.33,17.12,23.02,89.66,85.83,85.01
+ogbn-products_au77inkt_VGAE,0.3,0.41,3.54,7.36,17.12,23.02,1.8,0.3,0.41,3.54,7.36,17.12,23.02,89.66,85.83,85.01
+ogbn-products_qfzdj8o3_VGAE,0.3,0.97,3.26,7.36,17.12,23.02,1.8,0.3,0.97,3.26,7.36,17.12,23.02,89.66,85.83,85.01
+Best,0.3,0.97,3.76,7.66,17.12,23.71,1.8,0.3,0.97,3.76,7.66,17.12,23.71,89.66,85.83,85.01

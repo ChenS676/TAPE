@@ -43,6 +43,7 @@ if __name__ == "__main__":
     best_params = {}
 
     loggers = create_logger(args.repeat)
+
     for batch_size, walk_length, num_steps, sample_coverage in product(batch_sizes, walk_lengths, num_steps, sample_coverages):
         for run_id, seed, split_index in zip(*run_loop_settings(cfg, args)): # In run_loop_settings we should send 2 parameeters
 
@@ -52,8 +53,8 @@ if __name__ == "__main__":
             cfg.seed = seed
             cfg.run_id = run_id
             seed_everything(cfg.seed)
-            auto_select_device()
-            splits, text = load_data_lp[cfg.data.name](cfg.data)
+            cfg = config_device(cfg)
+            splits, _, data = load_data_lp[cfg.data.name](cfg.data)
 
             lst_args = cfg.model.type.split('_')
             if lst_args[0] == 'gsaint':

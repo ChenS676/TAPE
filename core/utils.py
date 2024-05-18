@@ -11,8 +11,8 @@ import git
 import subprocess
 import pandas as pd
 import argparse
+import wandb
 import torch.optim as optim
-from IPython import embed
 from torch_scatter import scatter
 from yacs.config import CfgNode as CN
 from graphgps.finetuning import get_final_pretrained_ckpt
@@ -26,7 +26,13 @@ from typing import Tuple, List, Dict
 
 set_float = lambda result: float(result.split(' ± ')[0])
 
-
+class StringTypeOrIntAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        if not isinstance(values, (str, int)):
+            parser.error("Argument must be either a string or an integer")
+        setattr(namespace, self.dest, values)
+        
+        
 def init_random_state(seed=0):
     # Libraries using GPU should be imported after specifying GPU-ID
     import torch
@@ -133,7 +139,6 @@ def append_acc_to_excel(uuid_val, metrics_acc, root, name, method):
     # if not exists save the first row
 
     csv_columns = ['Metric'] + list(metrics_acc) 
-
     # load old csv
     try:
         Data = pd.read_csv(root)[:-1]
@@ -190,25 +195,24 @@ def append_mrr_to_excel(uuid_val, metrics_mrr, root, name, method):
 
 
 def config_device(cfg):
-
-    if hasattr(cfg, 'device'):
-        device = cfg.device
-    elif hasattr(cfg, 'data') and hasattr(cfg.data, 'device'):
-        device = cfg.data.device
-    elif hasattr(cfg, 'train') and hasattr(cfg.data, 'device'):
-        device = cfg.train.device
-    else:
-        device = 'cpu'
+    
+    # detect gpu
     num_cuda_devices = 0
     if torch.cuda.is_available():
         # Get the number of available CUDA devices
         num_cuda_devices = torch.cuda.device_count()
-
+        print(f'Number of available CUDA devices: {num_cuda_devices}')
+    # enviorment setting
     if num_cuda_devices <= 0:
-        return 'cpu'
-    # Set the first CUDA device as the active device
-    torch.cuda.set_device(device)
-    return device
+        cfg.device = 'cpu'
+    elif hasattr(cfg, 'data') and hasattr(cfg.data, 'device'):
+        cfg.device = cfg.data.device
+    elif hasattr(cfg, 'train') and hasattr(cfg.data, 'device'):
+        cfg.device = cfg.train.device
+    else:
+        cfg.device = 0
+
+    return cfg
     
 
 def set_cfg(file_path, args):
@@ -311,13 +315,11 @@ class Logger(object):
 
         if print_mode:
             print(f'Run {run + 1:02d}:')
-            print(f'Highest Train: {result[:, 0].max().item():.2f} at Epoch {100*result[:, 0].argmax().item()}')
-            print(f'Highest Valid: {result[:, 1].max().item():.2f} at Epoch {100*best_valid_epoch}')
-            print(f'  Final Train: {best_train_valid:.2f} at Epoch {100*best_valid_epoch}')
-            print(f'   Final Test: {best_test_valid:.2f} at Epoch {100*best_valid_epoch}')
+            print(f'Highest Train: {result[:, 0].max().item():.2f} at Epoch {100*result[:, 0].argmax().item()}, Highest Valid: {result[:, 1].max().item():.2f} at Epoch {100*best_valid_epoch}, Final Train: {best_train_valid:.2f} at Epoch {100*best_valid_epoch}')
+            print(f'Final Test: {best_test_valid:.2f} at Epoch {100*best_valid_epoch}')
         
         # best train, best valid, train with the best valid epoch, test with the best valid epoch
-        return result[:, 0].max().item(), result[:, 1].max().item(), best_train_valid.item(), best_test_valid.item()
+        return round(result[:, 0].max().item(), 2), round(result[:, 1].max().item(), 2), round(best_train_valid.item(), 2), round(best_test_valid.item(), 2)
     
     
     def calc_all_stats(self, print_mode: bool=True) -> Tuple[str, str, str, List[float], List[float]]:
@@ -365,19 +367,31 @@ class Logger(object):
         "save the result into csv based on calc_all_stats"
         
         
+        
 
 def get_logger(name, log_dir, config_dir):
-	
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-    logger.propagate = False
 
-    std_out_format = '%(asctime)s - [%(levelname)s] - %(message)s'
-    consoleHandler = logging.StreamHandler(sys.stdout)
-    consoleHandler.setFormatter(logging.Formatter(std_out_format))
-    logger.addHandler(consoleHandler)
+    """
+    Set up printing options
 
-    return logger
+    """
+    logging.root.handlers = []
+    logging_cfg = {'level': logging.INFO, 'format': '%(message)s'}
+    os.makedirs(cfg.run_dir, exist_ok=True)
+    h_file = logging.FileHandler(f'{cfg.run_dir}/logging.log')
+    h_stdout = logging.StreamHandler(sys.stdout)
+    if cfg.print == 'file':
+        logging_cfg['handlers'] = [h_file]
+    elif cfg.print == 'stdout':
+        logging_cfg['handlers'] = [h_stdout]
+    elif cfg.print == 'both':
+        logging_cfg['handlers'] = [h_file, h_stdout]
+    else:
+        raise ValueError('Print option not supported')
+
+    logging.basicConfig(**logging_cfg)
+    return logging_cfg
+
 
 
 def save_emb(score_emb, save_path):
@@ -546,13 +560,16 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='GraphGym')
 
     parser.add_argument('--cfg', dest='cfg_file', type=str, required=False,
-                        default='core/yamls/cora/gcns/gae.yaml',
+                        default='core/yamls/cora/gcns/vgae.yaml',
                         help='The configuration file path.')
     parser.add_argument('--sweep', dest='sweep_file', type=str, required=False,
                         default='core/yamls/cora/gcns/gae_sp1.yaml',
                         help='The configuration file path.')
-    
-    parser.add_argument('--repeat', type=int, default=4,
+    parser.add_argument('--data', dest='data', type=str, required=False,
+                        default='cora',
+                        help='data name')
+        
+    parser.add_argument('--repeat', type=int, default=2,
                         help='The number of repeated jobs.')
     parser.add_argument('--mark_done', action='store_true',
                         help='Mark yaml as done after a job has finished.')
@@ -647,7 +664,9 @@ def custom_set_run_dir(cfg, run_id):
         cfg (CfgNode): Configuration node
         run_id (int): Main for-loop iter id (the random seed or dataset split)
     """
-    cfg.run_dir = os.path.join(cfg.out_dir, str(run_id))
+    id = wandb.util.generate_id()
+    cfg.wandb.name_tag = f'{cfg.data.name}_run{id}_{cfg.model.type}' 
+    cfg.run_dir = os.path.join(cfg.out_dir, str(cfg.wandb.name_tag))
     # Make output directory
     if cfg.train.auto_resume:
         os.makedirs(cfg.run_dir, exist_ok=True)
@@ -661,20 +680,32 @@ def set_printing(cfg):
     Set up printing options
 
     """
-    logging.root.handlers = []
-    logging_cfg = {'level': logging.INFO, 'format': '%(message)s'}
-    os.makedirs(cfg.run_dir, exist_ok=True)
-    h_file = logging.FileHandler(f'{cfg.run_dir}/logging.log')
-    h_stdout = logging.StreamHandler(sys.stdout)
-    if cfg.print == 'file':
-        logging_cfg['handlers'] = [h_file]
-    elif cfg.print == 'stdout':
-        logging_cfg['handlers'] = [h_stdout]
-    elif cfg.print == 'both':
-        logging_cfg['handlers'] = [h_file, h_stdout]
-    else:
-        raise ValueError('Print option not supported')
-    logging.basicConfig(**logging_cfg)
+    import logging
+
+    # Step 1: Create a logger
+    logger = logging.getLogger(__name__)
+
+    # Step 2: Set the overall log level for the logger
+    logger.setLevel(logging.DEBUG)
+
+    # Step 3: Create handlers
+    file_handler = logging.FileHandler(f'{cfg.run_dir}/logging.log')
+    console_handler = logging.StreamHandler(sys.stdout)
+
+    # Step 4: Set log levels for handlers
+    file_handler.setLevel(logging.DEBUG)
+    console_handler.setLevel(logging.DEBUG)
+
+    # Step 5: Create formatters and add them to handlers
+    formatter = logging.Formatter('%(asctime)s - %(message)s')
+    file_handler.setFormatter(formatter)
+    console_handler.setFormatter(formatter)
+
+    # Step 6: Add handlers to the logger
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
+    
+    return logger
 
 
 def create_optimizer(model, optimizer_config):
@@ -732,37 +763,18 @@ def create_scheduler(optimizer, scheduler_config):
         raise ValueError(f'Scheduler {scheduler_config.scheduler} not supported')
     return scheduler
 
-
-def init_model_from_pretrained(model, pretrained_dir, freeze_pretrained=False):
-    """ Copy model parameters from pretrained model except the prediction head.
-
-    Args:
-        model: Initialized model with random weights.
-        pretrained_dir: Root directory of saved pretrained model.
-        freeze_pretrained: If True, do not finetune the loaded pretrained
-            parameters, train the prediction head only. If False, train all.
-
-    Returns:
-        Updated pytorch model object.
+import os.path as osp
+def init_model_from_pretrained(model, pretrained_dir, freeze_pretrained=False) -> torch.Tensor:
+    # raise NotImplementedError #assign to constantin
+    # TODO start with torch.Embedding as preliminary step
+    """ Load the generated embedding from LLM to update data.x
+    
+    Step1: load themd
+    Step2: postprocessing to torch.Tensor in shape (num_nodes, n_dim)
+    num_nodes = data.x.shape[0]
+    n_dim = free to choose
+    Step3: Normalization 
+    
+    Return 
     """
-    ckpt_file = get_final_pretrained_ckpt(osp.join(pretrained_dir, '0', 'ckpt'))
-    logging.info(f"[*] Loading from pretrained model: {ckpt_file}")
-
-    ckpt = torch.load(ckpt_file)
-    pretrained_dict = ckpt['model_state']
-    model_dict = model.state_dict()
-
-    # Filter out prediction head parameter keys.
-    pretrained_dict = {k: v for k, v in pretrained_dict.items()
-                       if not k.startswith('post_mp')}
-    # Overwrite entries in the existing state dict.
-    model_dict.update(pretrained_dict)
-    # Load the new state dict.
-    model.load_state_dict(model_dict)
-
-    if freeze_pretrained:
-        for key, param in model.named_parameters():
-            if not key.startswith('post_mp'):
-                param.requires_grad = False
-    return model
 

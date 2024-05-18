@@ -387,7 +387,7 @@ def load_graph_ogbn_arxiv(use_mask):
     else:
         edge_index = data.adj_t.to_symmetric()
         
-    x = torch.tensor(data.x).float()
+    x = torch.tensor(data.x).float()  
     edge_index = torch.LongTensor(edge_index.to_torch_sparse_coo_tensor().coalesce().indices()).long()
     num_nodes = data.num_nodes
     

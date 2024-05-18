@@ -53,6 +53,7 @@ def train(model,
         train_edge_mask = train_pos[mask].transpose(1,0)
         train_edge_mask = torch.cat((train_edge_mask, train_edge_mask[[1,0]]),dim=1)
         
+        # visualize
         if pos_train_weight != None:
             pos_train_weight = pos_train_weight.to(mask.device)
             edge_weight_mask = pos_train_weight[mask]
@@ -211,16 +212,16 @@ def test(model,
 
 @torch.no_grad()
 def test_edge(score_func, input_data, h, batch_size):
+    input_data  = input_data.transpose(1, 0)
+    # print(input_data.size())
+    with torch.no_grad():
+        preds = []
+        for perm  in DataLoader(range(input_data.size(0)), batch_size):
 
-    # input_data  = input_data.transpose(1, 0)
-    # with torch.no_grad():
-    preds = []
-    for perm  in DataLoader(range(input_data.size(0)), batch_size):
-        edge = input_data[perm].t()
-    
-        preds += [score_func(h[edge[0]], h[edge[1]]).cpu()]
-        
-    pred_all = torch.cat(preds, dim=0)
+            edge = input_data[perm]
+            preds += [score_func(h[edge[0]], h[edge[1]]).cpu()]
+            
+        pred_all = torch.cat(preds, dim=0)
 
     return pred_all
 

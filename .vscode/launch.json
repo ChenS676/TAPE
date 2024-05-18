@@ -12,7 +12,29 @@
 			"console": "integratedTerminal",
 			"justMyCode": false,
 			// "args": ["--cfg", "core/configs/arxiv_2023/struc2vec.yaml", "--sweep", "core/configs/arxiv_2023/struc2vec_sp1.yaml"],
-			// "args": ["--cfg", "core/configs/pubmed/node_sim.yaml"],
+			"args": [
+				"--data",
+				"cora",
+				"--device",
+				"cpu"
+			],
+		}
+	],
+	"configurations": [
+		{
+			"name": "Python Debugger: Current File with Arguments",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "${file}",
+			"console": "integratedTerminal",
+			"args": [
+				"--data",
+				"cora",
+				"--device",
+				"cpu",
+				"--epochs",
+				"200"
+			],
 		}
 	]
 }

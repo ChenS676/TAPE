@@ -15,9 +15,8 @@ from torch_geometric import seed_everything
 from torch_geometric.nn import GCNConv, SAGEConv, GINConv, GATConv
 from ogb.linkproppred import Evaluator
 from graphgps.network.heart_gnn import (GCN, GAT, SAGE, mlp_score)
-from data_utils.load import data_loader
-from utils import Logger, save_emb, get_root_dir, get_logger, config_device, set_cfg, \
-parse_args, get_git_repo_root_path
+from data_utils.load import load_data_lp
+from utils import Logger, save_emb, get_root_dir, get_logger, config_device, set_cfg, get_git_repo_root_path
 from trainer_heart import train, test, test_edge
 
 
@@ -25,8 +24,8 @@ def get_config_dir():
     file_dir = os.path.dirname(os.path.realpath(__file__))
     return os.path.join(file_dir, "config")
 
-dir_path    = get_root_dir()
-log_prin    = get_logger('testrun', 'log', get_config_dir())
+# dir_path    = get_root_dir()
+# log_prin    = get_logger('testrun', 'log', get_config_dir())
 
 def parse_args() -> argparse.Namespace:
     r"""Parses the command line arguments."""
@@ -38,7 +37,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--sweep', dest='sweep_file', type=str, required=False,
                         default='core/yamls/cora/gat_sp1.yaml',
                         help='The configuration file path.')
-    
+    parser.add_argument('--data', dest='data', type=str, required=True,
+                        default='cora',
+                        help='data name')
+    parser.add_argument('--batch_size', dest='bs', type=int, required=False,
+                        default=2**15,
+                        help='data name')
+    parser.add_argument('--device', dest='device', required=True, 
+                        help='device id')
+    parser.add_argument('--epochs', dest='epoch', type=int, required=True,
+                        default=300,
+                        help='data name')
     parser.add_argument('--repeat', type=int, default=1,
                         help='The number of repeated jobs.')
     parser.add_argument('--mark_done', action='store_true',
@@ -53,7 +62,7 @@ def parse_args() -> argparse.Namespace:
 def data_preprocess(cfg):
 
     device = cfg.train.device
-    dataset, data_cited, splits = data_loader[cfg.data.name](cfg)
+    dataset, data_cited, splits = load_data_lp[cfg.data.name](cfg)
     data = dataset._data
 
     edge_index = data.edge_index
@@ -70,7 +79,6 @@ def data_preprocess(cfg):
     if not hasattr(data, 'edge_weight'): 
         train_edge_weight = torch.ones(splits['train'].edge_index.shape[1])
         train_edge_weight = train_edge_weight.to(torch.float)
-
 
     data = T.ToSparseTensor()(data)
 
@@ -92,7 +100,6 @@ def data_preprocess(cfg):
     else:
         data.full_adj_t = data.adj_t
 
-
     if emb != None:
         torch.nn.init.xavier_uniform_(emb.weight)
     return dataset, splits, emb, cfg, train_edge_weight
@@ -105,7 +112,7 @@ if __name__ == "__main__":
     args = parse_args()
     # Load args file
     
-    cfg = set_cfg(FILE_PATH, args)
+    cfg = set_cfg(FILE_PATH, args.cfg_file)
     cfg.merge_from_list(args.opts)
 
     # Set Pytorch environment
@@ -282,6 +289,7 @@ if __name__ == "__main__":
                 best_test = round(r[r[:, 1].argmax(), 2].item(), 4)
 
                 print(eval_metric)
+                
                 logging.info(f'best valid: {100*best_valid_current:.2f}%, '
                                 f'best test: {100*best_test:.2f}%')
                 

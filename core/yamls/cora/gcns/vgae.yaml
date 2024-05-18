@@ -1,8 +1,8 @@
 # line.yaml
 out_dir: results
 metric_best: acc
-cfg_dest: gae.yaml
-print: file
+cfg_dest: vgae.yaml
+print: both
 
 run:
   seed: 0
@@ -16,9 +16,9 @@ wandb:
 
 train:
   mode: custom
-  batch_size: 32   
+  batch_size: 2**14 
   eval_period: 1
-  epochs: 2000
+  epochs: 200
   device: 0
   auto_resume: False
   final_eval: False
@@ -26,8 +26,8 @@ train:
   
 model:
   type: VGAE
-  out_channels: 16
-  hidden_channels: 8  # Assume that the dimension of the hidden layer feature is 8
+  out_channels: 32
+  hidden_channels: 32  # Assume that the dimension of the hidden layer feature is 8
     
 num_threads: 11
 

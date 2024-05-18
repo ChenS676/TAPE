@@ -1,6 +1,6 @@
 import os
 import argparse
-from yacs.args import CfgNode as CN
+from yacs.config import CfgNode as CN
 
 
 def set_cfg(cfg):

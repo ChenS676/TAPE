@@ -1,0 +1,22 @@
+Number of available CUDA devices: 4
+not loaded 0 papers.
+Number of available CUDA devices: 4
+2024-05-17 17:21:54,212 - The cora graph torch.Size([2708, 1433]) is loaded on cuda:0, 
+ Train: 17376 samples,
+ Valid: 17376 samples,
+ Test: 1084 samples
+original config file saved to results/gae-gae-cora-origin/gae.yaml
+2024-05-17 17:21:54,215 - hypersearch space: {'out_channels': [160, 176], 'hidden_channels': [160, 176], 'batch_size': [8192, 16384], 'lr': [0.01, 0.008, 0.007, 0.015]}
+2024-05-17 17:21:54,216 - out : 160, hidden: 160
+2024-05-17 17:21:54,216 - bs : 8192, lr: 0.01
+2024-05-17 17:21:54,262 - config saved into results/gae-gae-cora-origin/cora_runylrh77y7_GAE
+2024-05-17 17:21:54,262 - Run 0 with seed 0 and split [0.8, 0.15, 0.05] on device cuda:0
+> /hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/core/gcns/custom_tune.py(136)project_main()
+-> trainer = Trainer(FILE_PATH,
+(Pdb) (Pdb) (Pdb) (Pdb) (Pdb) (Pdb) (Pdb) *** NameError: name 'halo' is not defined
+(Pdb) *** SyntaxError: invalid syntax
+(Pdb) *** SyntaxError: invalid syntax
+(Pdb) *** SyntaxError: invalid syntax
+(Pdb) *** SyntaxError: invalid syntax
+(Pdb) *** SyntaxError: invalid syntax
+(Pdb) 

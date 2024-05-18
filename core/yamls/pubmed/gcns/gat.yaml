@@ -1,0 +1,58 @@
+# line.yaml
+
+out_dir: results
+metric_best: acc
+cfg_dest: gat.yaml
+print: file
+seed: 0
+
+run:
+  seed: 0
+  num_threads: 11
+  multiple_splits: None
+
+
+wandb:
+  use: True
+  project: gtblueprint
+
+
+num_threads: 11
+
+train:
+  mode: custom
+  batch_size: 2048
+  eval_period: 1
+  epochs: 200
+  device: 1
+  auto_resume: False
+  final_eval: False
+  finetune: False
+
+
+model:
+  type: GAT
+  in_channels: None
+  out_channels: 32
+  heads: 1
+  hidden_channels: 8  
+  negative_slope: 0.2
+  dropout: 0
+  num_layers: 2
+
+num_threads: 11
+
+data:
+  name: cora
+  undirected: True
+  include_negatives: True
+  val_pct: 0.15
+  test_pct: 0.05
+  split_labels: True
+  num_features:  1433
+
+
+optimizer:
+  type: adam
+  base_lr: 0.01
+  weight_decay: 0.0005

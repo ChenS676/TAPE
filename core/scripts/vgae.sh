@@ -28,4 +28,12 @@ module load compiler/gnu/12
 
 
 # python custom_main.py --cfg core/yamls/cora/gcns/gae.yaml --sweep core/yamls/cora/gcns/gae_sp1.yaml
-python wb_tune.py --cfg core/yamls/cora/gcns/vgae.yaml --sweep core/yamls/cora/gcns/gae_sp1.yaml
+# python wb_tune.py --cfg core/yamls/cora/gcns/vgae.yaml --sweep core/yamls/cora/gcns/gae_sp1.yaml
+
+for cmd in cora pubmed arxiv_2023; do
+    python custom_tune.py --cfg core/yamls/cora/gcns/gae.yaml --data $cmd &
+done
+
+# python custom_tune.py --cfg core/yamls/cora/gcns/gae.yaml --data 'cora'
+# python custom_tune.py --cfg core/yamls/cora/gcns/vgae.yaml  --data 'pubmed'
+# python custom_tune.py --cfg core/yamls/cora/gcns/vgae.yaml  --data 'arxiv_2023'
