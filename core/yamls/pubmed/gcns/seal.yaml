@@ -28,12 +28,18 @@ model:
   hidden_channels: 32
   num_layers: 3
   sortpooling_k: 0.6
-  num_hops: 3
+  num_hops: 2
   node_label: 'drnl'
   max_z: 1000
   k: 0.6
 
 num_threads: 11
+
+wandb:
+  use: True
+  project: gtblueprint
+  name_tag: seal-pubmed
+
 
 data:
   name: pubmed

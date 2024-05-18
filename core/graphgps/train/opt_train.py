@@ -370,7 +370,7 @@ class Trainer_Saint(Trainer):
                  sample_coverage=None):
         super().__init__(FILE_PATH, cfg, model, optimizer, splits, run, repeat, loggers)
 
-        
+
         self.device = config_device(cfg)
             
         self.model = model.to(self.device)
@@ -407,8 +407,13 @@ class Trainer_SEAL(Trainer):
                  run,
                  repeat,
                  loggers,
+                 print_logger = None,
                  batch_size=None,):
-        self.device = config_device(cfg)
+        self.name_tag = cfg.wandb.name_tag
+        self.print_logger = print_logger
+        self.report_step = report_step[cfg.data.name]
+
+        self.device = config_device(cfg).device
 
         self.model = model.to(self.device)
 
@@ -428,6 +433,7 @@ class Trainer_SEAL(Trainer):
         self.optimizer = optimizer
         self.train_func = self._train_seal
         model_types = ['VGAE', 'GAE', 'GAT', 'GraphSage', 'GNNStack', 'SEAL']
+        self.print_logger = print_logger
         self.test_func = {model_type: self._test for model_type in model_types}
         self.evaluate_func = {model_type: self._evaluate for model_type in model_types}
 
@@ -461,7 +467,7 @@ class Trainer_SEAL(Trainer):
             print(f'Epoch: {epoch}','start training...')
             loss = self._train_seal()
             print(f'Loss: {loss}')
-            if epoch % 10 == 0:
+            if epoch % 1 == 0:
                 results_rank = self.merge_result_rank()
                 print(results_rank)
 

@@ -35,6 +35,11 @@ model:
 
 num_threads: 11
 
+wandb:
+  use: True
+  project: gtblueprint
+  name_tag: seal-arxiv_2023
+
 data:
   name: arxiv_2023
   undirected: True
