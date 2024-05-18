@@ -1,6 +1,5 @@
 import copy
 import os, sys
-import warnings
 
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -9,22 +8,16 @@ import time
 from graphgps.train.opt_train import Trainer_SEAL
 from graphgps.network.heart_gnn import DGCNN
 
-from data_utils.load import load_data_lp
 from torch_geometric import seed_everything
 from torch_geometric.graphgym.utils.device import auto_select_device
 from utils import set_cfg, parse_args, get_git_repo_root_path, custom_set_run_dir, set_printing, run_loop_settings, create_optimizer, config_device, \
     create_logger
 from gcns_subgraph.SEAL.utils import *
 from torch_geometric.data import InMemoryDataset, Dataset
-from data_utils.load_data_nc import load_tag_cora, load_tag_pubmed, \
-                            load_tag_product, load_tag_ogbn_arxiv, load_tag_product, \
-                            load_tag_arxiv23, load_graph_cora, load_graph_pubmed, \
-                            load_graph_arxiv23, load_graph_ogbn_arxiv, load_text_cora, \
-                            load_text_pubmed, load_text_arxiv23, load_text_ogbn_arxiv, \
-                            load_text_product
+from data_utils.load_data_nc import load_graph_cora, load_graph_pubmed, load_tag_arxiv23, load_graph_ogbn_arxiv
 
 class SEALDataset(InMemoryDataset):
-    def __init__(self, data, splits, num_hops, percent=100, split='train',node_label='drnl', ratio_per_hop=1.0,
+    def __init__(self, root, data, splits, num_hops, percent=100, split='train',node_label='drnl', ratio_per_hop=1.0,
                  max_nodes_per_hop=None, directed=False):
         self.data = data
         self.split_edge = splits
@@ -35,7 +28,7 @@ class SEALDataset(InMemoryDataset):
         self.ratio_per_hop = ratio_per_hop
         self.max_nodes_per_hop = max_nodes_per_hop
         self.directed = directed
-        super(SEALDataset, self).__init__(os.path.dirname(__file__))
+        super(SEALDataset, self).__init__(root)
         self.data, self.slices = torch.load(self.processed_paths[0])
 
 
@@ -84,7 +77,7 @@ class SEALDataset(InMemoryDataset):
 
 
 class SEALDynamicDataset(Dataset):
-    def __init__(self, data, splits, num_hops, percent=100, split='train',
+    def __init__(self, root, data, splits, num_hops, percent=100, split='train',
                  use_coalesce=False, node_label='drnl', ratio_per_hop=1.0,
                  max_nodes_per_hop=None, directed=False, **kwargs):
         self.data = data
@@ -96,11 +89,7 @@ class SEALDynamicDataset(Dataset):
         self.ratio_per_hop = ratio_per_hop
         self.max_nodes_per_hop = max_nodes_per_hop
         self.directed = directed
-        super(SEALDynamicDataset, self).__init__(os.path.dirname(__file__))
-        self.pos_edge_label = data[split].pos_edge_label
-        self.neg_edge_label = data[split].neg_edge_label
-        self.pos_edge_label_index = data[split].pos_edge_label_index
-        self.neg_edge_label_index = data[split].neg_edge_label_index
+        super(SEALDynamicDataset, self).__init__(root)
 
         pos_edge, neg_edge = get_pos_neg_edges(split, self.split_edge,
                                                self.data.edge_index,
@@ -109,10 +98,6 @@ class SEALDynamicDataset(Dataset):
         self.links = torch.cat([pos_edge, neg_edge], 1).t().tolist()
         self.labels = [1] * pos_edge.size(1) + [0] * neg_edge.size(1)
 
-        if self.use_coalesce:  # compress mutli-edge into edge with weight
-            self.data.edge_index, self.data.edge_weight = coalesce(
-                self.data.edge_index, self.data.edge_weight,
-                self.data.num_nodes, self.data.num_nodes)
 
         if 'edge_weight' in self.data:
             edge_weight = self.data.edge_weight.view(-1)
@@ -157,12 +142,6 @@ if __name__ == "__main__":
     torch.set_num_threads(cfg.num_threads)
     batch_sizes = [cfg.train.batch_size]  # [8, 16, 32, 64]
 
-    load_data_funcs = {
-        'cora': load_graph_cora,
-        'pubmed': load_graph_pubmed,
-        'arxiv23': load_graph_arxiv23,
-        'ogbn_arxiv': load_graph_ogbn_arxiv
-    }
 
     best_acc = 0
     best_params = {}
@@ -176,13 +155,19 @@ if __name__ == "__main__":
             cfg.run_id = run_id
             seed_everything(cfg.seed)
             auto_select_device()
-            data_func = load_data_funcs[cfg.data.name]
-            data, _ = data_func(cfg.data)
+            if cfg.data.name == 'pubmed':
+                data = load_graph_pubmed(False)
+            elif cfg.data.name == 'cora':
+                data, _ = load_graph_cora(False)
+            elif cfg.data.name == 'arxiv_2023':
+                data, _ = load_tag_arxiv23()
             splits = do_edge_split(copy.deepcopy(data), cfg.data.val_pct, cfg.data.test_pct)
+            path = os.path.dirname(__file__) + '/seal_{}'.format(cfg.data.name)
             dataset = {}
 
             if cfg.train.dynamic_train == True:
                 dataset['train'] = SEALDynamicDataset(
+                    path,
                     data,
                     splits,
                     num_hops=cfg.model.num_hops,
@@ -191,6 +176,7 @@ if __name__ == "__main__":
                     directed=not cfg.data.undirected,
                 )
                 dataset['valid'] = SEALDynamicDataset(
+                    path,
                     data,
                     splits,
                     num_hops=cfg.model.num_hops,
@@ -199,6 +185,7 @@ if __name__ == "__main__":
                     directed=not cfg.data.undirected,
                 )
                 dataset['test'] = SEALDynamicDataset(
+                    path,
                     data,
                     splits,
                     num_hops=cfg.model.num_hops,
@@ -208,6 +195,7 @@ if __name__ == "__main__":
                 )
             else:
                 dataset['train'] = SEALDataset(
+                    path,
                     data,
                     splits,
                     num_hops=cfg.model.num_hops,
@@ -216,6 +204,7 @@ if __name__ == "__main__":
                     directed=not cfg.data.undirected,
                 )
                 dataset['valid'] = SEALDataset(
+                    path,
                     data,
                     splits,
                     num_hops=cfg.model.num_hops,
@@ -224,6 +213,7 @@ if __name__ == "__main__":
                     directed=not cfg.data.undirected,
                 )
                 dataset['test'] = SEALDataset(
+                    path,
                     data,
                     splits,
                     num_hops=cfg.model.num_hops,

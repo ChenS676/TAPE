@@ -12,14 +12,14 @@ run:
 
 train:
   mode: custom
-  batch_size: 1024
+  batch_size: 32
   eval_period: 1
-  epochs: 50
+  epochs: 100
   device: 0
   auto_resume: False
   final_eval: False
   finetune: False
-  dynamic_train: True
+  dynamic_train: False
 
 model:
   type: SEAL
