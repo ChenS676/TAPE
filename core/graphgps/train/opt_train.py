@@ -467,7 +467,7 @@ class Trainer_SEAL(Trainer):
             print(f'Epoch: {epoch}','start training...')
             loss = self._train_seal()
             print(f'Loss: {loss}')
-            if epoch % 1 == 0:
+            if epoch % 10 == 0:
                 results_rank = self.merge_result_rank()
                 print(results_rank)
 
