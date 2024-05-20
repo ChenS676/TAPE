@@ -189,7 +189,7 @@ def project_main():
         dump_cfg(cfg)
 
         hyperparameter_search = {'hidden_channels': [32, 64, 128, 256],
-                                 "batch_size": [32, 64, 128, 256], "lr": [0.01, 0.001, 0.0001]}
+                                 "batch_size": [32, 64, 128, 256], "lr": [0.001, 0.0001]}
 
         print_logger.info(f"hypersearch space: {hyperparameter_search}")
         for hidden_channels, batch_size, lr in tqdm(itertools.product(*hyperparameter_search.values())):

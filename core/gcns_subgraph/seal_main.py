@@ -227,14 +227,15 @@ if __name__ == "__main__":
 
             # Execute experiment
             trainer = Trainer_SEAL(FILE_PATH,
-                                    cfg,
-                                    model,
-                                    optimizer,
-                                    dataset,
-                                    run_id,
-                                    args.repeat,
-                                    loggers,
-                                    batch_size)
+                                   cfg,
+                                   model,
+                                   optimizer,
+                                   dataset,
+                                   run_id,
+                                   args.repeat,
+                                   loggers,
+                                   print_logger = None,
+                                   batch_size=batch_size)
 
             start = time.time()
             trainer.train()
