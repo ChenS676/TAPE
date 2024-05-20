@@ -154,7 +154,6 @@ if __name__ == "__main__":
             cfg.seed = seed
             cfg.run_id = run_id
             seed_everything(cfg.seed)
-            auto_select_device()
             if cfg.data.name == 'pubmed':
                 data = load_graph_pubmed(False)
             elif cfg.data.name == 'cora':
