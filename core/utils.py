@@ -560,7 +560,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='GraphGym')
 
     parser.add_argument('--cfg', dest='cfg_file', type=str, required=False,
-                        default='core/yamls/cora/gcns/vgae.yaml',
+                        default='core/yamls/cora/gcns/gae.yaml',
                         help='The configuration file path.')
     parser.add_argument('--sweep', dest='sweep_file', type=str, required=False,
                         default='core/yamls/cora/gcns/gae_sp1.yaml',
@@ -731,7 +731,7 @@ def create_optimizer(model, optimizer_config):
         optimizer = optim.SGD(params, lr=optimizer.base_lr)
     else:
         raise ValueError(f'Optimizer {optimizer_config.optimizer} not supported')
-
+    optimizer.zero_grad()
     return optimizer
 
 

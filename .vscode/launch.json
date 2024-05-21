@@ -27,14 +27,16 @@
 			"request": "launch",
 			"program": "${file}",
 			"console": "integratedTerminal",
-			"args": [
-				"--data",
-				"cora",
-				"--device",
-				"cpu",
-				"--epochs",
-				"200"
-			],
+			// "args": [
+			// 	"--data",
+			// 	"cora",
+			// 	"--device",
+			// 	"cpu",
+			// 	"--epochs",
+			// 	"200",
+			// 	"--model",
+			// 	"GAE"
+			// ],
 		}
 	]
 }

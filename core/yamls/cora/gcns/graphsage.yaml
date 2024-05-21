@@ -20,10 +20,7 @@ optimizer:
   base_lr: 0.01
   weight_decay: 0.0005
 
-  # type: SGD
-  # base_lr: 0.01
-  # momentum: 0.9
-  # weight_decay: 0.0005
+
 
 train:
   mode: custom
@@ -50,4 +47,4 @@ data:
   test_pct: 0.05
   split_labels: True
   num_features:  1433
-
+  split_index: [0.8, 0.15, 0.05]

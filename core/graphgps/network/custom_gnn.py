@@ -220,16 +220,14 @@ def create_model(cfg):
     if cfg.model.type == 'GAT':
         model = GAE(encoder=GAT(cfg))
     elif cfg.model.type == 'GraphSage':
-        model = GAE(encoder=GraphSage(cfg),
-                              decoder=InnerProductDecoder())
+        model = GAE(encoder=GraphSage(cfg))
     
     if cfg.model.type == 'GAE':
         model = GAE(encoder = GCNEncoder(cfg) )
     elif cfg.model.type == 'VGAE':
         model = VGAE(encoder= VariationalGCNEncoder(cfg))
-    model.to(cfg.device)
     else:
         # Without this else I got: UnboundLocalError: local variable 'model' referenced before assignment
         raise ValueError('Current model does not exist')
-
+    model.to(cfg.device)
     return model 

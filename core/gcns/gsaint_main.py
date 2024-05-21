@@ -7,24 +7,21 @@ from itertools import product
 from graphgps.network.gsaint import GraphSAINTNodeSampler, GraphSAINTEdgeSampler, GraphSAINTRandomWalkSampler
 from graphgps.train.opt_train import Trainer, Trainer_Saint
 from torch_geometric.graphgym.cmd_args import parse_args
-from data_utils.load import load_data_lp
 from torch_geometric import seed_everything
 from torch_geometric.data.makedirs import makedirs
 from torch_geometric.graphgym.utils.device import auto_select_device
 from custom_main import run_loop_settings, custom_set_run_dir, set_printing
+from data_utils.load import load_data_nc, load_data_lp
 from graphgps.network.custom_gnn import create_model
 from utils import set_cfg, parse_args, get_git_repo_root_path, Logger, custom_set_out_dir \
     , custom_set_run_dir, set_printing, run_loop_settings, create_optimizer, config_device, \
         init_model_from_pretrained, create_logger
 
 def get_loader_RW(data, batch_size, walk_length, num_steps, sample_coverage):
-    return GraphSAINTRandomWalkSampler(data, batch_size=batch_size, walk_length=walk_length, num_steps=num_steps, sample_coverage=sample_coverage)
+    return GraphSAINTRandomWalkSampler(data, batch_size=batch_size, 
+                                       walk_length=walk_length, 
+                                       num_steps=num_steps, sample_coverage=sample_coverage)
 
-def get_loader_ES(data, batch_size, num_steps, sample_coverage):
-    return GraphSAINTEdgeSampler(data, batch_size=batch_size, num_steps=num_steps, sample_coverage=sample_coverage)
-
-def get_loader_NS(data, batch_size, num_steps, sample_coverage):
-    return GraphSAINTNodeSampler(data, batch_size=batch_size, num_steps=num_steps, sample_coverage=sample_coverage)
 if __name__ == "__main__":
     FILE_PATH = f'{get_git_repo_root_path()}/'
 
@@ -43,7 +40,7 @@ if __name__ == "__main__":
     best_params = {}
 
     loggers = create_logger(args.repeat)
-
+    
     for batch_size, walk_length, num_steps, sample_coverage in product(batch_sizes, walk_lengths, num_steps, sample_coverages):
         for run_id, seed, split_index in zip(*run_loop_settings(cfg, args)): # In run_loop_settings we should send 2 parameeters
 
@@ -55,11 +52,15 @@ if __name__ == "__main__":
             seed_everything(cfg.seed)
             cfg = config_device(cfg)
             splits, _, data = load_data_lp[cfg.data.name](cfg.data)
+            cfg.model.in_channels = data.x.size(1)
 
+            print_logger = set_printing(cfg)
+            print_logger.info(f"The {cfg['data']['name']} graph {splits['train']['x'].shape} is loaded on {splits['train']['x'].device}, \n Train: {2*splits['train']['pos_edge_label'].shape[0]} samples,\n Valid: {2*splits['train']['pos_edge_label'].shape[0]} samples,\n Test: {2*splits['test']['pos_edge_label'].shape[0]} samples") 
+        
             lst_args = cfg.model.type.split('_')
             if lst_args[0] == 'gsaint':
-                sampler = get_loader_RW
-                cfg.model.type = lst_args[1].upper() # Convert to upper case
+                sampler = get_loader
+                cfg.model.type = lst_args[1]
             else:
                 sampler = None 
 
@@ -67,14 +68,18 @@ if __name__ == "__main__":
             optimizer = torch.optim.Adam(model.parameters(), lr=cfg.optimizer.base_lr)
 
             # Execute experiment
-            trainer = Trainer_Saint(FILE_PATH, 
-                        cfg, 
+            trainer = Trainer_Saint(FILE_PATH,
+                        cfg,
                         model, 
-                        optimizer, 
-                        splits, 
+                        None, 
+                        data,
+                        optimizer,
+                        splits,
                         run_id, 
                         args.repeat,
-                        loggers,
+                        loggers, 
+                        print_logger,
+                        cfg.device,
                         sampler, 
                         batch_size, 
                         walk_length, 
@@ -87,13 +92,14 @@ if __name__ == "__main__":
             
             print('Training time: ', end - start)
                 
-        # statistic for all runs
-        print('All runs:')
+        best_auc, best_hits = trainer.train()
         
-        result_dict = {}
         for key in loggers:
             print(key)
-            _, _, _, valid_test, _, _ = trainer.loggers[key].calc_all_stats()
-            result_dict.update({key: valid_test})
+            trainer.loggers[key].print_statistics(run_id)
+            
+        print(trainer.results_rank)
 
-        trainer.save_result(result_dict)
+    best_auc_metric, result_all_run = trainer.result_statistic()
+    
+    print(f"best_auc_metric: {best_auc_metric}, result_all_run: {result_all_run}")

@@ -43,23 +43,26 @@ class Trainer():
                  model: torch.nn.Module, 
                  emb: torch.nn.Module,
                  data: Data,
-                 optimizer: torch.optim.Optimizer,
+                 optimizer: torch.optim.Optimizer, 
                  splits: Dict[str, Data], 
                  run: int, 
                  repeat: int,
-                 loggers: Logger,
-                 print_logger: None,
+                 loggers: Logger, 
+                 print_logger: None, 
                  device: int):
         
         self.device = device
         self.model = model.to(self.device)
         self.emb = emb
-
+        
         # params
-        self.model_name = cfg.model.type
+        self.model_name = cfg.model.type 
         self.data_name = cfg.data.name
         self.FILE_PATH = FILE_PATH 
+        self.name_tag = cfg.wandb.name_tag
         self.epochs = cfg.train.epochs
+        self.batch_size = cfg.train.batch_size
+        
         self.test_data = splits['test'].to(self.device)
         self.train_data = splits['train'].to(self.device)
         self.valid_data = splits['valid'].to(self.device)
@@ -79,19 +82,18 @@ class Trainer():
         self.repeat = repeat
         self.results_rank = {}
 
-    def _train_heart(self,
+    def _train_heart(self, 
                      pos_train_weight,
                      device):
 
-        self.model.train()
 
         train_pos = self.train_data
         total_loss = total_examples = 0
 
-        if self.emb is None:
+        if self.emb is None: 
             x = self.data.x
             emb_update = 0
-        else:
+        else: 
             x = self.emb.weight
             emb_update = 1
 
@@ -115,7 +117,7 @@ class Trainer():
             else:
                 edge_weight_mask = torch.ones(train_edge_mask.size(1)).to(torch.float).to(train_pos.device)
 
-            # masked adjacency matrix
+            # masked adjacency matrix 
             adj = SparseTensor.from_edge_index(train_edge_mask, edge_weight_mask, [num_nodes, num_nodes]).to(train_pos.device)
 
             ##################
@@ -159,7 +161,7 @@ class Trainer():
         loss.backward()
         self.optimizer.step()
         return loss.item()
-
+    
 
     def _train_vgae(self):
         self.model.train()
@@ -226,7 +228,7 @@ class Trainer():
     
     @torch.no_grad()
     def _evaluate_vgae(self, data: Data):
-
+       
         self.model.eval()
         pos_edge_index = data.pos_edge_label_index
         neg_edge_index = data.neg_edge_label_index
@@ -235,24 +237,24 @@ class Trainer():
         pos_pred = self.model.decoder(z, pos_edge_index)
         neg_pred = self.model.decoder(z, neg_edge_index)
         y_pred = torch.cat([pos_pred, neg_pred], dim=0)
-
+        
         hard_thres = (y_pred.max() + y_pred.min())/2
 
         pos_y = z.new_ones(pos_edge_index.size(1))
-        neg_y = z.new_zeros(neg_edge_index.size(1))
+        neg_y = z.new_zeros(neg_edge_index.size(1)) 
         y = torch.cat([pos_y, neg_y], dim=0)
-
+        
         y_pred[y_pred >= hard_thres] = 1
         y_pred[y_pred < hard_thres] = 0
 
         acc = torch.sum(y == y_pred)/len(y)
-
+        
         pos_pred, neg_pred = pos_pred.cpu(), neg_pred.cpu()
         result_mrr = get_metric_score(self.evaluator_hit, self.evaluator_mrr, pos_pred, neg_pred)
         result_mrr.update({'acc': round(acc.tolist(), 5)})
-
+    
         return result_mrr
-
+    
     def merge_result_rank(self):
         result_test = self.evaluate_func[self.model_name](self.test_data)
         result_valid = self.evaluate_func[self.model_name](self.valid_data)
@@ -263,8 +265,8 @@ class Trainer():
             for key in result_test.keys()
         }
     
-
-    def train(self):
+    
+    def train(self):  
         best_auc, best_hits, best_hit100 = 0, 0, 0
 
         for epoch in range(1, self.epochs + 1):
@@ -278,11 +280,11 @@ class Trainer():
                 #     # result - (train, valid, test)
                 #     self.loggers[key].add_result(self.run, result)
                     # print(self.loggers[key].results)
-
+                    
                 self.print_logger.info(f'Epoch: {epoch:03d}, Loss_train: {loss:.4f}, AUC: {self.results_rank["AUC"][0]:.4f}, AP: {self.results_rank["AP"][0]:.4f}, MRR: {self.results_rank["MRR"][0]:.4f}, Hit@10 {self.results_rank["Hits@10"][0]:.4f}')
-                self.print_logger.info(f'Epoch: {epoch:03d}, Loss_valid: {loss:.4f}, AUC: {self.results_rank["AUC"][1]:.4f}, AP: {self.results_rank["AP"][1]:.4f}, MRR: {self.results_rank["MRR"][1]:.4f}, Hit@10 {self.results_rank["Hits@10"][1]:.4f}')
-                self.print_logger.info(f'Epoch: {epoch:03d}, Loss_test: {loss:.4f}, AUC: {self.results_rank["AUC"][2]:.4f}, AP: {self.results_rank["AP"][2]:.4f}, MRR: {self.results_rank["MRR"][2]:.4f}, Hit@10 {self.results_rank["Hits@10"][2]:.4f}')
-
+                self.print_logger.info(f'Epoch: {epoch:03d}, Loss_valid: {loss:.4f}, AUC: {self.results_rank["AUC"][1]:.4f}, AP: {self.results_rank["AP"][1]:.4f}, MRR: {self.results_rank["MRR"][1]:.4f}, Hit@10 {self.results_rank["Hits@10"][1]:.4f}')               
+                self.print_logger.info(f'Epoch: {epoch:03d}, Loss_test: {loss:.4f}, AUC: {self.results_rank["AUC"][2]:.4f}, AP: {self.results_rank["AP"][2]:.4f}, MRR: {self.results_rank["MRR"][2]:.4f}, Hit@10 {self.results_rank["Hits@10"][2]:.4f}')               
+                    
 
                 for key, result in self.results_rank.items():
                     self.loggers[key].add_result(self.run, result)
@@ -293,7 +295,7 @@ class Trainer():
                                 f'Run: {self.run + 1:02d}, Key: {key}, '
                                 f'Epoch: {epoch:02d}, Loss: {loss:.4f}, Train: {100 * train_hits:.2f}, Valid: {100 * valid_hits:.2f}, Test: {100 * test_hits:.2f}%')
                         self.print_logger.info('---')
-
+                        
 
         return best_auc, best_hits
 
@@ -327,32 +329,22 @@ class Trainer():
         acc_file = os.path.join(root, f'{self.data_name}_wb_acc_mrr.csv')
         self.print_logger.info(f"save to {acc_file}")
         os.makedirs(root, exist_ok=True)
+        
 
-        # first_value_type = type(next(iter(results_dict.values())))
-        # if all(isinstance(value, first_value_type) for value in results_dict.values()):
-        #     if first_value_type == float:
-        #         mvari_str2csv(self.name_tag, results_dict, acc_file)
-        #     elif first_value_type == str:
-        #
         mvari_str2csv(self.name_tag, results_dict, acc_file)
 
 
     def save_tune(self, results_dict: Dict[str, float], to_file):  # sourcery skip: avoid-builtin-shadow
-
+        
         root = os.path.join(self.FILE_PATH, cfg.out_dir)
         acc_file = os.path.join(root, to_file)
         self.print_logger.info(f"save to {acc_file}")
         os.makedirs(root, exist_ok=True)
+        
 
-        # first_value_type = type(next(iter(results_dict.values())))
-        # if all(isinstance(value, first_value_type) for value in results_dict.values()):
-        #     if first_value_type == float:
-        #         mvari_str2csv(self.name_tag, results_dict, acc_file)
-        #     elif first_value_type == str:
-        #
-        save_parmet_tune(self.name_tag, results_dict, acc_file)
+        save_parmet_tune(self.name_tag, results_dict, acc_file)    
 
-
+        
 class Trainer_Saint(Trainer):
     def __init__(self, 
                  FILE_PATH,
@@ -363,14 +355,16 @@ class Trainer_Saint(Trainer):
                  run, 
                  repeat, 
                  loggers,
+                 print_logger,
+                 device,
                  gsaint=None,
                  batch_size=None, 
                  walk_length=None, 
                  num_steps=None, 
                  sample_coverage=None):
-        super().__init__(FILE_PATH, cfg, model, optimizer, splits, run, repeat, loggers)
+        super().__init__(FILE_PATH, cfg, model, optimizer, splits, run, repeat, loggers, print_logger, device)
 
-
+        
         self.device = config_device(cfg)
             
         self.model = model.to(self.device)
@@ -395,7 +389,7 @@ class Trainer_Saint(Trainer):
         self.train_data = splits['train'].to(self.device)
         self.valid_data = splits['valid'].to(self.device)
         self.optimizer = optimizer
-
+        
 
 class Trainer_SEAL(Trainer):
     def __init__(self,
