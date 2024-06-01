@@ -14,7 +14,9 @@ from torch import nn
 from torch_geometric.nn import GCNConv, MessagePassing
 from torch_geometric.utils import softmax
 from graphgps.loss.custom_loss import InnerProductDecoder
-from graphgps.network.heart_gnn import GAT
+# This file contain class GAT. Why do we need to imort this?
+# I commented this, because I got error: ImportError: cannot import name 'GAT' from partially initialized module 'network.heart_gnn' (most likely due to a circular import) (/home/german-rivman/KIT/TAPE/core/graphgps/network/heart_gnn.py)
+#from network.heart_gnn import GAT
 from torch_geometric.utils import negative_sampling
 
 class GraphSage(MessagePassing):

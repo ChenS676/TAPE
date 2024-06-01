@@ -197,7 +197,6 @@ class Trainer():
             loss = self.train_func[self.model_name]()
             
             wandb.log({'loss': loss, 'epoch': epoch}) if self.if_wandb else None
-                
             if epoch % int(self.report_step) == 0:
 
                 self.results_rank = self.merge_result_rank()

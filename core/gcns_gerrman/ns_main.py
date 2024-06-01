@@ -26,8 +26,8 @@ from torch_geometric.datasets import Planetoid
 from distutils.util import strtobool
 import argparse
 
-from graphgps.train.opt_train import Trainer
-from graphgps.train.gsaint_train import Trainer_Saint
+from graphgps.train.ns_train import Trainer_NS
+# from torch_geometric.loader import NeighborLoader
 from graphgps.network.custom_gnn import create_model
 from graphgps.network.gsaint import GraphSAINTRandomWalkSampler
 from data_utils.load import load_data_lp
@@ -63,6 +63,8 @@ def parse_args() -> argparse.Namespace:
                         help='Mark yaml as done after a job has finished.')
     parser.add_argument('opts', default=None, nargs=argparse.REMAINDER,
                         help='See graphgym/config.py for remaining options.')
+    # parser.add_argument('--wandb', dest='wandb', required=True, action='store_true',
+    #                     help='data name')
 
     return parser.parse_args()
 
@@ -78,12 +80,11 @@ def save_results_to_file(result_dict, cfg, output_dir):
     result_df['ModelType'] = cfg.type
     result_df['BatchSize'] = cfg.batch_size
     result_df['LearningRate'] = cfg.lr
-    result_df['BatchSizeSampler'] = cfg.batch_size_sampler
     result_df['HiddenChannels'] = cfg.hidden_channels
     result_df['OutChannels'] = cfg.out_channels
-    result_df['NumSteps'] = cfg.num_steps
-    result_df['SampleCoverage'] = cfg.sample_coverage
-    result_df['WalkLength'] = cfg.walk_length
+    result_df['BatchSizeSampler'] = cfg.batch_size_sampler
+    result_df['NumNeighbors'] = cfg.num_neighbors
+    result_df['NumHops'] = cfg.num_hops
     
     # Specify the output file path
     output_file = os.path.join(output_dir, 'results_summary.csv')
@@ -101,18 +102,16 @@ hyperparameter_space = {
                                 'heads': [2**2, 2], 'negative_slope': [0.1], 'dropout': [0], 
                                 'num_layers': [5, 6, 7], 'base_lr': [0.015]},
     'GAE': {'out_channels': [32], 'hidden_channels': [32]},
-    'VGAE': {'out_channels': [16], 'hidden_channels': [16]},
+    'VGAE': {'out_channels': [32], 'hidden_channels': [32]},
     'GraphSage': {'out_channels': [2**8, 2**9], 'hidden_channels': [2**8, 2**9]}, 'base_lr': [0.015, 0.1, 0.01]
 }
 
 hyperparameter_gsaint = {
-        'batch_size': [16, 32],
-        'lr': [0.01],
-        'batch_size_sampler': [128], # 32, 64 very bad we get very sparse graphs for Cora
-                                     # 32, 64, 128, 256 very bad we get very sparse graphs for Arxiv_2023
-        'walk_length'       : [10],
-        'num_steps'         : [10],
-        'sample_coverage'   : [100]
+        'batch_size': [32],#, 64, 128],
+        'lr': [0.1, 0.01],
+        'batch_size_sampler': [32],#, 64, 128],
+        'num_neighbors': [30, 40],#[5, 10, 20], #50, 100 
+        'num_hops': [6, 7, 8, 9, 10], # 1, 2 is very small number of hops
 }
 
 yaml_file = {   
@@ -143,7 +142,7 @@ def project_main():
 
     loggers = create_logger(args.repeat)
 
-    for model_type in ['GAE']:#, 'GAE', 'GAT', 'GraphSage']:
+    for model_type in ['GAE']:#, 'GAT', 'GraphSage']:
         cfg.model.type = model_type
         args.cfg_file = yaml_file[model_type]
         
@@ -210,7 +209,9 @@ def project_main():
                                                     cfg.train.freeze_pretrained)
                     
                 hyper_id = wandb.util.generate_id()
-                cfg.wandb.name_tag = f'{cfg.data.name}_run{id}_{cfg.model.type}_hyper{hyper_id}' 
+                cfg.wandb.name_tag = f'{cfg.data.name}_run{id}_{cfg.model.type}_hyper{hyper_id}'
+                # wandb.init(id=id, config=cfg, settings=wandb.Settings(_service_wait=300), save_code=True)
+                # wandb.watch(model, log="all",log_freq=10)
                 custom_set_run_dir(cfg, cfg.wandb.name_tag)
             
                 # dump_run_cfg(cfg)
@@ -219,42 +220,22 @@ def project_main():
                 
                 cfg.model.params = params_count(model)
                 print_logger.info(f'Num parameters: {cfg.model.params}')
-
-                if cfg.model.sampler == 'gsaint':
-                    sampler = get_loader_RW
-
-                    trainer = Trainer_Saint(
-                        FILE_PATH=FILE_PATH,
-                        cfg=cfg, 
-                        model=model,
-                        emb=None,
-                        data=data,
-                        optimizer=optimizer,
-                        splits=splits, 
-                        run=run_id, 
-                        repeat=args.repeat,
-                        loggers=loggers,
-                        print_logger=print_logger,
-                        device=cfg.device,
-                        gsaint=sampler, 
-                        batch_size_sampler=cfg.model.batch_size_sampler, 
-                        walk_length=cfg.model.walk_length, 
-                        num_steps=cfg.model.num_steps, 
-                        sample_coverage=cfg.model.sample_coverage
-                        )
-                else:
-                    trainer = Trainer(FILE_PATH,
-                                cfg,
-                                model, 
-                                None, 
-                                data,
-                                optimizer,
-                                splits,
-                                run_id, 
-                                args.repeat,
-                                loggers, 
-                                print_logger,
-                                cfg.device)
+                
+                trainer = Trainer_NS(FILE_PATH,
+                            cfg,
+                            model, 
+                            None, 
+                            data,
+                            optimizer,
+                            splits,
+                            run_id, 
+                            args.repeat,
+                            loggers, 
+                            print_logger,
+                            cfg.device,
+                            cfg.model.batch_size_sampler,
+                            cfg.model.num_neighbors,
+                            cfg.model.num_hops)
 
                 trainer.train()
 

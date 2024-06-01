@@ -2,24 +2,55 @@ import os
 import sys
 from os.path import abspath, dirname, join
 sys.path.insert(0, abspath(join(dirname(dirname(__file__)))))
-# standard library imports
+
 import torch
 import time
+import wandb 
+import numpy as np
+from ogb.linkproppred import Evaluator
 from torch_geometric.graphgym.config import cfg
+from sklearn.metrics import roc_auc_score, average_precision_score, roc_curve, auc
 from yacs.config import CfgNode as CN
+from tqdm import tqdm 
 from torch_geometric.data import Data
-from torch_geometric.utils import negative_sampling
 from typing import Dict, Tuple
-import torch.nn.functional as F
+from torch_geometric.transforms.virtual_node import VirtualNode
 
-# external 
-from embedding.tune_utils import param_tune_acc_mrr, mvari_str2csv, save_parmet_tune
+from embedding.tune_utils import mvari_str2csv, save_parmet_tune
 from heuristic.eval import get_metric_score
-from graphgps.utility.utils import config_device, savepred, Logger
+from graphgps.utility.utils import config_device, Logger
 from graphgps.train.opt_train import Trainer
-from graphgps.network.gsaint import GraphSAINTRandomWalkSampler, GraphSAINTNodeSampler, GraphSAINTEdgeSampler
+from graphgps.splits.neighbor_loader import NeighborLoader
+from graphgps.utility.NS_utils import degree
 
-class Trainer_Saint(Trainer):
+
+report_step = {
+    'cora': 100,
+    'pubmed': 1,
+    'arxiv_2023': 100,
+    'ogbn-arxiv': 1,
+    'ogbn-products': 1,
+}
+
+def data_loader(data, batch_size_sampler, num_neighbors, num_hops):
+    return NeighborLoader(
+                data=data,
+                num_neighbors=[num_neighbors] * num_hops, # tune
+                input_nodes=None,
+                subgraph_type='bidirectional', # Check it more
+                disjoint=False,
+                temporal_strategy='uniform', # Check about "last"
+                is_sorted=False, # Broke for me everything if is_sorted=True
+                                  # After adding this parameter my lists:
+                                  # edge_index, pos_edge_label, pos_edge_label_index, neg_edge_label, neg_edge_label_index are EMPTY
+                neighbor_sampler=None,
+                directed=False,
+                replace=False,
+                shuffle=False,
+                batch_size=batch_size_sampler # tune
+            )
+
+class Trainer_NS(Trainer):
     def __init__(self, 
                  FILE_PATH: str, 
                  cfg: CN, 
@@ -31,40 +62,45 @@ class Trainer_Saint(Trainer):
                  run: int, 
                  repeat: int,
                  loggers: Logger, 
-                 print_logger: None,  # Ensure this is correctly defined and passed
-                 device: torch.device,
-                 gsaint=None,
-                 batch_size_sampler=None, 
-                 walk_length=None, 
-                 num_steps=None, 
-                 sample_coverage=None):
-        # Correctly pass all parameters expected by the superclass constructor
-        super().__init__(FILE_PATH, cfg, model, emb, data, optimizer, splits, run, repeat, loggers, print_logger, device)
+                 print_logger: None, 
+                 device: int,
+                 batch_size_sampler: int,
+                 num_neighbors: int,
+                 num_hops: int):
         
-        self.device = device 
-        self.print_logger = print_logger                
+        self.device = device
         self.model = model.to(self.device)
         self.emb = emb
-        self.data = data.to(self.device)
+
+        # params
         self.model_name = cfg.model.type 
         self.data_name = cfg.data.name
-        
         self.FILE_PATH = FILE_PATH 
+        self.name_tag = cfg.wandb.name_tag
         self.epochs = cfg.train.epochs
+        self.batch_size = cfg.train.batch_size
         
-        # GSAINT splitting
-        if gsaint is not None:
-            device_cpu = torch.device('cpu')
-            self.test_data  = GraphSAINTRandomWalkSampler(splits['test'].to(device_cpu), batch_size_sampler, walk_length, num_steps, sample_coverage)
-            self.train_data = GraphSAINTRandomWalkSampler(splits['train'].to(device_cpu), batch_size_sampler, walk_length, num_steps, sample_coverage)
-            self.valid_data = GraphSAINTRandomWalkSampler(splits['valid'].to(device_cpu), batch_size_sampler, walk_length, num_steps, sample_coverage)
-        else:
-            self.test_data  = splits['test'].to(self.device)
-            self.train_data = splits['train'].to(self.device)
-            self.valid_data = splits['valid'].to(self.device)
+        self.test_data  = data_loader(splits['test'],  batch_size_sampler, num_neighbors, num_hops)
+        self.train_data = data_loader(splits['train'], batch_size_sampler, num_neighbors, num_hops)
+        self.valid_data = data_loader(splits['valid'], batch_size_sampler, num_neighbors, num_hops)
 
-        self.optimizer  = optimizer
-    
+        self.data = data
+        self.optimizer = optimizer
+        self.loggers = loggers
+        self.print_logger = print_logger
+        self.report_step = report_step[cfg.data.name]
+        model_types = ['VGAE', 'GAE', 'GAT', 'GraphSage']
+        self.train_func = {model_type: self._train_gae if model_type in ['GAE', 'GAT', 'GraphSage', 'GNNStack'] else self._train_vgae for model_type in model_types}
+        self.test_func = {model_type: self._test for model_type in model_types}
+        self.evaluate_func = {model_type: self._evaluate if model_type in ['GAE', 'GAT', 'GraphSage', 'GNNStack'] else self._evaluate_vgae for model_type in model_types}
+        self.evaluator_hit = Evaluator(name='ogbl-collab')
+        self.evaluator_mrr = Evaluator(name='ogbl-citation2')
+        
+        self.run = run
+        self.repeat = repeat
+        self.results_rank = {}
+        self.run_result = {}
+
     def global_to_local(self, edge_label_index, node_idx):
 
         # Make dict where key: local indexes, value: global indexes
@@ -85,37 +121,52 @@ class Trainer_Saint(Trainer):
 
         return local_indices
     
+    def is_disjoint(self, edge_index, num_nodes):
+        node_degree = degree(edge_index[0], num_nodes) + degree(edge_index[1], num_nodes)
+        return (node_degree == 0).any()
+
     def _train_gae(self):
         self.model.train()
         total_loss = total_examples = 0
         for subgraph in self.train_data:
             self.optimizer.zero_grad()
+            
+            if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
+                transform = VirtualNode()
+                subgraph = transform(subgraph)
+
             subgraph = subgraph.to(self.device)
 
             z = self.model.encoder(subgraph.x, subgraph.edge_index)
-
-            local_pos_indices = self.global_to_local(subgraph.pos_edge_label_index, subgraph.node_index)
-            local_neg_indices = self.global_to_local(subgraph.neg_edge_label_index, subgraph.node_index)
-
+            
+            local_pos_indices = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
+            local_neg_indices = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
+            
             loss = self.model.recon_loss(z, local_pos_indices, local_neg_indices)
-
+            
             loss.backward()
             self.optimizer.step()
             total_loss += loss.item() * subgraph.num_nodes
+            total_examples += subgraph.num_nodes
         
-        return total_loss / len(self.train_data)
+        return total_loss / total_examples
     
     def _train_vgae(self):
         self.model.train()
         total_loss = total_examples = 0
         for subgraph in self.train_data:
             self.optimizer.zero_grad()
+
+            if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
+                transform = VirtualNode()
+                subgraph = transform(subgraph)
+
             subgraph = subgraph.to(self.device)
 
             z = self.model(subgraph.x, subgraph.edge_index)
 
-            local_pos_indices = self.global_to_local(subgraph.pos_edge_label_index, subgraph.node_index)
-            local_neg_indices = self.global_to_local(subgraph.neg_edge_label_index, subgraph.node_index)
+            local_pos_indices = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
+            local_neg_indices = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
 
             loss = self.model.recon_loss(z, local_pos_indices, local_neg_indices)
             loss += (1 / subgraph.num_nodes) * self.model.kl_loss()
@@ -123,21 +174,26 @@ class Trainer_Saint(Trainer):
             loss.backward()
             self.optimizer.step()
             total_loss += loss.item() * subgraph.num_nodes
+            total_examples += subgraph.num_nodes
         
-        return total_loss / len(self.train_data)      
+        return
 
     @torch.no_grad()
-    def _evaluate(self, data_loader: Data):
+    def _evaluate(self, test_data):
         self.model.eval()
         accumulated_metrics = []
 
-        for data in data_loader:
-            data = data.to(self.device)
+        for subgraph in test_data:
+            if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
+                transform = VirtualNode()
+                subgraph = transform(subgraph)
 
-            local_pos_indices = self.global_to_local(data.pos_edge_label_index, data.node_index)
-            local_neg_indices = self.global_to_local(data.neg_edge_label_index, data.node_index)
+            subgraph = subgraph.to(self.device)
+
+            local_pos_indices = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
+            local_neg_indices = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
             
-            z = self.model.encoder(data.x, data.edge_index)
+            z = self.model.encoder(subgraph.x, subgraph.edge_index)
             pos_pred = self.model.decoder(z, local_pos_indices)
             neg_pred = self.model.decoder(z, local_neg_indices)
             y_pred = torch.cat([pos_pred, neg_pred], dim=0)
@@ -172,17 +228,21 @@ class Trainer_Saint(Trainer):
         return averaged_results
 
     @torch.no_grad()
-    def _evaluate_vgae(self, data_loader):
+    def _evaluate_vgae(self, test_data):
         self.model.eval()
         accumulated_metrics = []
 
-        for data in data_loader:
-            data = data.to(self.device)
+        for subgraph in test_data:
+            if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
+                transform = VirtualNode()
+                subgraph = transform(subgraph)
 
-            local_pos_indices = self.global_to_local(data.pos_edge_label_index, data.node_index)
-            local_neg_indices = self.global_to_local(data.neg_edge_label_index, data.node_index)
+            subgraph = subgraph.to(self.device)
+
+            local_pos_indices = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
+            local_neg_indices = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
             
-            z = self.model(data.x, data.edge_index)
+            z = self.model(subgraph.x, subgraph.edge_index)
             pos_pred = self.model.decoder(z, local_pos_indices)
             neg_pred = self.model.decoder(z, local_neg_indices)
             y_pred = torch.cat([pos_pred, neg_pred], dim=0)
@@ -215,11 +275,12 @@ class Trainer_Saint(Trainer):
         averaged_results = {key: sum(values) / len(values) for key, values in aggregated_results.items()}
 
         return averaged_results
-
+    
     def train(self):  
         
         for epoch in range(1, self.epochs + 1):
             loss = self.train_func[self.model_name]()
+            # print(epoch, ': ', loss)
             # wandb.log({'loss': loss, 'epoch': epoch}) #if self.if_wandb else None
             if epoch % 100 == 0: #int(self.report_step) == 0:
 
@@ -248,3 +309,5 @@ class Trainer_Saint(Trainer):
             self.run_result['train_time'] = time.time() - start_train
             self.evaluate_func[self.model_name](self.test_data)
             self.run_result['eval_time'] = time.time() - start_train
+
+
