@@ -131,9 +131,9 @@ class Trainer_NS(Trainer):
         for subgraph in self.train_data:
             self.optimizer.zero_grad()
             
-            if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
-                transform = VirtualNode()
-                subgraph = transform(subgraph)
+            #if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
+            #    transform = VirtualNode()
+            #    subgraph = transform(subgraph)
 
             subgraph = subgraph.to(self.device)
 
@@ -157,9 +157,9 @@ class Trainer_NS(Trainer):
         for subgraph in self.train_data:
             self.optimizer.zero_grad()
 
-            if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
-                transform = VirtualNode()
-                subgraph = transform(subgraph)
+            #if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
+            #    transform = VirtualNode()
+            #    subgraph = transform(subgraph)
 
             subgraph = subgraph.to(self.device)
 
@@ -176,7 +176,7 @@ class Trainer_NS(Trainer):
             total_loss += loss.item() * subgraph.num_nodes
             total_examples += subgraph.num_nodes
         
-        return
+        return total_loss / total_examples
 
     @torch.no_grad()
     def _evaluate(self, test_data):
@@ -184,9 +184,9 @@ class Trainer_NS(Trainer):
         accumulated_metrics = []
 
         for subgraph in test_data:
-            if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
-                transform = VirtualNode()
-                subgraph = transform(subgraph)
+            #if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
+            #   transform = VirtualNode()
+            #   subgraph = transform(subgraph)
 
             subgraph = subgraph.to(self.device)
 
@@ -231,11 +231,10 @@ class Trainer_NS(Trainer):
     def _evaluate_vgae(self, test_data):
         self.model.eval()
         accumulated_metrics = []
-
         for subgraph in test_data:
-            if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
-                transform = VirtualNode()
-                subgraph = transform(subgraph)
+#            if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
+#                transform = VirtualNode()
+#                subgraph = transform(subgraph)
 
             subgraph = subgraph.to(self.device)
 
@@ -280,9 +279,9 @@ class Trainer_NS(Trainer):
         
         for epoch in range(1, self.epochs + 1):
             loss = self.train_func[self.model_name]()
-            # print(epoch, ': ', loss)
+            print(epoch, ': ', loss)
             # wandb.log({'loss': loss, 'epoch': epoch}) #if self.if_wandb else None
-            if epoch % 100 == 0: #int(self.report_step) == 0:
+            if epoch % 25 == 0: #int(self.report_step) == 0:
 
                 self.results_rank = self.merge_result_rank()
                 

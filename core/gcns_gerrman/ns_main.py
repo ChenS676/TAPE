@@ -107,11 +107,11 @@ hyperparameter_space = {
 }
 
 hyperparameter_gsaint = {
-        'batch_size': [32],#, 64, 128],
+        'batch_size': [32, 64, 128],
         'lr': [0.1, 0.01],
-        'batch_size_sampler': [32],#, 64, 128],
-        'num_neighbors': [30, 40],#[5, 10, 20], #50, 100 
-        'num_hops': [6, 7, 8, 9, 10], # 1, 2 is very small number of hops
+        'batch_size_sampler': [32, 64, 128],
+        'num_neighbors': [5, 10, 20, 30, 40],#[5, 10, 20], #50, 100 
+        'num_hops': [6, 7, 8]# 1, 2 is very small number of hops, 9 and 10 take a lot of time and give bad results
 }
 
 yaml_file = {   
@@ -131,18 +131,18 @@ def project_main():
     cfg.merge_from_list(args.opts)
     
     cfg.data.name = args.data
-    cfg.data.device = "cpu"#args.device
-    cfg.model.device = "cpu"#args.device
+    cfg.data.device = "cuda" if torch.cuda.is_available() else "cpu"#args.device
+    cfg.model.device = "cuda" if torch.cuda.is_available() else "cpu"#args.device
     # cfg.device = args.device
     # cfg.train.epochs = args.epoch
     
     
     # Set Pytorch environment
-    torch.set_num_threads(20)
+    #torch.set_num_threads(200)
 
     loggers = create_logger(args.repeat)
 
-    for model_type in ['GAE']:#, 'GAT', 'GraphSage']:
+    for model_type in ['VGAE']:#, 'GAT', 'GraphSage']:
         cfg.model.type = model_type
         args.cfg_file = yaml_file[model_type]
         
@@ -182,8 +182,9 @@ def project_main():
             combinations = itertools.product(*values)
             
             for combination in combinations:
+
                 param_dict = dict(zip(keys, combination))
-            
+        
                 for key, value in param_dict.items():
                     setattr(cfg.model, key, value)
                 
@@ -200,9 +201,15 @@ def project_main():
                 logging.info(cfg)
                 cfg.params = params_count(model)
                 logging.info(f'Num parameters: {cfg.params}')
-
+                
                 optimizer = create_optimizer(model, cfg)
-
+                
+                if model_type == 'VGAE' and cfg.model.out_channels == 32 and cfg.model.hidden_channels == 32 and cfg.train.batch_size == 32 and cfg.train.lr == 0.1 and cfg.model.batch_size_sampler == 32:
+                    if (cfg.model.num_neighbors in [5, 10, 20, 30, 40] and cfg.model.num_hops in [6, 7, 8]) or (cfg.model.num_neighbors == 20 and cfg.model.num_hops in [6]):
+                        continue
+                if model_type == 'GAE' and cfg.model.out_channels == 32 and cfg.model.hidden_channels == 32 and cfg.train.batch_size == 32 and cfg.train.lr == 0.1 and cfg.model.batch_size_sampler == 32:
+                    if (cfg.model.num_neighbors in [5, 10] and cfg.model.num_hops in [6, 7, 8]) or (cfg.model.num_neighbors == 20 and cfg.model.num_hops in [6]):
+                        continue
                 # LLM: finetuning
                 if cfg.train.finetune: 
                     model = init_model_from_pretrained(model, cfg.train.finetune,
@@ -220,7 +227,8 @@ def project_main():
                 
                 cfg.model.params = params_count(model)
                 print_logger.info(f'Num parameters: {cfg.model.params}')
-                
+                cfg.device = "cuda" if torch.cuda.is_available() else "cpu"
+                print('DDEVICE: ', cfg.device)
                 trainer = Trainer_NS(FILE_PATH,
                             cfg,
                             model, 

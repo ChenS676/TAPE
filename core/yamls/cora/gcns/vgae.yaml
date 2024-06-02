@@ -16,17 +16,9 @@ wandb:
 
 train:
   mode: custom
-<<<<<<< HEAD
-  batch_size: 2**14 
-=======
   batch_size: 2**14
-<<<<<<< HEAD
->>>>>>> ea92b90a2dc71dd378457a0877c2aab641119c5e
-=======
->>>>>>> d987485649d900ef25fb5bb36d043b11b293f164
->>>>>>> Wektor607-gcn_wb
   eval_period: 1
-  epochs: 200
+  epochs: 50
   device: 0
   auto_resume: False
   final_eval: False
