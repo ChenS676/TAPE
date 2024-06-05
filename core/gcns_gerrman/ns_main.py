@@ -56,7 +56,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--data', dest='data', type=str, required=False,
                         default='pubmed',
                         help='data name')
-        
+    parser.add_argument('--device', dest='device', required=True, 
+                        help='device id')
     parser.add_argument('--repeat', type=int, default=1,
                         help='The number of repeated jobs.')
     parser.add_argument('--mark_done', action='store_true',
@@ -110,7 +111,7 @@ hyperparameter_gsaint = {
         'batch_size': [32, 64, 128],
         'lr': [0.1, 0.01],
         'batch_size_sampler': [32, 64, 128],
-        'num_neighbors': [5, 10, 20, 30, 40],#[5, 10, 20], #50, 100 
+        'num_neighbors': [5, 10, 20, 30, 40], #50, 100 
         'num_hops': [6, 7, 8]# 1, 2 is very small number of hops, 9 and 10 take a lot of time and give bad results
 }
 
@@ -131,18 +132,20 @@ def project_main():
     cfg.merge_from_list(args.opts)
     
     cfg.data.name = args.data
-    cfg.data.device = "cuda" if torch.cuda.is_available() else "cpu"#args.device
-    cfg.model.device = "cuda" if torch.cuda.is_available() else "cpu"#args.device
-    # cfg.device = args.device
+    cfg.data.device = args.device
+    cfg.model.device = args.device
+    cfg.device = args.device
+    print('DDEVICE: ', cfg.device, args.device)
+    print("cuda" if torch.cuda.is_available() else "cpu")
     # cfg.train.epochs = args.epoch
     
     
     # Set Pytorch environment
-    #torch.set_num_threads(200)
+    # torch.set_num_threads(20) #!!!!Computations become slower
 
     loggers = create_logger(args.repeat)
 
-    for model_type in ['VGAE']:#, 'GAT', 'GraphSage']:
+    for model_type in ['GAE']:#, 'GAE', 'VGAE', 'GAT', 'GraphSage']:
         cfg.model.type = model_type
         args.cfg_file = yaml_file[model_type]
         
@@ -151,117 +154,121 @@ def project_main():
 
         output_dir = os.path.join(FILE_PATH, f"results_{model_type}")
         os.makedirs(output_dir, exist_ok=True)
+        print(cfg.data.split_index)
+        # for run_id, seed, split_index in zip(*run_loop_settings(cfg, args)):
+        # Set configurations for each run TODO clean code here 
+        id = wandb.util.generate_id()
+        cfg.wandb.name_tag = f'{cfg.data.name}_run{id}_{cfg.model.type}' 
+        custom_set_run_dir(cfg, cfg.wandb.name_tag)
 
-        for run_id, seed, split_index in zip(*run_loop_settings(cfg, args)):
-            # Set configurations for each run TODO clean code here 
-            id = wandb.util.generate_id()
-            cfg.wandb.name_tag = f'{cfg.data.name}_run{id}_{cfg.model.type}' 
-            custom_set_run_dir(cfg, cfg.wandb.name_tag)
-
-            cfg.seed = seed
-            cfg.run_id = run_id
-            seed_everything(cfg.seed)
-            
-            cfg = config_device(cfg)
-            cfg.data.name = args.data
-
-            splits, _, data = load_data_lp[cfg.data.name](cfg.data)
-            cfg.model.in_channels = splits['train'].x.shape[1]
-
-            print_logger = set_printing(cfg)
-            print_logger.info(f"The {cfg['data']['name']} graph {splits['train']['x'].shape} is loaded on {splits['train']['x'].device}, \n Train: {2*splits['train']['pos_edge_label'].shape[0]} samples,\n Valid: {2*splits['train']['pos_edge_label'].shape[0]} samples,\n Test: {2*splits['test']['pos_edge_label'].shape[0]} samples")
-            dump_cfg(cfg)    
-
-            hyperparameter_search = hyperparameter_space[cfg.model.type]
-            combined_hyperparameters = {**hyperparameter_search, **hyperparameter_gsaint}
-            
-            print_logger.info(f"hypersearch space: {combined_hyperparameters}")
-            
-            keys = combined_hyperparameters.keys()
-            values = combined_hyperparameters.values()
-            combinations = itertools.product(*values)
-            
-            for combination in combinations:
-
-                param_dict = dict(zip(keys, combination))
+        cfg.seed = 0#seed
+        cfg.run_id = 0#run_id
+        seed_everything(cfg.seed)
         
-                for key, value in param_dict.items():
-                    setattr(cfg.model, key, value)
-                
-                cfg.train.batch_size = cfg.model.batch_size
-                cfg.train.lr = cfg.model.lr
-                print_logger.info(f"out : {cfg.model.out_channels}, hidden: {cfg.model.hidden_channels}")
-                print_logger.info(f"bs : {cfg.train.batch_size}, lr: {cfg.model.lr}")
-                            
-                start_time = time.time()
-                    
-                model = create_model(cfg)
-                
-                logging.info(f"{model} on {next(model.parameters()).device}" )
-                logging.info(cfg)
-                cfg.params = params_count(model)
-                logging.info(f'Num parameters: {cfg.params}')
-                
-                optimizer = create_optimizer(model, cfg)
-                
-                if model_type == 'VGAE' and cfg.model.out_channels == 32 and cfg.model.hidden_channels == 32 and cfg.train.batch_size == 32 and cfg.train.lr == 0.1 and cfg.model.batch_size_sampler == 32:
-                    if (cfg.model.num_neighbors in [5, 10, 20, 30, 40] and cfg.model.num_hops in [6, 7, 8]) or (cfg.model.num_neighbors == 20 and cfg.model.num_hops in [6]):
-                        continue
-                if model_type == 'GAE' and cfg.model.out_channels == 32 and cfg.model.hidden_channels == 32 and cfg.train.batch_size == 32 and cfg.train.lr == 0.1 and cfg.model.batch_size_sampler == 32:
-                    if (cfg.model.num_neighbors in [5, 10] and cfg.model.num_hops in [6, 7, 8]) or (cfg.model.num_neighbors == 20 and cfg.model.num_hops in [6]):
-                        continue
-                # LLM: finetuning
-                if cfg.train.finetune: 
-                    model = init_model_from_pretrained(model, cfg.train.finetune,
-                                                    cfg.train.freeze_pretrained)
-                    
-                hyper_id = wandb.util.generate_id()
-                cfg.wandb.name_tag = f'{cfg.data.name}_run{id}_{cfg.model.type}_hyper{hyper_id}'
-                # wandb.init(id=id, config=cfg, settings=wandb.Settings(_service_wait=300), save_code=True)
-                # wandb.watch(model, log="all",log_freq=10)
-                custom_set_run_dir(cfg, cfg.wandb.name_tag)
+        cfg = config_device(cfg)
+        cfg.data.name = args.data
+
+        splits, _, data = load_data_lp[cfg.data.name](cfg.data)
+        cfg.model.in_channels = splits['train'].x.shape[1]
+
+        print_logger = set_printing(cfg)
+        print_logger.info(f"The {cfg['data']['name']} graph {splits['train']['x'].shape} is loaded on {splits['train']['x'].device}, \n Train: {2*splits['train']['pos_edge_label'].shape[0]} samples,\n Valid: {2*splits['train']['pos_edge_label'].shape[0]} samples,\n Test: {2*splits['test']['pos_edge_label'].shape[0]} samples")
+        dump_cfg(cfg)    
+
+        hyperparameter_search = hyperparameter_space[cfg.model.type]
+        combined_hyperparameters = {**hyperparameter_search, **hyperparameter_gsaint}
+        
+        print_logger.info(f"hypersearch space: {combined_hyperparameters}")
+        
+        keys = combined_hyperparameters.keys()
+        values = combined_hyperparameters.values()
+        combinations = itertools.product(*values)
+        
+        for combination in combinations:
+
+            param_dict = dict(zip(keys, combination))
+    
+            for key, value in param_dict.items():
+                setattr(cfg.model, key, value)
             
-                # dump_run_cfg(cfg)
-                print_logger.info(f"config saved into {cfg.run_dir}")
-                print_logger.info(f'Run {run_id} with seed {seed} and split {split_index} on device {cfg.device}')
+            cfg.train.batch_size = cfg.model.batch_size
+            cfg.train.lr = cfg.model.lr
+            print_logger.info(f"out : {cfg.model.out_channels}, hidden: {cfg.model.hidden_channels}")
+            print_logger.info(f"bs : {cfg.train.batch_size}, lr: {cfg.model.lr}")
+                        
+            start_time = time.time()
                 
-                cfg.model.params = params_count(model)
-                print_logger.info(f'Num parameters: {cfg.model.params}')
-                cfg.device = "cuda" if torch.cuda.is_available() else "cpu"
-                print('DDEVICE: ', cfg.device)
-                trainer = Trainer_NS(FILE_PATH,
-                            cfg,
-                            model, 
-                            None, 
-                            data,
-                            optimizer,
-                            splits,
-                            run_id, 
-                            args.repeat,
-                            loggers, 
-                            print_logger,
-                            cfg.device,
-                            cfg.model.batch_size_sampler,
-                            cfg.model.num_neighbors,
-                            cfg.model.num_hops)
+            model = create_model(cfg)
+            
+            logging.info(f"{model} on {next(model.parameters()).device}" )
+            logging.info(cfg)
+            cfg.params = params_count(model)
+            logging.info(f'Num parameters: {cfg.params}')
+            
+            optimizer = create_optimizer(model, cfg)
+            
+            # if model_type == 'GAT' and ((cfg.train.batch_size == 32 and cfg.train.lr == 0.1) or (cfg.train.lr == 0.01 and cfg.model.batch_size_sampler == 32) or (cfg.train.lr == 0.01 and cfg.model.batch_size_sampler == 64 and cfg.model.num_neighbors in [5, 10])):
+            #     continue
 
-                trainer.train()
+            # if model_type == 'VGAE' and cfg.model.out_channels == 32 and cfg.model.hidden_channels == 32 and cfg.train.batch_size == 32 and cfg.train.lr == 0.1 and (cfg.model.batch_size_sampler == 32 or (cfg.model.batch_size_sampler == 64 and cfg.model.num_neighbors == 5 and cfg.model.num_hops == 6)):
+            #         continue
+            # if model_type == 'GAE' and cfg.model.out_channels == 32 and cfg.model.hidden_channels == 32 and cfg.train.batch_size == 32 and cfg.train.lr == 0.1 and cfg.model.batch_size_sampler == 32:
+            #     if (cfg.model.num_neighbors in [5, 10] and cfg.model.num_hops in [6, 7, 8]) or (cfg.model.num_neighbors == 20 and cfg.model.num_hops in [6]):
+            #         continue
+            # LLM: finetuning
+            if cfg.train.finetune: 
+                model = init_model_from_pretrained(model, cfg.train.finetune,
+                                                cfg.train.freeze_pretrained)
+                
+            hyper_id = wandb.util.generate_id()
+            cfg.wandb.name_tag = f'{cfg.data.name}_run{id}_{cfg.model.type}_hyper{hyper_id}'
+            # wandb.init(id=id, config=cfg, settings=wandb.Settings(_service_wait=300), save_code=True)
+            # wandb.watch(model, log="all",log_freq=10)
+            custom_set_run_dir(cfg, cfg.wandb.name_tag)
+        
+            # dump_run_cfg(cfg)
+            print_logger.info(f"config saved into {cfg.run_dir}")
+            print_logger.info(f'Run {0} with seed {0} and split {0} on device {cfg.device}')
+            #print_logger.info(f'Run {run_id} with seed {seed} and split {split_index} on device {cfg.device}')
+            
+            cfg.model.params = params_count(model)
+            print_logger.info(f'Num parameters: {cfg.model.params}')
+            # cfg.device = "cuda" if torch.cuda.is_available() else "cpu"
+            print('DDEVICE: ', cfg.device)
+            trainer = Trainer_NS(FILE_PATH,
+                        cfg,
+                        model, 
+                        None, 
+                        data,
+                        optimizer,
+                        splits,
+                        #run_id, 
+                        0,
+                        args.repeat,
+                        loggers, 
+                        print_logger,
+                        cfg.device,
+                        cfg.model.batch_size_sampler,
+                        cfg.model.num_neighbors,
+                        cfg.model.num_hops)
 
-                run_result = {}
-                for key in trainer.loggers.keys():
-                    # refer to calc_run_stats in Logger class
-                    _, _, _, test_bvalid = trainer.loggers[key].calc_run_stats(run_id)
-                    run_result.update({key: test_bvalid})
-                for key in combined_hyperparameters.keys():
-                    run_result.update({key: getattr(cfg.model, key)})
-                run_result.update({'epochs': cfg.train.epochs})
-                
-                print_logger.info(run_result)
-                
-                to_file = f'{cfg.data.name}_{cfg.model.type}_tune_result.csv'
-                trainer.save_tune(run_result, to_file)
-                save_results_to_file(run_result, cfg.model, output_dir)
-                print_logger.info(f"runing time {time.time() - start_time}")
+            trainer.train()
+
+            run_result = {}
+            for key in trainer.loggers.keys():
+                # refer to calc_run_stats in Logger class
+                _, _, _, test_bvalid = trainer.loggers[key].calc_run_stats(0)#run_id)
+                run_result.update({key: test_bvalid})
+            for key in combined_hyperparameters.keys():
+                run_result.update({key: getattr(cfg.model, key)})
+            run_result.update({'epochs': cfg.train.epochs})
+            
+            print_logger.info(run_result)
+            
+            to_file = f'{cfg.data.name}_{cfg.model.type}_tune_result.csv'
+            trainer.save_tune(run_result, to_file)
+            save_results_to_file(run_result, cfg.model, output_dir)
+            print_logger.info(f"runing time {time.time() - start_time}")
         
     # statistic for all runs
 

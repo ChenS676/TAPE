@@ -2,18 +2,32 @@
 
 out_dir: results
 metric_best: acc
+cfg_dest: vgae.yaml
+print: file
+seed: 0
+
+run:
+  seed: 0
+  num_threads: 11
+  multiple_splits: None
+
 wandb:
   use: True
   project: gtblueprint
+  name_tag: vgae-pubmed-origin
 
 train:
   mode: custom
-  batch_size: 32   
+  batch_size: 32
   eval_period: 1
-  epochs: 2000
+  epochs: 25
+  device: 0
+  auto_resume: False
+  final_eval: False
+  finetune: False
   
 model:
-  type: vgae
+  type: VGAE
   out_channels: 16
   hidden_channels: 8  # Assume that the dimension of the hidden layer feature is 8
     
@@ -23,8 +37,14 @@ data:
   name: pubmed
   undirected: True
   include_negatives: True
-  val_pct: 0.15
-  test_pct: 0.05
+  val_pct: 0.125
+  test_pct: 0.025
+  device: 0
   split_labels: True
-  num_features: 500 # 0 works very well
+  num_features: 1433 # 0 works very well
+  split_index: [0.4, 0.125, 0.025]
 
+optimizer:
+  type: adam
+  base_lr: 0.001
+  weight_decay: 0.0005

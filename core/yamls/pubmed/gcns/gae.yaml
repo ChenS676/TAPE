@@ -14,14 +14,14 @@ run:
 wandb:
   use: True
   project: gtblueprint
-  name_tag: gae-cora-origin
+  name_tag: gae-pubmed-origin
 
 train:
   mode: custom
   batch_size: 2048
   eval_period: 1
-  epochs: 2000
-  device: 1
+  epochs: 25
+  device: 0
   auto_resume: False
   final_eval: False
   finetune: False
@@ -37,12 +37,12 @@ data:
   name: pubmed
   undirected: True
   include_negatives: True
-  val_pct: 0.15
-  test_pct: 0.05
+  val_pct: 0.125
+  test_pct: 0.025
   split_labels: True
   num_features:  1433
-  device: 1
-  split_index: [0.8, 0.15, 0.05]
+  device: 0
+  split_index: [0.4, 0.125, 0.025]
 
 optimizer:
   type: adam

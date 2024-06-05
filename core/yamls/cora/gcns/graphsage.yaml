@@ -21,13 +21,11 @@ optimizer:
   base_lr: 0.01
   weight_decay: 0.0005
 
-
-
 train:
   mode: custom
   batch_size: 32   
   eval_period: 1
-  epochs: 2000
+  epochs: 50
   device: 0
   auto_resume: False
   finetune: False

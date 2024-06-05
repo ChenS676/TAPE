@@ -1,7 +1,7 @@
 accelerator: auto
 cfg_dest: gae.yaml
 data:
-  device: 0
+  device: cpu
   include_negatives: true
   name: cora
   num_features: 1433
@@ -13,10 +13,10 @@ data:
   test_pct: 0.05
   undirected: true
   val_pct: 0.15
-device: cuda
+device: cpu
 metric_best: acc
 model:
-  device: cuda
+  device: cpu
   hidden_channels: 32
   in_channels: 1433
   out_channels: 32
@@ -32,7 +32,7 @@ run:
   multiple_splits: None
   num_threads: 11
   seed: 0
-run_dir: results/gae-gae-cora-origin/cora_runbzs4wxnz_GAE
+run_dir: results/gae-gae-cora-origin/cora_runjoc34wl4_GAE
 run_id: 0
 sampler:
   batch_size: 2048
@@ -50,6 +50,6 @@ train:
   finetune: false
   mode: custom
 wandb:
-  name_tag: cora_runbzs4wxnz_GAE
+  name_tag: cora_runjoc34wl4_GAE
   project: gtblueprint
   use: true
