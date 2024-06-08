@@ -24,7 +24,7 @@ train:
   mode: custom
   batch_size: 2048
   eval_period: 1
-  epochs: 25
+  epochs: 10
   device: 1
   auto_resume: False
   final_eval: False
@@ -44,13 +44,13 @@ model:
 num_threads: 11
 
 data:
-  name: cora
+  name: pubmed
   undirected: True
   include_negatives: True
   val_pct: 0.125
   test_pct: 0.025
   split_labels: True
-  num_features:  1433
+  num_features:  500
   split_index: [0.4, 0.125, 0.025]
 
 

@@ -35,7 +35,7 @@ model:
   out_channels: 32
   heads: 4
   hidden_channels: 32  # {128, 256, 512}
-  in_channels: 1433
+  in_channels: None #500
   batch_size_sampler: 256
   walk_length: 50
   num_steps: 20
@@ -50,7 +50,7 @@ data:
   val_pct: 0.15
   test_pct: 0.05
   split_labels: True
-  num_features: 1433
+  num_features: 500
   device: 1
   split_index: [0.4, 0.125, 0.025]
 

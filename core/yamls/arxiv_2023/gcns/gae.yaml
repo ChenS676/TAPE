@@ -16,14 +16,14 @@ run:
 wandb:
   use: True
   project: gtblueprint
-  name_tag: gae-cora-origin
+  name_tag: gae-arxiv_2023-origin
 
 train:
   mode: custom
   batch_size: 2048
   eval_period: 1
   epochs: 1000
-  device: 1
+  device: 0
   auto_resume: False
   final_eval: False
   finetune: False
@@ -37,15 +37,15 @@ model:
 num_threads: 11
 
 data:
-  name: cora
+  name: arxiv_2023
   undirected: True
   include_negatives: True
-  val_pct: 0.15
-  test_pct: 0.05
+  val_pct: 0.125
+  test_pct: 0.025
   split_labels: True
-  num_features:  300
-  device: 1
-  split_index: [0.8, 0.15, 0.05]
+  num_features:  128
+  device: 0
+  split_index: [0.4, 0.125, 0.025] #[0.8, 0.15, 0.05]
 
 optimizer:
   type: adam

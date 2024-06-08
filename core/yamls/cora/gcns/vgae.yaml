@@ -27,6 +27,7 @@ train:
 model:
   type: VGAE
   out_channels: 32
+  in_channels: None
   hidden_channels: 32  # Assume that the dimension of the hidden layer feature is 8
     
 num_threads: 11

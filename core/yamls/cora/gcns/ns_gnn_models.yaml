@@ -2,13 +2,13 @@
 
 out_dir: results
 metric_best: [Hits@10, MRR, AUC]
-cfg_dest: heart_gnn_unified.yaml
+cfg_dest: ns_gnn_models.yaml
 print: file
 seed: 0
 accelerator: auto
 
 wandb:
-  use: True
+  use: False
   project: gtblueprint
   name_tag: Tune  # tune or train
 
@@ -17,13 +17,11 @@ run:
   num_threads: 11
   multiple_splits: None
 
-
-
 train:
   mode: custom
   batch_size: 1024
   eval_period: 1
-  epochs: 500
+  epochs: 20
   device: 0
   use_valedges_as_input: True
   lr: 0.001
@@ -46,14 +44,13 @@ model:
     dropout: 0
     num_layers: 3
 
-  GAT_Variant:
+  GAT:
     heads: 1
     hidden_channels: 256
     negative_slope: 0.2
     dropout: 0
     num_layers: 3
     emb: False
-    num_layers: 3
     in_channels: None
     out_channels: 128
 
@@ -62,9 +59,8 @@ model:
     hidden_channels: None
     num_layers_predictor: 3
     dropout: 0.1
-    num_layers_predictor: 3
 
-  SAGE_Variant:
+  GraphSage:
     in_channels: None
     hidden_channels: 256
     out_channels: 128
@@ -77,7 +73,6 @@ model:
     hidden_channels: 256
     num_layers: 3
     emb: False
-    num_layers: 3
     
   GIN_Variant:
     out_channels: 128
@@ -85,9 +80,24 @@ model:
     num_layers: 3
     dropout: 0.1
     emb: False
-    num_layers: 3
     mlp_layer: 2
+  
+  GAE:
+    in_channels: None
+    hidden_channels: 256
+    out_channels: 128
+    negative_slope: 0.2
+    dropout: 0
+    num_layers: 3
 
+  VGAE:
+    in_channels: None
+    hidden_channels: 256
+    out_channels: 128
+    negative_slope: 0.2
+    dropout: 0
+    num_layers: 3
+    
 sampler:
   type: gsaint
   gsaint:
@@ -135,7 +145,6 @@ sampler:
     walk_length: 10
     num_steps: 10
     sample_coverage: 100
-
 
 save:
   output_dir: './'

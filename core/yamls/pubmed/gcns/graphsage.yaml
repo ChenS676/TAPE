@@ -2,7 +2,7 @@
 
 out_dir: results
 metric_best: acc
-cfg_dest: gae.yaml
+cfg_dest: graphsage.yaml
 print: file
 seed: 0
 
@@ -14,23 +14,28 @@ run:
 wandb:
   use: True
   project: gtblueprint
-  name_tag: gae-pubmed-origin
+  name_tag: graphsage-pubmed-origin
+
+optimizer:
+  type: adam
+  base_lr: 0.01
+  weight_decay: 0.0005
 
 train:
   mode: custom
-  batch_size: 2048
+  batch_size: 32   
   eval_period: 1
   epochs: 10
   device: 0
   auto_resume: False
-  final_eval: False
   finetune: False
-
+  
 model:
-  type: GAE
-  out_channels: 32
-  in_channels: None #500
-
+  type: GraphSage
+  in_channels: None #12
+  out_channels: 16
+  hidden_channels: None
+    
 num_threads: 11
 
 data:
@@ -43,11 +48,3 @@ data:
   num_features: 500
   device: 0
   split_index: [0.4, 0.125, 0.025]
-
-optimizer:
-  type: adam
-  base_lr: 0.001
-  weight_decay: 0.0005
-
-
-

@@ -145,7 +145,7 @@ def load_graph_cora(use_mask) -> Data:
 
 
 def load_tag_cora()  -> Tuple[Data, List[str]]:
-    data, data_citeid = load_graph_cora()
+    data, data_citeid = load_graph_cora(True)
     text = load_text_cora(data_citeid)
     return data, text
 
@@ -433,7 +433,6 @@ def load_tag_product() -> Tuple[Data, List[str]]:
     data.edge_index = torch.LongTensor(edge_index).long()
 
     return data, text
-
 
 # Test code
 if __name__ == '__main__':

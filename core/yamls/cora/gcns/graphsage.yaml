@@ -25,14 +25,14 @@ train:
   mode: custom
   batch_size: 32   
   eval_period: 1
-  epochs: 50
+  epochs: 20
   device: 0
   auto_resume: False
   finetune: False
   
 model:
   type: GraphSage
-  in_channels: 12
+  in_channels: None
   out_channels: 16
   hidden_channels: None
     

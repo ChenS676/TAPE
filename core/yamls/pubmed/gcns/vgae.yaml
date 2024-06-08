@@ -20,7 +20,7 @@ train:
   mode: custom
   batch_size: 32
   eval_period: 1
-  epochs: 25
+  epochs: 10
   device: 0
   auto_resume: False
   final_eval: False
@@ -30,6 +30,7 @@ model:
   type: VGAE
   out_channels: 16
   hidden_channels: 8  # Assume that the dimension of the hidden layer feature is 8
+  in_channels: None
     
 num_threads: 11
 
@@ -41,7 +42,7 @@ data:
   test_pct: 0.025
   device: 0
   split_labels: True
-  num_features: 1433 # 0 works very well
+  num_features: 500 # 0 works very well
   split_index: [0.4, 0.125, 0.025]
 
 optimizer:

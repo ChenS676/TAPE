@@ -24,7 +24,7 @@ model:
   type: vgae
   out_channels: 16
   hidden_channels: 8  # Assume that the dimension of the hidden layer feature is 8
-  in_channels: 300 # Missed! AttrubuteError
+  in_channels: 128 # Missed! AttrubuteError
     
 num_threads: 11
 
@@ -32,8 +32,8 @@ data:
   name: arxiv_2023
   undirected: True
   include_negatives: True
-  val_pct: 0.15
-  test_pct: 0.05
+  val_pct: 0.125
+  test_pct: 0.025
   split_labels: True
-  num_features: 300
-
+  num_features: 128
+  split_index: [0.4, 0.125, 0.025]

@@ -20,14 +20,17 @@ from embedding.tune_utils import mvari_str2csv, save_parmet_tune
 from heuristic.eval import get_metric_score
 from graphgps.utility.utils import config_device, Logger
 from graphgps.train.opt_train import Trainer
+from torch.utils.data import DataLoader
 from graphgps.splits.neighbor_loader import NeighborLoader
 from graphgps.utility.NS_utils import degree
+from torch_sparse import SparseTensor
+import pandas as pd
 
 
 report_step = {
-    'cora': 100,
+    'cora': 5, #100,
     'pubmed': 1,
-    'arxiv_2023': 100,
+    'arxiv_2023': 5, #100,
     'ogbn-arxiv': 1,
     'ogbn-products': 1,
 }
@@ -64,14 +67,20 @@ class Trainer_NS(Trainer):
                  loggers: Logger, 
                  print_logger: None, 
                  device: int,
+                 if_wandb: bool,
                  batch_size_sampler: int,
                  num_neighbors: int,
-                 num_hops: int):
+                 num_hops: int,
+                 virtual_node_flag: bool):
         
         self.device = device
+        self.if_wandb = if_wandb
         self.model = model.to(self.device)
+        self.run_dir = cfg.run_dir
         self.emb = emb
 
+        if if_wandb:
+            self.step = 0
         # params
         self.model_name = cfg.model.type 
         self.data_name = cfg.data.name
@@ -83,16 +92,19 @@ class Trainer_NS(Trainer):
         self.test_data  = data_loader(splits['test'],  batch_size_sampler, num_neighbors, num_hops)
         self.train_data = data_loader(splits['train'], batch_size_sampler, num_neighbors, num_hops)
         self.valid_data = data_loader(splits['valid'], batch_size_sampler, num_neighbors, num_hops)
+        self.virtual_node_flag = virtual_node_flag # Turn on/off the adding of Virtual Node in graph
 
         self.data = data
         self.optimizer = optimizer
         self.loggers = loggers
         self.print_logger = print_logger
         self.report_step = report_step[cfg.data.name]
-        model_types = ['VGAE', 'GAE', 'GAT', 'GraphSage']
-        self.train_func = {model_type: self._train_gae if model_type in ['GAE', 'GAT', 'GraphSage', 'GNNStack'] else self._train_vgae for model_type in model_types}
-        self.test_func = {model_type: self._test for model_type in model_types}
-        self.evaluate_func = {model_type: self._evaluate if model_type in ['GAE', 'GAT', 'GraphSage', 'GNNStack'] else self._evaluate_vgae for model_type in model_types}
+        self.model_types = ['VGAE', 'GAE', 'GAT', 'GraphSage']
+        
+        self.train_func = {model_type: self._train_heart for model_type in self.model_types}
+        self.test_func = {model_type: self._eval_heart  for model_type in self.model_types}
+        self.evaluate_func = {model_type: self._eval_heart  for model_type in self.model_types}
+
         self.evaluator_hit = Evaluator(name='ogbl-collab')
         self.evaluator_mrr = Evaluator(name='ogbl-citation2')
         
@@ -125,163 +137,174 @@ class Trainer_NS(Trainer):
         node_degree = degree(edge_index[0], num_nodes) + degree(edge_index[1], num_nodes)
         return (node_degree == 0).any()
 
-    def _train_gae(self):
-        self.model.train()
-        total_loss = total_examples = 0
-        for subgraph in self.train_data:
+    def _train_heart(self):
+        pos_train_weight = None
+
+        for subgraph in self.train_data:  # Drop the last incomplete batch if dataset size is not divisible by batch size
+            
+            if self.emb is None: 
+                x = subgraph.x
+                emb_update = 0
+            else: 
+                x = self.emb.weight
+                emb_update = 1
+            
             self.optimizer.zero_grad()
             
-            #if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
-            #    transform = VirtualNode()
-            #    subgraph = transform(subgraph)
-
+            if self.virtual_node_flag:
+                if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
+                   transform = VirtualNode()
+                   subgraph = transform(subgraph)
+            
             subgraph = subgraph.to(self.device)
+            num_nodes = x.size(0)    
+            batch_edge_index = subgraph.edge_index.to(self.device)
+            x = x.to(self.device) 
+            
+            pos_edges = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
+            neg_edges = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
+            
+            pos_edges = pos_edges.to(self.device)
+            neg_edges = neg_edges.to(self.device)
 
-            z = self.model.encoder(subgraph.x, subgraph.edge_index)
-            
-            local_pos_indices = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
-            local_neg_indices = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
-            
-            loss = self.model.recon_loss(z, local_pos_indices, local_neg_indices)
-            
+            # pos_edge =  edge_index[:, perm].to(self.device)
+            if self.model_name == 'VGAE':
+                h = self.model(x, batch_edge_index)
+                loss = self.model.recon_loss(h, pos_edges, neg_edges)
+                loss = loss + (1 / num_nodes) * self.model.kl_loss()
+            elif self.model_name in ['GAE', 'GAT', 'GraphSage', 'GAT_Variant', 
+                                 'GCN_Variant', 'SAGE_Variant', 'GIN_Variant']:
+                h = self.model.encoder(x, batch_edge_index)
+                loss = self.model.recon_loss(h, pos_edges, neg_edges)                
             loss.backward()
-            self.optimizer.step()
-            total_loss += loss.item() * subgraph.num_nodes
-            total_examples += subgraph.num_nodes
+            
+            if emb_update == 1: torch.nn.utils.clip_grad_norm_(x, 1.0)
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+
+            self.optimizer.step()           
         
-        return total_loss / total_examples
+        #self.scheduler.step()
+        return loss.item() 
     
-    def _train_vgae(self):
-        self.model.train()
-        total_loss = total_examples = 0
-        for subgraph in self.train_data:
-            self.optimizer.zero_grad()
+    @torch.no_grad()
+    def test_edge(self, h, edge_index):
+        preds = []
+        edge_index = edge_index.t()
+    
+        # sourcery skip: no-loop-in-tests
+        for perm in DataLoader(range(edge_index.size(0)), self.batch_size):
+            edge = edge_index[perm].t()
+            preds += [self.model.decoder(h[edge[0]], h[edge[1]]).cpu()]
 
-            #if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
-            #    transform = VirtualNode()
-            #    subgraph = transform(subgraph)
+        return torch.cat(preds, dim=0)
 
-            subgraph = subgraph.to(self.device)
-
-            z = self.model(subgraph.x, subgraph.edge_index)
-
-            local_pos_indices = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
-            local_neg_indices = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
-
-            loss = self.model.recon_loss(z, local_pos_indices, local_neg_indices)
-            loss += (1 / subgraph.num_nodes) * self.model.kl_loss()
-
-            loss.backward()
-            self.optimizer.step()
-            total_loss += loss.item() * subgraph.num_nodes
-            total_examples += subgraph.num_nodes
-        
-        return total_loss / total_examples
 
     @torch.no_grad()
-    def _evaluate(self, test_data):
+    def _eval_heart(self, graph: Data):
         self.model.eval()
-        accumulated_metrics = []
 
-        for subgraph in test_data:
-            #if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
-            #   transform = VirtualNode()
-            #   subgraph = transform(subgraph)
+        for subgraph in graph:
+            if self.virtual_node_flag:
+                if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
+                   transform = VirtualNode()
+                   subgraph = transform(subgraph)
 
-            subgraph = subgraph.to(self.device)
+            subgraph = subgraph.to(self.device)   
+            pos_edge_label_index = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
+            neg_edge_label_index = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
 
-            local_pos_indices = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
-            local_neg_indices = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
+            if self.model_name == 'VGAE':
+                z = self.model(subgraph.x, subgraph.edge_index)
+                
+            elif self.model_name in ['GAE', 'GAT', 'GraphSage', 'GAT_Variant', 
+                                    'GCN_Variant', 'SAGE_Variant', 'GIN_Variant']:
+                z = self.model.encoder(subgraph.x, subgraph.edge_index)
             
-            z = self.model.encoder(subgraph.x, subgraph.edge_index)
-            pos_pred = self.model.decoder(z, local_pos_indices)
-            neg_pred = self.model.decoder(z, local_neg_indices)
-            y_pred = torch.cat([pos_pred, neg_pred], dim=0)
-
-            hard_thres = (y_pred.max() + y_pred.min())/2
-
-            pos_y = z.new_ones(local_pos_indices.size(1))
-            neg_y = z.new_zeros(local_neg_indices.size(1)) 
-            y = torch.cat([pos_y, neg_y], dim=0)
+            pos_pred = self.test_edge(z, pos_edge_label_index)
+            neg_pred = self.test_edge(z, neg_edge_label_index)
             
-            y_pred[y_pred >= hard_thres] = 1
-            y_pred[y_pred < hard_thres] = 0
-            acc = torch.sum(y == y_pred) / len(y)
-
-            pos_pred, neg_pred = pos_pred.cpu(), neg_pred.cpu()
-            result_mrr = get_metric_score(self.evaluator_hit, self.evaluator_mrr, pos_pred, neg_pred)
-            result_mrr.update({'acc': round(acc.item(), 5)})
-            accumulated_metrics.append(result_mrr)
-
-        # Aggregate results from accumulated_metrics
-        aggregated_results = {}
-        for result in accumulated_metrics:
-            for key, value in result.items():
-                if key in aggregated_results:
-                    aggregated_results[key].append(value)
-                else:
-                    aggregated_results[key] = [value]
-
-        # Calculate average results
-        averaged_results = {key: sum(values) / len(values) for key, values in aggregated_results.items()}
-
-        return averaged_results
-
-    @torch.no_grad()
-    def _evaluate_vgae(self, test_data):
-        self.model.eval()
-        accumulated_metrics = []
-        for subgraph in test_data:
-#            if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
-#                transform = VirtualNode()
-#                subgraph = transform(subgraph)
-
-            subgraph = subgraph.to(self.device)
-
-            local_pos_indices = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
-            local_neg_indices = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
-            
-            z = self.model(subgraph.x, subgraph.edge_index)
-            pos_pred = self.model.decoder(z, local_pos_indices)
-            neg_pred = self.model.decoder(z, local_neg_indices)
-            y_pred = torch.cat([pos_pred, neg_pred], dim=0)
-
-            hard_thres = (y_pred.max() + y_pred.min())/2
-
-            pos_y = z.new_ones(local_pos_indices.size(1))
-            neg_y = z.new_zeros(local_neg_indices.size(1)) 
-            y = torch.cat([pos_y, neg_y], dim=0)
-            
-            y_pred[y_pred >= hard_thres] = 1
-            y_pred[y_pred < hard_thres] = 0
-            acc = torch.sum(y == y_pred) / len(y)
+            acc = self._acc(pos_pred, neg_pred)
             
             pos_pred, neg_pred = pos_pred.cpu(), neg_pred.cpu()
-            result_mrr = get_metric_score(self.evaluator_hit, self.evaluator_mrr, pos_pred, neg_pred)
-            result_mrr.update({'acc': round(acc.item(), 5)})
-            accumulated_metrics.append(result_mrr)
-
-        # Aggregate results from accumulated_metrics
-        aggregated_results = {}
-        for result in accumulated_metrics:
-            for key, value in result.items():
-                if key in aggregated_results:
-                    aggregated_results[key].append(value)
-                else:
-                    aggregated_results[key] = [value]
-
-        # Calculate average results
-        averaged_results = {key: sum(values) / len(values) for key, values in aggregated_results.items()}
-
-        return averaged_results
+            result_mrr = get_metric_score(self.evaluator_hit, self.evaluator_mrr, pos_pred.squeeze(), neg_pred.squeeze())
+            result_mrr.update({'ACC': round(acc, 5)})
+            return result_mrr
     
+    @torch.no_grad()
+    def save_eval_edge_pred(self, h, edge_index):
+        preds = []
+        edge_index = edge_index.t()
+        edge_index_list = []
+        # sourcery skip: no-loop-in-tests
+        for perm  in DataLoader(range(edge_index.size(0)), self.batch_size):
+            edge = edge_index[perm].t()
+            edge_index_list.append(edge)
+            preds += [self.model.decoder(h[edge[0]], h[edge[1]]).cpu()]
+
+        return torch.cat(preds, dim=0), torch.cat(edge_index_list, dim=1)
+    
+    @torch.no_grad()
+    def _save_err_heart(self, graph: Data, mode):
+        self.model.eval()
+
+        for subgraph in graph:
+            if self.model_name == 'VGAE':
+                z = self.model(subgraph.x, subgraph.edge_index)
+                
+            elif self.model_name in ['GAE', 'GAT', 'GraphSage', 'GAT_Variant', 
+                                    'GCN_Variant', 'SAGE_Variant', 'GIN_Variant']:
+                z = self.model.encoder(subgraph.x, subgraph.edge_index)
+            
+            pos_edge_label_index = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
+            neg_edge_label_index = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
+
+            pos_pred, pos_edge_index = self.save_eval_edge_pred(z, pos_edge_label_index)
+            neg_pred, neg_edge_index = self.save_eval_edge_pred(z, neg_edge_label_index)
+            
+            self._acc_error_save(pos_pred, pos_edge_index, neg_pred, neg_edge_index, mode)
+
+    
+    def _acc_error_save(self, 
+                        pos_pred: torch.tensor, 
+                        pos_edge_index: torch.tensor, 
+                        neg_pred: torch.tensor, 
+                        neg_edge_index: torch.tensor, 
+                        mode: str) -> None:
+        
+        hard_thres = (max(torch.max(pos_pred).item(), torch.max(neg_pred).item()) + min(torch.min(pos_pred).item(), torch.min(neg_pred).item())) / 2
+
+        y_pred = torch.zeros_like(pos_pred)
+        y_pred[pos_pred >= hard_thres] = 1
+
+        neg_y_pred = torch.ones_like(neg_pred)
+        neg_y_pred[neg_pred <= hard_thres] = 0
+
+        # Concatenate the positive and negative predictions
+        y_pred = torch.cat([y_pred, neg_y_pred], dim=0)
+
+        # Initialize ground truth labels
+        pos_y = torch.ones_like(pos_pred)
+        neg_y = torch.zeros_like(neg_pred)
+        gr = torch.cat([pos_y, neg_y], dim=0)
+
+        data = {
+            "edge_index0": torch.cat([pos_edge_index, neg_edge_index], dim=1)[0].cpu(),
+            "edge_index1": torch.cat([pos_edge_index, neg_edge_index], dim=1)[1].cpu(),
+            "pred": y_pred.squeeze().cpu(),
+            "gr": gr.squeeze().cpu(),
+        }
+        df = pd.DataFrame(data)
+        df.to_csv(f'{self.run_dir}/{self.data_name}_{mode}pred_gr_last_epoch.csv', index=False)
+
     def train(self):  
-        
         for epoch in range(1, self.epochs + 1):
             loss = self.train_func[self.model_name]()
-            print(epoch, ': ', loss)
-            # wandb.log({'loss': loss, 'epoch': epoch}) #if self.if_wandb else None
-            if epoch % 25 == 0: #int(self.report_step) == 0:
+            
+            if self.if_wandb:
+                wandb.log({"Epoch": epoch}, step=self.step)
+                wandb.log({'loss': loss}, step=self.step) 
+                #wandb.log({"lr": self.scheduler.get_lr()}, step=self.step)
+            if epoch % int(self.report_step) == 0:
 
                 self.results_rank = self.merge_result_rank()
                 
@@ -296,17 +319,28 @@ class Trainer_NS(Trainer):
                     self.print_logger.info(
                         f'Run: {self.run + 1:02d}, Key: {key}, '
                         f'Epoch: {epoch:02d}, Loss: {loss:.4f}, Train: {100 * train_hits:.2f}, Valid: {100 * valid_hits:.2f}, Test: {100 * test_hits:.2f}%')
-                    # wandb.log({f"Metrics/train_{key}": train_hits})
-                    # wandb.log({f"Metrics/valid_{key}": valid_hits})
-                    # wandb.log({f"Metrics/test_{key}": test_hits})
+                    
+                    if self.if_wandb:
+                        wandb.log({f"Metrics/train_{key}": train_hits}, step=self.step)
+                        wandb.log({f"Metrics/valid_{key}": valid_hits}, step=self.step)
+                        wandb.log({f"Metrics/test_{key}": test_hits}, step=self.step)
                     
                 self.print_logger.info('---')
-
+                
+            if self.if_wandb:
+                self.step += 1
+    
+    
+    def finalize(self):
         for _ in range(1):
             start_train = time.time() 
             self.train_func[self.model_name]()
             self.run_result['train_time'] = time.time() - start_train
             self.evaluate_func[self.model_name](self.test_data)
             self.run_result['eval_time'] = time.time() - start_train
+        
+        self._save_err_heart(self.test_data, 'test')
+        self._save_err_heart(self.valid_data, 'valid')
+        self._save_err_heart(self.train_data,  'train')
 
 

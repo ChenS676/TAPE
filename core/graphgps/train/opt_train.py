@@ -20,13 +20,6 @@ from graphgps.utility.utils import config_device, Logger
 from typing import Dict, Tuple
 
 
-report_step = {
-    'cora': 100,
-    'pubmed': 1,
-    'arxiv_2023': 100,
-    'ogbn-arxiv': 1,
-    'ogbn-products': 1,
-}
 
 
 class Trainer():
@@ -56,18 +49,30 @@ class Trainer():
         self.epochs = cfg.train.epochs
         self.batch_size = cfg.train.batch_size
         
-        self.test_data = splits['test'].to(self.device)
-        self.train_data = splits['train'].to(self.device)
-        self.valid_data = splits['valid'].to(self.device)
+        self.train_data = splits['train']
+        self.test_data = splits['test']
+        
+        self.valid_data = splits['valid']
         self.data = data
         self.optimizer = optimizer
         self.loggers = loggers
         self.print_logger = print_logger
+        
+        report_step = {
+                'cora': 1,
+                'pubmed': 100,
+                'arxiv_2023': 100,
+                'ogbn-arxiv': 1,
+                'ogbn-products': 1,
+        }
+
         self.report_step = report_step[cfg.data.name]
-        model_types = ['VGAE', 'GAE', 'GAT', 'GraphSage']
-        self.train_func = {model_type: self._train_gae if model_type in ['GAE', 'GAT', 'GraphSage', 'GNNStack'] else self._train_vgae for model_type in model_types}
-        self.test_func = {model_type: self._test for model_type in model_types}
-        self.evaluate_func = {model_type: self._evaluate if model_type in ['GAE', 'GAT', 'GraphSage', 'GNNStack'] else self._evaluate_vgae for model_type in model_types}
+        
+        self.model_types = ['VGAE', 'GAE', 'GAT', 'GraphSage']
+        
+        self.train_func = {model_type: self._train_gae if model_type in ['GAE', 'GAT', 'GraphSage'] else self._train_vgae for model_type in self.model_types}
+        self.test_func = {model_type: self._test for model_type in self.model_types}
+        self.evaluate_func = {model_type: self._evaluate if model_type in ['GAE', 'GAT', 'GraphSage'] else self._evaluate_vgae for model_type in self.model_types}
         self.evaluator_hit = Evaluator(name='ogbl-collab')
         self.evaluator_mrr = Evaluator(name='ogbl-citation2')
         
@@ -131,26 +136,40 @@ class Trainer():
         z = self.model.encoder(data.x, data.edge_index)
         pos_pred = self.model.decoder(z, pos_edge_index)
         neg_pred = self.model.decoder(z, neg_edge_index)
-        y_pred = torch.cat([pos_pred, neg_pred], dim=0)
         
         # add a visualization of the threshold
-        hard_thres = (y_pred.max() + y_pred.min())/2
 
-        pos_y = z.new_ones(pos_edge_index.size(1))
-        neg_y = z.new_zeros(neg_edge_index.size(1)) 
-        y = torch.cat([pos_y, neg_y], dim=0)
-        
-        y_pred[y_pred >= hard_thres] = 1
-        y_pred[y_pred < hard_thres] = 0
-
-        acc = torch.sum(y == y_pred)/len(y)
+        acc = self._acc(pos_pred, neg_pred)
         
         pos_pred, neg_pred = pos_pred.cpu(), neg_pred.cpu()
         result_mrr = get_metric_score(self.evaluator_hit, self.evaluator_mrr, pos_pred, neg_pred)
-        result_mrr.update({'acc': round(acc.tolist(), 5)})
+        result_mrr.update({'ACC': round(acc.tolist(), 5)})
     
         return result_mrr
     
+    def _acc(self, pos_pred, neg_pred):
+        hard_thres = (max(torch.max(pos_pred).item(), torch.max(neg_pred).item()) + min(torch.min(pos_pred).item(), torch.min(neg_pred).item())) / 2
+
+        # Initialize predictions with zeros and set ones where condition is met
+        y_pred = torch.zeros_like(pos_pred)
+        y_pred[pos_pred >= hard_thres] = 1
+
+        # Do the same for negative predictions
+        neg_y_pred = torch.ones_like(neg_pred)
+        neg_y_pred[neg_pred <= hard_thres] = 0
+
+        # Concatenate the positive and negative predictions
+        y_pred = torch.cat([y_pred, neg_y_pred], dim=0)
+
+        # Initialize ground truth labels
+        pos_y = torch.ones_like(pos_pred)
+        neg_y = torch.zeros_like(neg_pred)
+        y = torch.cat([pos_y, neg_y], dim=0)
+        y_logits = torch.cat([pos_pred, neg_pred], dim=0)
+        # Calculate accuracy    
+        return (y == y_pred).float().mean().item()
+
+
     @torch.no_grad()
     def _evaluate_vgae(self, data: Data):
        
@@ -176,10 +195,11 @@ class Trainer():
         
         pos_pred, neg_pred = pos_pred.cpu(), neg_pred.cpu()
         result_mrr = get_metric_score(self.evaluator_hit, self.evaluator_mrr, pos_pred, neg_pred)
-        result_mrr.update({'acc': round(acc.tolist(), 5)})
+        result_mrr.update({'ACC': round(acc.tolist(), 5)})
     
         return result_mrr
     
+
     def merge_result_rank(self):
         result_test = self.evaluate_func[self.model_name](self.test_data)
         result_valid = self.evaluate_func[self.model_name](self.valid_data)
@@ -192,11 +212,11 @@ class Trainer():
     
     
     def train(self):  
-        
         for epoch in range(1, self.epochs + 1):
             loss = self.train_func[self.model_name]()
             
             wandb.log({'loss': loss, 'epoch': epoch}) if self.if_wandb else None
+                
             if epoch % int(self.report_step) == 0:
 
                 self.results_rank = self.merge_result_rank()
@@ -212,9 +232,11 @@ class Trainer():
                     self.print_logger.info(
                         f'Run: {self.run + 1:02d}, Key: {key}, '
                         f'Epoch: {epoch:02d}, Loss: {loss:.4f}, Train: {100 * train_hits:.2f}, Valid: {100 * valid_hits:.2f}, Test: {100 * test_hits:.2f}%')
-                    wandb.log({f"Metrics/train_{key}": train_hits})
-                    wandb.log({f"Metrics/valid_{key}": valid_hits})
-                    wandb.log({f"Metrics/test_{key}": test_hits})
+                    
+                    if self.if_wandb:
+                        wandb.log({f"Metrics/train_{key}": train_hits})
+                        wandb.log({f"Metrics/valid_{key}": valid_hits})
+                        wandb.log({f"Metrics/test_{key}": test_hits})
                     
                 self.print_logger.info('---')
 
@@ -257,7 +279,7 @@ class Trainer():
         mvari_str2csv(self.name_tag, results_dict, acc_file)
 
 
-    def save_tune(self, results_dict: Dict[str, float], to_file):  # sourcery skip: avoid-builtin-shadow
+    def save_tune(self, results_dict: Dict[str, float], to_file: str):  # sourcery skip: avoid-builtin-shadow
         
         root = os.path.join(self.FILE_PATH, cfg.out_dir)
         acc_file = os.path.join(root, to_file)
@@ -265,4 +287,3 @@ class Trainer():
         os.makedirs(root, exist_ok=True)
         save_parmet_tune(self.name_tag, results_dict, acc_file)    
         
-
