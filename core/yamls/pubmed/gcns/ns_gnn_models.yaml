@@ -1,0 +1,150 @@
+# line.yaml
+
+out_dir: results
+metric_best: [Hits@10, MRR, AUC]
+cfg_dest: ns_gnn_models.yaml
+print: file
+seed: 0
+accelerator: auto
+
+wandb:
+  use: False
+  project: gtblueprint
+  name_tag: Tune  # tune or train
+
+run:
+  seed: 0
+  num_threads: 11
+  multiple_splits: None
+
+train:
+  mode: custom
+  batch_size: 1024
+  eval_period: 1
+  epochs: 20
+  device: 0
+  use_valedges_as_input: True
+  lr: 0.001
+  l2: 0.0
+  runs: 10 
+  kill_cnt: 30
+  auto_resume: False
+  finetune : False
+
+model:
+  type: GCN_Variant
+  sampler: gsaint
+
+  batch_size_sampler: 1024
+  GCN_Variant: 
+    in_channels: None
+    hidden_channels: 256
+    out_channels: 128
+    negative_slope: 0.2
+    dropout: 0
+    num_layers: 3
+
+  GAT:
+    heads: 1
+    hidden_channels: 256
+    negative_slope: 0.2
+    dropout: 0
+    num_layers: 3
+    emb: False
+    in_channels: None
+    out_channels: 128
+
+  mlp_model:
+    in_channels: 128
+    hidden_channels: None
+    num_layers_predictor: 3
+    dropout: 0.1
+
+  GraphSage:
+    in_channels: None
+    hidden_channels: 256
+    out_channels: 128
+    num_layers: 3
+    dropout: 0.1
+    emb: False
+
+  DGCNN:
+    k: 2
+    hidden_channels: 256
+    num_layers: 3
+    emb: False
+    
+  GIN_Variant:
+    out_channels: 128
+    hidden_channels: 256
+    num_layers: 3
+    dropout: 0.1
+    emb: False
+    mlp_layer: 2
+  
+  GAE:
+    in_channels: None
+    hidden_channels: 256
+    out_channels: 128
+    negative_slope: 0.2
+    dropout: 0
+    num_layers: 3
+
+  VGAE:
+    in_channels: None
+    hidden_channels: 256
+    out_channels: 128
+    negative_slope: 0.2
+    dropout: 0
+    num_layers: 3
+    
+sampler:
+  type: gsaint
+  gsaint:
+    num_steps: 30
+    sample_coverage: 100
+    walk_length: 20
+    batch_size: 2048
+
+score:
+  type: mlp_score
+  mlp_score:
+    score_in_channels: 128 #must be same as out_channels of GAT
+    score_hidden_channels: 64
+    score_num_layers_predictor: 3
+    score_dropout: 0.1
+    score_out_channels: 1
+    score_gin_mlp_layer: 2
+    score_cat_node_feat_mf: False
+    score_cat_n2v_feat: False
+    score_num_layers: 1
+    product: inner
+
+num_threads: 11
+
+data:
+  name: pubmed
+  undirected: True
+  include_negatives: True
+  val_pct: 0.15
+  test_pct: 0.05
+  split_labels: True
+  num_features:  1433
+  device: 0
+  split_index: [0.4, 0.125, 0.025] #[0.8, 0.15, 0.05]
+
+optimizer:
+  type: adam
+  base_lr: 0.001
+  weight_decay: 0.0005
+
+
+sampler:
+  gsaint:
+    sampler_batch_size: 1024
+    walk_length: 10
+    num_steps: 10
+    sample_coverage: 100
+
+save:
+  output_dir: './'

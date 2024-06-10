@@ -29,7 +29,7 @@ import pandas as pd
 
 report_step = {
     'cora': 5, #100,
-    'pubmed': 1,
+    'pubmed': 5,
     'arxiv_2023': 5, #100,
     'ogbn-arxiv': 1,
     'ogbn-products': 1,
@@ -299,7 +299,7 @@ class Trainer_NS(Trainer):
     def train(self):  
         for epoch in range(1, self.epochs + 1):
             loss = self.train_func[self.model_name]()
-            
+            print(f"Epoch: {epoch}, Loss: {loss}")
             if self.if_wandb:
                 wandb.log({"Epoch": epoch}, step=self.step)
                 wandb.log({'loss': loss}, step=self.step) 

@@ -129,45 +129,54 @@ product_space = {
 }
 
 hyperparameter_space = {
-    'GAT': {'out_channels': [2**4, 2**5, 2**6], 'hidden_channels':  [2**4, 2**5],
+    'GAT': {'out_channels': [2**7, 2**8], 'hidden_channels':  [2**7, 2**8], # 2**5, 2**6
                                 'heads': [2**2, 2, 2**3], 'negative_slope': [0.1], 'dropout': [0, 0.1], 
                                 'num_layers': [3],#[1, 2, 3], 
                                 'base_lr': [0.015],
-                                'score_num_layers_predictor': [1, 2, 3],
+                                'score_num_layers_predictor': [3],
                                 'score_gin_mlp_layer': [2],
                                 'score_hidden_channels': [2**6, 2**5, 2**4], 
                                 'score_out_channels': [1], 
-                                'score_num_layers': [1, 2, 3], 
+                                'score_num_layers': [3], 
                                 'score_dropout': [0.1], 
-                                'product': [0, 1]},
+                                'product': [0, 1],
+                                },
     
-    'GraphSage': {'out_channels': [2**4, 2**5, 2**6, 2**7, 2**8, 2**9], 
-                     'hidden_channels': [2**4, 2**5, 2**6, 2**7, 2**8, 2**9], 
-                     'base_lr': [0.015, 0.1, 0.01],
-                    'score_num_layers_predictor': [1, 2, 3],
+    'GraphSage': {'out_channels': [2**4], #2**5, 2**6, 
+                    'hidden_channels': [2**4], #2**5, 2**6,
+                    'base_lr': [0.015, 0.1, 0.01],
+                    'score_num_layers_predictor': [3],
                     'score_gin_mlp_layer': [2],
-                    'score_hidden_channels': [2**6, 2**5, 2**4], 
+                    'score_hidden_channels': [2**6, 2**5, 2**4],
                     'score_out_channels': [1], 
-                    'score_num_layers': [1, 2, 3], 
+                    'score_num_layers': [3], 
                     'score_dropout': [0.1], 
                     'product': [0, 1],
+                    
                      },
     
-    'GAE': {'out_channels': [2**4, 2**5, 2**6], 'hidden_channels': [2**4, 2**5], 'batch_size': [2**10]},
-    'VGAE': {'out_channels': [2**4, 2**5, 2**6], 'hidden_channels': [2**4, 2**5], 'batch_size': [2**10]},
+    'GAE': {'out_channels': [2**7], 
+            'hidden_channels': [2**7], 
+            'batch_size': [2**10]
+    },
+    'VGAE': {'out_channels': [2**5], 'hidden_channels': [2**5], 'batch_size': [2**10]},# 2**5, 2**6
 }
 
 hyperparameter_ns = {
-        'batch_size': [32, 64, 128],
+        'batch_size': [256, 512, 1024], #32, 64, 128, 
         'lr': [0.015, 0.1, 0.01],
         'batch_size_sampler': [32, 64, 128],
-        'num_neighbors': [5, 10, 20, 30, 40], #50, 100 
-        'num_hops': [5, 6, 7, 8]# 1, 2 is very small number of hops, 9 and 10 take a lot of time and give bad results
+        'num_neighbors': [5, 10],# 20, 30, 40], #50, 100 
+        'num_hops': [5, 6], #7, 8]# 1, 2 is very small number of hops, 9 and 10 take a lot of time and give bad results
 }
 
 def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
     
     # process params
+    # torch.cuda.empty_cache()
+    # # then collect the garbage
+    # gc.collect()
+
     args = parse_args()
 
     print(args)
@@ -276,6 +285,41 @@ def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
 
         cfg.model.params = params_count(model)
         print_logger.info(f'Num parameters: {cfg.model.params}')
+
+        # if cfg.model.type == 'GAE' and cfg_model.out_channels == 16 and cfg_model.hidden_channels == 16 \
+        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and (cfg_model.batch_size_sampler in [32, 64] or \
+        # cfg_model.batch_size_sampler == 128 and cfg_model.num_neighbors in [5, 10] and cfg_model.num_hops in [5, 6]):
+        #     continue
+
+        # if cfg.model.type == 'VGAE' and cfg_model.out_channels == 16 and cfg_model.hidden_channels == 16 \
+        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and (cfg_model.batch_size_sampler in [32, 64] or \
+        # cfg_model.batch_size_sampler == 128 and cfg_model.num_neighbors in [5] and cfg_model.num_hops in [5]):
+        #     continue
+
+        # if cfg.model.type == 'GAT' and cfg_model.out_channels == 16 and cfg_model.hidden_channels == 16 \
+        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and (cfg_model.batch_size_sampler in [32] or \
+        # cfg_model.batch_size_sampler == 64 and cfg_model.num_neighbors in [5, 10, 20, 30] and cfg_model.num_hops in [5, 6]):
+        #     continue
+
+        # if cfg.model.type == 'GAT' and cfg_model.out_channels == 16 and cfg_model.hidden_channels == 16 \
+        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and ( cfg_model.batch_size_sampler == 32 and \
+        # cfg_model.num_neighbors in [5] and cfg_model.num_hops in [5, 6]):
+        #     continue
+
+        # if cfg.model.type == 'GAE' and cfg_model.out_channels == 64 and cfg_model.hidden_channels == 64 \
+        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and (cfg_model.batch_size_sampler in [32] or \
+        # cfg_model.batch_size_sampler == 64 and cfg_model.num_neighbors in [5]):
+        #     continue
+
+        # if (cfg.model.type == 'VGAE' or cfg.model.type == 'GAT') and cfg_model.out_channels == 16 and cfg_model.hidden_channels == 16 \
+        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and (cfg_model.batch_size_sampler in [32, 64] or \
+        # cfg_model.batch_size_sampler == 128 and cfg_model.num_neighbors in [5] and cfg_model.num_hops in [5]):
+        #     continue
+
+        # if cfg.model.type == 'GraphSage' and cfg_model.out_channels == 64 and cfg_model.hidden_channels == 64 \
+        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and (cfg_model.batch_size_sampler in [32] or \
+        # cfg_model.batch_size_sampler == 64 and cfg_model.num_neighbors in [5, 10, 20]):
+        #     continue
 
         optimizer = create_optimizer(model, cfg)
         #scheduler = LinearDecayLR(optimizer, start_lr=0.01, end_lr=0.001, num_epochs=cfg.train.epochs)
