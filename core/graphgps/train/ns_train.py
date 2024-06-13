@@ -156,7 +156,7 @@ class Trainer_NS(Trainer):
                    transform = VirtualNode()
                    subgraph = transform(subgraph)
             
-            subgraph = subgraph.to(self.device)
+            subgraph = subgraph.to('cpu') # Neighbor Sampler working only on CPU!
             num_nodes = x.size(0)    
             batch_edge_index = subgraph.edge_index.to(self.device)
             x = x.to(self.device) 
@@ -209,16 +209,19 @@ class Trainer_NS(Trainer):
                    transform = VirtualNode()
                    subgraph = transform(subgraph)
 
-            subgraph = subgraph.to(self.device)   
+            subgraph = subgraph.to('cpu')   
             pos_edge_label_index = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
             neg_edge_label_index = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
 
+            batch_edge_index = subgraph.edge_index.to(self.device)
+            x = x.to(self.device) 
+
             if self.model_name == 'VGAE':
-                z = self.model(subgraph.x, subgraph.edge_index)
+                z = self.model(x, batch_edge_index)
                 
             elif self.model_name in ['GAE', 'GAT', 'GraphSage', 'GAT_Variant', 
                                     'GCN_Variant', 'SAGE_Variant', 'GIN_Variant']:
-                z = self.model.encoder(subgraph.x, subgraph.edge_index)
+                z = self.model.encoder(x, batch_edge_index)
             
             pos_pred = self.test_edge(z, pos_edge_label_index)
             neg_pred = self.test_edge(z, neg_edge_label_index)
