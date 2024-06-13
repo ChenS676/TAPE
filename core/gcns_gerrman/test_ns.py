@@ -158,6 +158,7 @@ hyperparameter_space = {
     'GAE': {'out_channels': [2**7], 
             'hidden_channels': [2**7], 
             'batch_size': [512],
+            'batch_size_sampler': [128],
             'lr': [0.015],
             'num_neighbors': [10],
             'num_hops': [5]
@@ -166,6 +167,7 @@ hyperparameter_space = {
     'VGAE': {'out_channels': [2**5], 
              'hidden_channels': [2**5], 
              'batch_size': [512],
+             'batch_size_sampler':[128],
              'lr': [0.015],
              'num_neighbors': [5],
              'num_hops': [5]
@@ -320,39 +322,39 @@ def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
             trainer.train()
             trainer.finalize()
             
-            run_result = {}
-            for key in trainer.loggers.keys():
-                print(key)
-                _, _, _, test_bvalid = trainer.loggers[key].calc_all_stats(run_id, True)
-                run_result[key] = test_bvalid
+    run_result = {}
+    for key in trainer.loggers.keys():
+        print(key)
+        _, _, _, test_bvalid, _, _ = trainer.loggers[key].calc_all_stats()
+        run_result[key] = test_bvalid
 
-            # save params TODO if the updated params is saved.
-            for k in hyperparameter_gnn.keys():
-                if hasattr(cfg_model, k):
-                    run_result[k] = getattr(cfg_model, k)
-                if hasattr(cfg_score, k):
-                    run_result[k] = getattr(cfg_score, k)
-                elif hasattr(cfg.train, k):
-                    run_result[k] = getattr(cfg.train, k)
-                elif hasattr(cfg.optimizer, k):
-                    run_result[k] = getattr(cfg.optimizer, k)
+    # save params TODO if the updated params is saved.
+    for k in hyperparameter_gnn.keys():
+        if hasattr(cfg_model, k):
+            run_result[k] = getattr(cfg_model, k)
+        if hasattr(cfg_score, k):
+            run_result[k] = getattr(cfg_score, k)
+        elif hasattr(cfg.train, k):
+            run_result[k] = getattr(cfg.train, k)
+        elif hasattr(cfg.optimizer, k):
+            run_result[k] = getattr(cfg.optimizer, k)
 
-            run_result['epochs'] = cfg.train.epochs
-            run_result['train_time'] = trainer.run_result['train_time']
-            run_result['test_time'] = trainer.run_result['eval_time']
-            run_result['params'] = cfg.model.params
+    run_result['epochs'] = cfg.train.epochs
+    run_result['train_time'] = trainer.run_result['train_time']
+    run_result['test_time'] = trainer.run_result['eval_time']
+    run_result['params'] = cfg.model.params
 
-            print_logger.info(run_result)
-            to_file = f'{args.data}_{cfg.model.type}heart_tune_time_.csv'
-            trainer.save_tune(run_result, to_file)
+    print_logger.info(run_result)
+    to_file = f'{args.data}_{cfg.model.type}heart_tune_time_.csv'
+    trainer.save_tune(run_result, to_file)
 
-            print_logger.info(f"train time per epoch {run_result['train_time']}")
-            print_logger.info(f"test time per epoch {run_result['test_time']}")
-            print_logger.info(f"train time per epoch {run_result['train_time']}")
-            print_logger.info(f"test time per epoch {run_result['test_time']}")
-            
-            if args.wandb:
-                wandb.finish()
+    print_logger.info(f"train time per epoch {run_result['train_time']}")
+    print_logger.info(f"test time per epoch {run_result['test_time']}")
+    print_logger.info(f"train time per epoch {run_result['train_time']}")
+    print_logger.info(f"test time per epoch {run_result['test_time']}")
+    
+    if args.wandb:
+        wandb.finish()
         
 if __name__ == "__main__":
     project_main()
