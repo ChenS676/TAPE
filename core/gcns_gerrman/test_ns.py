@@ -157,17 +157,19 @@ hyperparameter_space = {
     
     'GAE': {'out_channels': [2**7], 
             'hidden_channels': [2**7], 
-            'batch_size': [2**10]
-    },
-    'VGAE': {'out_channels': [2**5], 'hidden_channels': [2**5], 'batch_size': [2**10]},
-}
+            'batch_size': [512],
+            'lr': [0.015],
+            'num_neighbors': [10],
+            'num_hops': [5]
 
-hyperparameter_ns = {
-        'batch_size': [256, 512, 1024],
-        'lr': [0.015, 0.1, 0.01],
-        'batch_size_sampler': [32, 64, 128],
-        'num_neighbors': [5, 10],
-        'num_hops': [5, 6],
+    },
+    'VGAE': {'out_channels': [2**5], 
+             'hidden_channels': [2**5], 
+             'batch_size': [512],
+             'lr': [0.015],
+             'num_neighbors': [5],
+             'num_hops': [5]
+             },
 }
 
 def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
@@ -226,12 +228,11 @@ def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
 
         dump_cfg(cfg)
         hyperparameter_gnn = hyperparameter_space[args.model]
-        combined_hyperparameters = {**hyperparameter_gnn, **hyperparameter_ns}
         print_logger.info(f"hypersearch space: {hyperparameter_gnn}")
 
-        keys = combined_hyperparameters.keys()
+        keys = hyperparameter_gnn.keys()
         # Generate Cartesian product of the hyperparameter values
-        product = itertools.product(*combined_hyperparameters.values())
+        product = itertools.product(*hyperparameter_gnn.values())
 
         for combination in tqdm(product):
             for key, value in zip(keys, combination):
@@ -279,7 +280,6 @@ def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
 
             cfg.model.params = params_count(model)
             print_logger.info(f'Num parameters: {cfg.model.params}')
-
 
             optimizer = create_optimizer(model, cfg)
 
