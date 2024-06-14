@@ -1,0 +1,182 @@
+/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch_geometric/graphgym/imports.py:14: UserWarning: Please install 'pytorch_lightning' via  'pip install pytorch_lightning' in order to use GraphGym
+  warnings.warn("Please install 'pytorch_lightning' via  "
+/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch_geometric/graphgym/imports.py:14: UserWarning: Please install 'pytorch_lightning' via  'pip install pytorch_lightning' in order to use GraphGym
+  warnings.warn("Please install 'pytorch_lightning' via  "
+/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch_geometric/graphgym/imports.py:14: UserWarning: Please install 'pytorch_lightning' via  'pip install pytorch_lightning' in order to use GraphGym
+  warnings.warn("Please install 'pytorch_lightning' via  "
+/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch_geometric/graphgym/imports.py:14: UserWarning: Please install 'pytorch_lightning' via  'pip install pytorch_lightning' in order to use GraphGym
+  warnings.warn("Please install 'pytorch_lightning' via  "
+2024-06-13 11:45:56,976 - The cora graph with shape torch.Size([2708, 1433]) is loaded on cuda:0,
+Split index: [0.8, 0.15, 0.05] based on 10858 samples.
+Train: 0.8% (17376 samples),
+Valid: 0.15% (3256 samples),
+Test:  0.05% (1084 samples)
+2024-06-13 11:45:56,990 - hypersearch space: {'out_channels': [32], 'hidden_channels': [32], 'batch_size': [512], 'batch_size_sampler': [128], 'lr': [0.015], 'num_neighbors': [5], 'num_hops': [5]}
+0it [00:00, ?it/s]2024-06-13 11:45:57,014 - Object cfg_model has attribute 'out_channels' with value: 128
+2024-06-13 11:45:57,014 - Object cfg_model.out_channels updated to 32 
+
+2024-06-13 11:45:57,014 - Object cfg_model has attribute 'hidden_channels' with value: 256
+2024-06-13 11:45:57,014 - Object cfg_model.hidden_channels updated to 32 
+
+2024-06-13 11:45:57,014 - Object cfg.train has attribute 'batch_size' with values 1024
+2024-06-13 11:45:57,015 - Object cfg.train.batch_size updated to 512 
+
+2024-06-13 11:45:57,015 - Object cfg_model.batch_size_sampler get new attribute 128 
+
+2024-06-13 11:45:57,015 - Object cfg.train has attribute 'lr' with values 0.001
+2024-06-13 11:45:57,015 - Object cfg.train.lr updated to 0.015 
+
+2024-06-13 11:45:57,015 - Object cfg_model.num_neighbors get new attribute 5 
+
+2024-06-13 11:45:57,015 - Object cfg_model.num_hops get new attribute 5 
+
+2024-06-13 11:45:57,015 - out : 32, hidden: 32
+2024-06-13 11:45:57,015 - bs : 512, lr: 0.001
+2024-06-13 11:45:57,015 - The model VGAE is initialized.
+2024-06-13 11:45:57,116 - The cora graph with shape torch.Size([2708, 1433]) is loaded on cuda:0,
+Split index: [0.8, 0.15, 0.05] based on 10858 samples.
+Train: 0.8% (17376 samples),
+Valid: 0.15% (3256 samples),
+Test:  0.05% (1084 samples)
+2024-06-13 11:45:57,133 - hypersearch space: {'out_channels': [128], 'hidden_channels': [128], 'batch_size': [512], 'batch_size_sampler': [128], 'lr': [0.015], 'num_neighbors': [10], 'num_hops': [5]}
+2024-06-13 11:45:57,134 - The cora graph with shape torch.Size([2708, 1433]) is loaded on cuda:0,
+Split index: [0.8, 0.15, 0.05] based on 10858 samples.
+Train: 0.8% (17376 samples),
+Valid: 0.15% (3256 samples),
+Test:  0.05% (1084 samples)
+2024-06-13 11:45:57,138 - The cora graph with shape torch.Size([2708, 1433]) is loaded on cuda:0,
+Split index: [0.8, 0.15, 0.05] based on 10858 samples.
+Train: 0.8% (17376 samples),
+Valid: 0.15% (3256 samples),
+Test:  0.05% (1084 samples)
+2024-06-13 11:45:57,145 - hypersearch space: {'out_channels': [32], 'hidden_channels': [32], 'batch_size': [512], 'batch_size_sampler': [128], 'lr': [0.015], 'num_neighbors': [5], 'num_hops': [5]}
+0it [00:00, ?it/s]2024-06-13 11:45:57,146 - Object cfg_model has attribute 'out_channels' with value: 128
+2024-06-13 11:45:57,146 - Object cfg_model.out_channels updated to 32 
+
+2024-06-13 11:45:57,146 - Object cfg_model has attribute 'hidden_channels' with value: 256
+2024-06-13 11:45:57,146 - Object cfg_model.hidden_channels updated to 32 
+
+2024-06-13 11:45:57,148 - Object cfg.train has attribute 'batch_size' with values 1024
+2024-06-13 11:45:57,148 - Object cfg.train.batch_size updated to 512 
+
+2024-06-13 11:45:57,148 - Object cfg_model.batch_size_sampler get new attribute 128 
+
+2024-06-13 11:45:57,148 - Object cfg.train has attribute 'lr' with values 0.001
+2024-06-13 11:45:57,148 - Object cfg.train.lr updated to 0.015 
+
+2024-06-13 11:45:57,149 - Object cfg_model.num_neighbors get new attribute 5 
+
+2024-06-13 11:45:57,149 - Object cfg_model.num_hops get new attribute 5 
+
+2024-06-13 11:45:57,149 - out : 32, hidden: 32
+2024-06-13 11:45:57,149 - bs : 512, lr: 0.001
+2024-06-13 11:45:57,149 - The model VGAE is initialized.
+0it [00:00, ?it/s]2024-06-13 11:45:57,157 - Object cfg_model has attribute 'out_channels' with value: 128
+2024-06-13 11:45:57,158 - Object cfg_model.out_channels updated to 128 
+
+2024-06-13 11:45:57,158 - Object cfg_model has attribute 'hidden_channels' with value: 256
+2024-06-13 11:45:57,158 - Object cfg_model.hidden_channels updated to 128 
+
+2024-06-13 11:45:57,158 - Object cfg.train has attribute 'batch_size' with values 1024
+2024-06-13 11:45:57,158 - Object cfg.train.batch_size updated to 512 
+
+2024-06-13 11:45:57,158 - Object cfg_model.batch_size_sampler get new attribute 128 
+
+2024-06-13 11:45:57,158 - Object cfg.train has attribute 'lr' with values 0.001
+2024-06-13 11:45:57,158 - Object cfg.train.lr updated to 0.015 
+
+2024-06-13 11:45:57,158 - Object cfg_model.num_neighbors get new attribute 10 
+
+2024-06-13 11:45:57,158 - Object cfg_model.num_hops get new attribute 5 
+
+2024-06-13 11:45:57,158 - out : 128, hidden: 128
+2024-06-13 11:45:57,158 - bs : 512, lr: 0.001
+2024-06-13 11:45:57,158 - The model GAE is initialized.
+0it [00:00, ?it/s]
+Traceback (most recent call last):
+  File "/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_gerrman/core/gcns_gerrman/test_ns.py", line 360, in <module>
+    project_main()
+  File "/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_gerrman/core/gcns_gerrman/test_ns.py", line 280, in project_main
+    model.to(cfg.device)
+  File "/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1152, in to
+    return self._apply(convert)
+  File "/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch/nn/modules/module.py", line 802, in _apply
+2024-06-13 11:45:57,186 - hypersearch space: {'out_channels': [128], 'hidden_channels': [128], 'batch_size': [512], 'batch_size_sampler': [128], 'lr': [0.015], 'num_neighbors': [10], 'num_hops': [5]}
+0it [00:00, ?it/s]2024-06-13 11:45:57,187 - Object cfg_model has attribute 'out_channels' with value: 128
+2024-06-13 11:45:57,187 - Object cfg_model.out_channels updated to 128 
+
+2024-06-13 11:45:57,187 - Object cfg_model has attribute 'hidden_channels' with value: 256
+2024-06-13 11:45:57,187 - Object cfg_model.hidden_channels updated to 128 
+
+2024-06-13 11:45:57,187 - Object cfg.train has attribute 'batch_size' with values 1024
+2024-06-13 11:45:57,187 - Object cfg.train.batch_size updated to 512 
+
+2024-06-13 11:45:57,187 - Object cfg_model.batch_size_sampler get new attribute 128 
+
+    module._apply(fn)
+  File "/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch/nn/modules/module.py", line 802, in _apply
+2024-06-13 11:45:57,187 - Object cfg.train has attribute 'lr' with values 0.001
+2024-06-13 11:45:57,188 - Object cfg.train.lr updated to 0.015 
+
+2024-06-13 11:45:57,188 - Object cfg_model.num_neighbors get new attribute 10 
+
+2024-06-13 11:45:57,188 - Object cfg_model.num_hops get new attribute 5 
+
+2024-06-13 11:45:57,188 - out : 128, hidden: 128
+2024-06-13 11:45:57,188 - bs : 512, lr: 0.001
+2024-06-13 11:45:57,188 - The model GAE is initialized.
+    module._apply(fn)
+  File "/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch/nn/modules/module.py", line 802, in _apply
+    module._apply(fn)
+  File "/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch/nn/modules/module.py", line 825, in _apply
+    param_applied = fn(param)
+  File "/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1150, in convert
+    return t.to(device, dtype if t.is_floating_point() or t.is_complex() else None, non_blocking)
+RuntimeError: CUDA error: invalid device ordinal
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2024-06-13 11:45:57,261 - GAE_forall(
+  (encoder): GCNEncoder(
+    (conv_first): GCNConv(1433, 128)
+    (conv_middle): GCNConv(128, 128)
+    (conv_last): GCNConv(128, 128)
+  )
+  (decoder): InnerProduct()
+) on cuda:0
+2024-06-13 11:45:57,261 - Num parameters: 216576
+2024-06-13 11:45:57,322 - GAE_forall(
+  (encoder): GCNEncoder(
+    (conv_first): GCNConv(1433, 128)
+    (conv_middle): GCNConv(128, 128)
+    (conv_last): GCNConv(128, 128)
+  )
+  (decoder): InnerProduct()
+) on cuda:0
+2024-06-13 11:45:57,322 - Num parameters: 216576
+0it [00:00, ?it/s]
+Traceback (most recent call last):
+  File "/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_gerrman/core/gcns_gerrman/test_ns.py", line 360, in <module>
+    project_main()
+  File "/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_gerrman/core/gcns_gerrman/test_ns.py", line 280, in project_main
+    model.to(cfg.device)
+  File "/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1152, in to
+    return self._apply(convert)
+  File "/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch/nn/modules/module.py", line 802, in _apply
+    module._apply(fn)
+  File "/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch/nn/modules/module.py", line 802, in _apply
+    module._apply(fn)
+  File "/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch/nn/modules/module.py", line 802, in _apply
+    module._apply(fn)
+  File "/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch/nn/modules/module.py", line 825, in _apply
+    param_applied = fn(param)
+  File "/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1150, in convert
+    return t.to(device, dtype if t.is_floating_point() or t.is_complex() else None, non_blocking)
+RuntimeError: CUDA error: invalid device ordinal
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+/var/spool/slurmd/job1440786/slurm_script: line 49: /dev/tty: No such device or address
+/var/spool/slurmd/job1440786/slurm_script: line 53: kill: (2332090) - No such process

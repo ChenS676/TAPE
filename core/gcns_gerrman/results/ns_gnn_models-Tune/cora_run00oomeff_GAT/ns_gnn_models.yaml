@@ -39,9 +39,9 @@ model:
     hidden_channels: 128
     in_channels: 1433
     negative_slope: 0.1
-    num_hops: 5
+    num_hops: 6
     num_layers: 3
-    num_neighbors: 5
+    num_neighbors: 10
     out_channels: 128
   GCN_Variant:
     dropout: 0
@@ -131,6 +131,6 @@ train:
   runs: 10
   use_valedges_as_input: true
 wandb:
-  name_tag: cora_run00oomeff_GAT_hyperndh8jqnu
+  name_tag: cora_run00oomeff_GAT_hypergjhhq59t
   project: gtblueprint
   use: false

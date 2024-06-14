@@ -28,7 +28,7 @@ import pandas as pd
 
 
 report_step = {
-    'cora': 5, #100,
+    'cora': 2, #100,
     'pubmed': 5,
     'arxiv_2023': 5, #100,
     'ogbn-arxiv': 1,
@@ -156,18 +156,16 @@ class Trainer_NS(Trainer):
                    transform = VirtualNode()
                    subgraph = transform(subgraph)
             
-            subgraph = subgraph.to('cpu') # Neighbor Sampler working only on CPU!
             num_nodes = x.size(0)    
             batch_edge_index = subgraph.edge_index.to(self.device)
             x = x.to(self.device) 
             
-            pos_edges = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
-            neg_edges = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
+            pos_edges = self.global_to_local(subgraph.pos_edge_label_index.to('cpu'), subgraph.n_id)
+            neg_edges = self.global_to_local(subgraph.neg_edge_label_index.to('cpu'), subgraph.n_id)
             
             pos_edges = pos_edges.to(self.device)
             neg_edges = neg_edges.to(self.device)
 
-            # pos_edge =  edge_index[:, perm].to(self.device)
             if self.model_name == 'VGAE':
                 h = self.model(x, batch_edge_index)
                 loss = self.model.recon_loss(h, pos_edges, neg_edges)
@@ -208,13 +206,12 @@ class Trainer_NS(Trainer):
                 if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
                    transform = VirtualNode()
                    subgraph = transform(subgraph)
-
-            subgraph = subgraph.to('cpu')   
-            pos_edge_label_index = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
-            neg_edge_label_index = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
+   
+            pos_edge_label_index = self.global_to_local(subgraph.pos_edge_label_index.to('cpu'), subgraph.n_id)
+            neg_edge_label_index = self.global_to_local(subgraph.neg_edge_label_index.to('cpu'), subgraph.n_id)
 
             batch_edge_index = subgraph.edge_index.to(self.device)
-            x = x.to(self.device) 
+            x = subgraph.x.to(self.device) 
 
             if self.model_name == 'VGAE':
                 z = self.model(x, batch_edge_index)
@@ -223,8 +220,8 @@ class Trainer_NS(Trainer):
                                     'GCN_Variant', 'SAGE_Variant', 'GIN_Variant']:
                 z = self.model.encoder(x, batch_edge_index)
             
-            pos_pred = self.test_edge(z, pos_edge_label_index)
-            neg_pred = self.test_edge(z, neg_edge_label_index)
+            pos_pred = self.test_edge(z, pos_edge_label_index.to(self.device))
+            neg_pred = self.test_edge(z, neg_edge_label_index.to(self.device))
             
             acc = self._acc(pos_pred, neg_pred)
             

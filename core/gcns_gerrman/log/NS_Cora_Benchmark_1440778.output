@@ -1,0 +1,33 @@
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:0 --data cora --model GAE --epochs 100 --wandb True
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:1 --data cora --model VGAE --epochs 100 --wandb True
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:2 --data cora --model  --epochs 100 --wandb True
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:3 --data cora --model  --epochs 100 --wandb True
+round 0
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:0 --data cora --model GAE --epochs 100 --wandb True
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:1 --data cora --model VGAE --epochs 100 --wandb True
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:2 --data cora --model  --epochs 100 --wandb True
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:3 --data cora --model  --epochs 100 --wandb True
+round 1
+Press Ctrl+C to stop all jobs.
+Stopping all background jobs...
+
+============================= JOB FEEDBACK =============================
+
+Job ID: 1440778
+Cluster: haic
+User/Group: cc7738/aifb
+Account: aifb
+State: FAILED (exit code 1)
+Partition: normal
+Nodes: 1
+Cores per node: 60
+Nodelist: haicn1701
+CPU Utilized: 00:00:43
+CPU Efficiency: 2.11% of 00:34:00 core-walltime
+Job Wall-clock time: 00:00:34
+Starttime: Thu Jun 13 11:25:20 2024
+Endtime: Thu Jun 13 11:25:54 2024
+Memory Utilized: 1.26 GB
+Memory Efficiency: 2.56% of 48.98 GB
+Energy Consumed: 17618 Joule / 4.89388888888889 Watthours
+Average node power draw: 518.176470588235 Watt

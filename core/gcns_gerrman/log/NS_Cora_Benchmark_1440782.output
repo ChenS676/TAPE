@@ -1,0 +1,23 @@
+Press Ctrl+C to stop all jobs.
+Stopping all background jobs...
+
+============================= JOB FEEDBACK =============================
+
+Job ID: 1440782
+Cluster: haic
+User/Group: cc7738/aifb
+Account: aifb
+State: FAILED (exit code 2)
+Partition: normal
+Nodes: 1
+Cores per node: 60
+Nodelist: haicn1701
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 00:09:00 core-walltime
+Job Wall-clock time: 00:00:09
+Starttime: Thu Jun 13 11:34:24 2024
+Endtime: Thu Jun 13 11:34:33 2024
+Memory Utilized: 17.47 MB
+Memory Efficiency: 0.03% of 48.98 GB
+Energy Consumed: 3186 Joule / 0.885 Watthours
+Average node power draw: 354 Watt

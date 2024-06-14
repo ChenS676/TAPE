@@ -1,16 +1,15 @@
 #!/bin/bash
-#SBATCH --time=2-00:00:00
-#SBATCH --nodes=50
+#SBATCH --time=3-00:00:00
+#SBATCH --nodes=30
 #SBATCH --ntasks=152
-#SBATCH --gres=gpu:4
 #SBATCH --output=log/NS_Cora_Benchmark_%j.output
 #SBATCH --error=error/NS_Cora_Benchmark_%j.error
 #SBATCH --partition=cpuonly
 #SBATCH --job-name=NS_Cora_256
-#SBATCH --mem=243200mb
+#SBATCH --mem=501600mb
 
 
-#SBATCH --chdir=/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_gerrman/core/gcns_gerrman
+#SBATCH --chdir=/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_gerrman/core/res_outputs
 
 # Notification settings:
 #SBATCH --mail-type=ALL
@@ -27,7 +26,7 @@ module load devel/cmake/3.18
 module load devel/cuda/11.8
 module load compiler/gnu/12
 
-device_list=(0 1 2 3)
+device_list=(4 5 6 7)
 data=cora  #pubmed arxiv_2023
 yaml=core/yamls/cora/gcns/ns_gnn_models.yaml
 model_list=(GAT GAE VGAE GraphSage)
@@ -55,3 +54,4 @@ kill $(jobs -p)
 
 # python3 final_ns_tune.py --cfg $yaml --data $data --device cuda:0 --epochs 20 --model GAE --repeat 1 --mark_done
 # python3 final_ns_tune.py --cfg $yaml --data $data --epochs 20 --model GAE --device cuda:0 
+# python3 test_ns.py --cfg core/yamls/pubmed/gcns/ns_gnn_models.yaml --data pubmed --epochs 100 --model GAE --device cuda:0

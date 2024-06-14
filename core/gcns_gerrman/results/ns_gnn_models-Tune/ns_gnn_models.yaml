@@ -1,7 +1,7 @@
 accelerator: auto
 cfg_dest: ns_gnn_models.yaml
 data:
-  device: cpu
+  device: 0
   include_negatives: true
   name: cora
   num_features: 1433
@@ -13,7 +13,7 @@ data:
   test_pct: 0.05
   undirected: true
   val_pct: 0.15
-device: cpu
+device: 0
 metric_best:
 - Hits@10
 - MRR
@@ -25,11 +25,14 @@ model:
     k: 2
     num_layers: 3
   GAE:
+    batch_size_sampler: 128
     dropout: 0
-    hidden_channels: 256
-    in_channels: None
+    hidden_channels: 128
+    in_channels: 1433
     negative_slope: 0.2
+    num_hops: 5
     num_layers: 3
+    num_neighbors: 10
     out_channels: 128
   GAT:
     dropout: 0
@@ -64,19 +67,20 @@ model:
   VGAE:
     dropout: 0
     hidden_channels: 256
-    in_channels: 1433
+    in_channels: None
     negative_slope: 0.2
     num_layers: 3
     out_channels: 128
-  batch_size_sampler: 1024
-  device: cpu:2
+  batch_size_sampler: 128
+  device: cuda:0
   mlp_model:
     dropout: 0.1
     hidden_channels: None
     in_channels: 128
     num_layers_predictor: 3
+  params: 216576
   sampler: gsaint
-  type: VGAE
+  type: GAE
 num_threads: 11
 optimizer:
   base_lr: 0.001
@@ -88,8 +92,8 @@ run:
   multiple_splits: None
   num_threads: 11
   seed: 0
-run_dir: results/ns_gnn_models-Tune/cora_run1rpy697v_VGAE
-run_id: 0
+run_dir: results/ns_gnn_models-Tune/Tune
+run_id: 2
 sampler:
   gsaint:
     num_steps: 10
@@ -111,21 +115,21 @@ score:
     score_num_layers_predictor: 3
     score_out_channels: 1
   type: mlp_score
-seed: 0
+seed: 2
 train:
   auto_resume: false
-  batch_size: 1024
+  batch_size: 512
   device: 0
   epochs: 20
   eval_period: 1
   finetune: false
   kill_cnt: 30
   l2: 0.0
-  lr: 0.001
+  lr: 0.015
   mode: custom
   runs: 10
   use_valedges_as_input: true
 wandb:
-  name_tag: cora_run1rpy697v_VGAE
+  name_tag: Tune
   project: gtblueprint
   use: false
