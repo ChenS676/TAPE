@@ -62,14 +62,14 @@ model:
     num_layers: 3
     out_channels: 128
   VGAE:
-    batch_size_sampler: 32
+    batch_size_sampler: 128
     dropout: 0
     hidden_channels: 32
     in_channels: 1433
     negative_slope: 0.2
     num_hops: 6
     num_layers: 3
-    num_neighbors: 5
+    num_neighbors: 10
     out_channels: 32
   batch_size_sampler: 32
   device: cpu:2
@@ -118,18 +118,18 @@ score:
 seed: 0
 train:
   auto_resume: false
-  batch_size: 64
+  batch_size: 1024
   device: 0
   epochs: 20
   eval_period: 1
   finetune: false
   kill_cnt: 30
   l2: 0.0
-  lr: 0.015
+  lr: 0.01
   mode: custom
   runs: 10
   use_valedges_as_input: true
 wandb:
-  name_tag: cora_run9zlt9ue5_VGAE_hyperzqmabtsm
+  name_tag: cora_run9zlt9ue5_VGAE_hypergo6sabkp
   project: gtblueprint
   use: false

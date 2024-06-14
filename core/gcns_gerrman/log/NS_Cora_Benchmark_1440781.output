@@ -1,0 +1,81 @@
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:0 --data cora --model GAE --epochs 100 --wandb True
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:1 --data cora --model VGAE --epochs 100 --wandb True
+round 0
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:0 --data cora --model GAE --epochs 100 --wandb True
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:1 --data cora --model VGAE --epochs 100 --wandb True
+Namespace(cfg_file='core/yamls/cora/gcns/ns_gnn_models.yaml', sweep_file='core/yamls/cora/gcns/gae_sp1.yaml', data='cora', bs=32768, device='cuda:0', epochs=100, model='GAE', score='mlp_score', wandb='True', repeat=3, mark_done=False, opts=[])
+DDEVICE:  cuda:0 cuda:0
+cuda
+Number of available CUDA devices: 1
+not loaded 0 papers.
+Number of available CUDA devices: 1
+dropout: 0
+hidden_channels: 256
+in_channels: None
+negative_slope: 0.2
+num_layers: 3
+out_channels: 128
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+Namespace(cfg_file='core/yamls/cora/gcns/ns_gnn_models.yaml', sweep_file='core/yamls/cora/gcns/gae_sp1.yaml', data='cora', bs=32768, device='cuda:1', epochs=100, model='VGAE', score='mlp_score', wandb='True', repeat=3, mark_done=False, opts=[])
+DDEVICE:  cuda:1 cuda:1
+cuda
+Number of available CUDA devices: 1
+not loaded 0 papers.
+Number of available CUDA devices: 1
+dropout: 0
+hidden_channels: 256
+in_channels: None
+negative_slope: 0.2
+num_layers: 3
+out_channels: 128
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+Namespace(cfg_file='core/yamls/cora/gcns/ns_gnn_models.yaml', sweep_file='core/yamls/cora/gcns/gae_sp1.yaml', data='cora', bs=32768, device='cuda:1', epochs=100, model='VGAE', score='mlp_score', wandb='True', repeat=3, mark_done=False, opts=[])
+DDEVICE:  cuda:1 cuda:1
+cuda
+Number of available CUDA devices: 1
+not loaded 0 papers.
+Number of available CUDA devices: 1
+dropout: 0
+hidden_channels: 256
+in_channels: None
+negative_slope: 0.2
+num_layers: 3
+out_channels: 128
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+Namespace(cfg_file='core/yamls/cora/gcns/ns_gnn_models.yaml', sweep_file='core/yamls/cora/gcns/gae_sp1.yaml', data='cora', bs=32768, device='cuda:0', epochs=100, model='GAE', score='mlp_score', wandb='True', repeat=3, mark_done=False, opts=[])
+DDEVICE:  cuda:0 cuda:0
+cuda
+Number of available CUDA devices: 1
+not loaded 0 papers.
+Number of available CUDA devices: 1
+dropout: 0
+hidden_channels: 256
+in_channels: None
+negative_slope: 0.2
+num_layers: 3
+out_channels: 128
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+round 1
+Press Ctrl+C to stop all jobs.
+Stopping all background jobs...
+
+============================= JOB FEEDBACK =============================
+
+Job ID: 1440781
+Cluster: haic
+User/Group: cc7738/aifb
+Account: aifb
+State: COMPLETED (exit code 0)
+Partition: normal
+Nodes: 1
+Cores per node: 60
+Nodelist: haicn1701
+CPU Utilized: 00:00:46
+CPU Efficiency: 0.97% of 01:19:00 core-walltime
+Job Wall-clock time: 00:01:19
+Starttime: Thu Jun 13 11:31:28 2024
+Endtime: Thu Jun 13 11:32:47 2024
+Memory Utilized: 2.96 GB
+Memory Efficiency: 6.03% of 48.98 GB
+Energy Consumed: 47830 Joule / 13.2861111111111 Watthours
+Average node power draw: 605.443037974684 Watt

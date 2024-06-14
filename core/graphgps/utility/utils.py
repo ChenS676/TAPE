@@ -304,6 +304,7 @@ class Logger(object):
                        run:int =None, 
                        print_mode:bool =True) -> Tuple[float, float, float, float]:
         result = 100 * torch.tensor(self.results[run])
+        print(result.shape)
         best_valid_epoch = result[:, 1].argmax().item()
         best_train_valid, _, best_test_valid = result[best_valid_epoch]
 

@@ -60,7 +60,7 @@ model:
     emb: false
     hidden_channels: 16
     in_channels: 1433
-    num_hops: 6
+    num_hops: 5
     num_layers: 3
     num_neighbors: 5
     out_channels: 16
@@ -78,7 +78,7 @@ model:
     hidden_channels: None
     in_channels: 128
     num_layers_predictor: 3
-  params: 46928
+  params: 47489
   sampler: gsaint
   type: GraphSage
 num_threads: 11
@@ -104,12 +104,13 @@ save:
   output_dir: ./
 score:
   mlp_score:
-    product: inner
+    in_channels: 16
+    product: dot
     score_cat_n2v_feat: false
     score_cat_node_feat_mf: false
     score_dropout: 0.1
     score_gin_mlp_layer: 2
-    score_hidden_channels: 64
+    score_hidden_channels: 16
     score_in_channels: 128
     score_num_layers: 3
     score_num_layers_predictor: 3
@@ -119,7 +120,7 @@ seed: 0
 train:
   auto_resume: false
   base_lr: 0.015
-  batch_size: 64
+  batch_size: 256
   device: 0
   epochs: 20
   eval_period: 1
@@ -131,6 +132,6 @@ train:
   runs: 10
   use_valedges_as_input: true
 wandb:
-  name_tag: cora_runtjnqv6k9_GraphSage_hyper6vqfyt11
+  name_tag: cora_runtjnqv6k9_GraphSage_hyperhoulv95v
   project: gtblueprint
   use: false

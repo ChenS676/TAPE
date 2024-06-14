@@ -55,7 +55,7 @@ model:
     num_layers: 3
     out_channels: 128
   GraphSage:
-    batch_size_sampler: 32
+    batch_size_sampler: 64
     dropout: 0.1
     emb: false
     hidden_channels: 16
@@ -131,6 +131,6 @@ train:
   runs: 10
   use_valedges_as_input: true
 wandb:
-  name_tag: cora_runfdh7ook7_GraphSage_hyperhzyhqu5a
+  name_tag: cora_runfdh7ook7_GraphSage_hyperbpf0lyzd
   project: gtblueprint
   use: false

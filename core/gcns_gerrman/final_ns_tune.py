@@ -171,12 +171,6 @@ hyperparameter_ns = {
 }
 
 def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
-    
-    # process params
-    # torch.cuda.empty_cache()
-    # # then collect the garbage
-    # gc.collect()
-
     args = parse_args()
 
     print(args)
