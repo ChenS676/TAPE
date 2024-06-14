@@ -129,30 +129,39 @@ product_space = {
 }
 
 hyperparameter_space = {
-    'GAT': {'out_channels': [2**7, 2**8], 'hidden_channels':  [2**7, 2**8],
-                                'heads': [2**2, 2, 2**3], 'negative_slope': [0.1], 'dropout': [0, 0.1], 
+    'GAT': {'out_channels': [2**7], 'hidden_channels':  [2**7],
+                                'heads': [2**2], 'negative_slope': [0.1], 'dropout': [0], 
                                 'num_layers': [3],
                                 'base_lr': [0.015],
                                 'score_num_layers_predictor': [3],
                                 'score_gin_mlp_layer': [2],
-                                'score_hidden_channels': [2**6, 2**5, 2**4], 
+                                'score_hidden_channels': [2**5], 
                                 'score_out_channels': [1], 
                                 'score_num_layers': [3], 
                                 'score_dropout': [0.1], 
-                                'product': [0, 1],
+                                'product': [1],
+                                'batch_size': [256],
+                                'batch_size_sampler': [128],
+                                'lr': [0.1],
+                                'num_neighbors': [10],
+                                'num_hops': [5]
                                 },
     
     'GraphSage': {'out_channels': [2**4],
                     'hidden_channels': [2**4],
-                    'base_lr': [0.015, 0.1, 0.01],
+                    'base_lr': [0.015],
                     'score_num_layers_predictor': [3],
                     'score_gin_mlp_layer': [2],
-                    'score_hidden_channels': [2**6, 2**5, 2**4],
+                    'score_hidden_channels': [2**4],
                     'score_out_channels': [1], 
                     'score_num_layers': [3], 
                     'score_dropout': [0.1], 
-                    'product': [0, 1],
-                    
+                    'product': [1],
+                    'batch_size': [64],
+                    'batch_size_sampler': [128],
+                    'lr': [0.015],
+                    'num_neighbors': [5],
+                    'num_hops': [6]
                      },
     
     'GAE': {'out_channels': [2**7], 
