@@ -7,6 +7,7 @@ import numpy as np
 import torch
 import random
 import json
+import dgl
 from ogb.nodeproppred import PygNodePropPredDataset
 import torch_geometric.transforms as T
 from sklearn.preprocessing import normalize
@@ -15,6 +16,10 @@ from torch_geometric.datasets import Planetoid
 from torch_geometric.transforms import RandomLinkSplit
 from graphgps.utility.utils import get_git_repo_root_path, time_logger
 from typing import Tuple, List, Dict, Set, Any 
+from dgl.transforms import RowFeatNormalizer
+from ogb.nodeproppred import DglNodePropPredDataset
+
+from synthetic import Synthetic
 
 FILE = 'core/dataset/ogbn_products_orig/ogbn-products.csv'
 FILE_PATH = get_git_repo_root_path() + '/'
@@ -434,29 +439,85 @@ def load_tag_product() -> Tuple[Data, List[str]]:
 
     return data, text
 
+# first parameter can be: random, global, local
+# second parameter can be: diag, offdiag, _
+def load_graph_synthetic(type, use_mask):
+    keys = type.split('-')
+    if keys[1] == 'diag':
+        data = Synthetic(num_nodes=4000, num_features=800, num_classes=4,
+                        x_type=keys[0], e_type=keys[1],
+                        edge_density=0.01, edge_noise=0.0002, feature_noise=0.002)
+    elif keys[1] == 'offdiag':
+        data = Synthetic(num_nodes=4000, num_features=800, num_classes=4,
+                        x_type=keys[0], e_type=keys[1],
+                        edge_density=0.01, edge_noise=0.0001, feature_noise=0.002)
+    else:
+        data = Synthetic(num_nodes=4000, num_features=800, num_classes=4,
+                        x_type=keys[0], e_type=keys[1])
+
+    print('Created Synthetic Graph!')
+
+    g = dgl.remove_self_loop(data.g)
+    data.g = dgl.to_bidirected(g, copy_ndata=True)
+    
+    x = torch.tensor(data.g.ndata['feat'])
+    edge_index = torch.tensor(data.edge_index)
+    num_nodes = data.num_nodes
+
+    # split data
+    if use_mask:
+        y = torch.tensor(data.g.ndata['label'])
+        train_id, val_id, test_id, train_mask, val_mask, test_mask = get_node_mask(num_nodes)
+        
+        return Data(x=x,
+            edge_index=edge_index,
+            y=y,
+            num_nodes=num_nodes,
+            train_mask=train_mask,
+            test_mask=test_mask,
+            val_mask=val_mask,
+            node_attrs=x, 
+            edge_attrs = None, 
+            graph_attrs = None,
+            train_id = train_id,
+            val_id = val_id,
+            test_id = test_id
+        ) 
+    else:
+        return Data(x=x,
+            edge_index=edge_index,
+            num_nodes=num_nodes,
+            node_attrs=x, 
+            edge_attrs = None, 
+            graph_attrs = None
+        )
+
 # Test code
 if __name__ == '__main__':
-    graph = load_graph_arxiv23()
+    graph = load_graph_synthetic('random-diag', True)
+    print(graph)
+    # graph = load_graph_arxiv23()
+    # # print(type(graph))
+    # graph, text = load_tag_arxiv23()
     # print(type(graph))
-    graph, text = load_tag_arxiv23()
-    print(type(graph))
-    print(type(text))
+    # print(type(text))
 
     graph, _ = load_graph_cora(True)
+    print(graph)
+    # # print(type(graph))
+    # graph, text = load_tag_cora()
     # print(type(graph))
-    graph, text = load_tag_cora()
-    print(type(graph))
-    print(type(text))
+    # print(type(text))
 
-    graph, text = load_tag_ogbn_arxiv()
-    print(type(graph))
-    print(type(text))
+    # graph, text = load_tag_ogbn_arxiv()
+    # print(type(graph))
+    # print(type(text))
     
-    graph, text = load_tag_product()
-    print(type(graph))
-    print(type(text))
+    # graph, text = load_tag_product()
+    # print(type(graph))
+    # print(type(text))
     
-    graph = load_graph_pubmed()
-    graph, text = load_tag_pubmed()
-    print(type(graph))
-    print(type(text))
+    # graph = load_graph_pubmed()
+    # graph, text = load_tag_pubmed()
+    # print(type(graph))
+    # print(type(text))
