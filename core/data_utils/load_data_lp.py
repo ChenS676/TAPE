@@ -15,12 +15,13 @@ from ogb.nodeproppred import PygNodePropPredDataset
 from sklearn.preprocessing import normalize
 from yacs.config import CfgNode as CN
 from data_utils.dataset import CustomLinkDataset
+from data_utils.utils_synthetic import split_edges
 from data_utils.load_data_nc import load_tag_cora, load_tag_pubmed, \
                             load_tag_product, load_tag_ogbn_arxiv, load_tag_product, \
                             load_tag_arxiv23, load_graph_cora, load_graph_pubmed, \
                             load_graph_arxiv23, load_graph_ogbn_arxiv, load_text_cora, \
                             load_text_pubmed, load_text_arxiv23, load_text_ogbn_arxiv, \
-                            load_text_product
+                            load_text_product, load_graph_synthetic
                     
                     
 from graphgps.utility.utils import get_git_repo_root_path, config_device, init_cfg_test
@@ -144,6 +145,22 @@ def load_taglp_pubmed(cfg: CN) -> Tuple[Dict[str, Data], List[str]]:
                        cfg.include_negatives,
                        cfg.split_labels
                        )   
+    return splits, text, data
+
+def load_taglp_synthetic(cfg: CN) -> Tuple[Dict[str, Data], List[str]]:
+    # Сделать передаваемыми параметрами
+    type = 'random-diag'
+    seed = 0
+    data = load_graph_synthetic(type, False)
+    
+    # To think how implement
+    text = ''
+
+    # undirected = data.is_directed()
+    
+    cfg = config_device(cfg)
+
+    splits = split_edges(data.g, ratio=(0.7, 0.1, 0.2), seed=seed)   
     return splits, text, data
 
 # TEST CODE

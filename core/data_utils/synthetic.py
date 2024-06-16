@@ -22,7 +22,7 @@ from torch import spmm
 
 import dgl
 
-#import rwcpp
+import rwcpp
 from utils_synthetic import normalize_adj, to_adj_matrix
 
 def make_intra_edges_block(nodes, density):
@@ -208,25 +208,24 @@ class Synthetic():
             u, s, _ = torch.svd_lowrank(adj, num_features)
             return u * s.sqrt().unsqueeze(0)
         
-        # Fix it later: rwcpp in C++
-        # def make_global_features():
-        #     row, col = edge_index.cpu().numpy()
-        #     neighbors_dict = {n: col[row == n] for n in range(self.num_nodes)}
-        #     walks_arr = rwcpp.random_walks(neighbors_dict, 3, 1000)
-        #     out = torch.sparse_coo_tensor(torch.tensor([[i, j] for i, j in walks_arr.keys()]).T, 
-        #                           torch.tensor(list(walks_arr.values())).float(), (self.num_nodes, self.num_nodes))
-        #     return out
+        def make_global_features():
+            row, col = edge_index.cpu().numpy()
+            neighbors_dict = {n: col[row == n] for n in range(self.num_nodes)}
+            walks_arr = rwcpp.random_walks(neighbors_dict, 3, 1000)
+            out = torch.sparse_coo_tensor(torch.tensor([[i, j] for i, j in walks_arr.keys()]).T, 
+                                  torch.tensor(list(walks_arr.values())).float(), (self.num_nodes, self.num_nodes))
+            return out
 
         if self.x_type == 'random':
             out = torch.randint(0, 2, (self.num_nodes, num_features)).float()
         elif self.x_type == 'global':
-            u, s, _ = torch.svd_lowrank(make_structural_features(), num_features) # Here
+            u, s, _ = torch.svd_lowrank(make_global_features(), num_features) # You can change on make_structural_features
             u = u * s.sqrt().unsqueeze(0)
             u -= u.min()
             out = u
         elif self.x_type == 'local':
             f_num = int(self.num_features / self.num_classes_)
-            u, s, _ = torch.svd_lowrank(make_structural_features(), f_num) # Here
+            u, s, _ = torch.svd_lowrank(make_global_features(), f_num) # You can change on make_structural_features
             u = u * s.sqrt().unsqueeze(0)
             u -= u.min()
 
