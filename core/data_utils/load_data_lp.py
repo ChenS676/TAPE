@@ -148,6 +148,17 @@ def load_taglp_pubmed(cfg: CN) -> Tuple[Dict[str, Data], List[str]]:
     return splits, text, data
 
 def load_taglp_synthetic(cfg: CN) -> Tuple[Dict[str, Data], List[str]]:
+    """
+    This function creates data and separates it. The main function here is load_graph_synthetic.
+    
+    TODO: How to generate text stored in the text variable?
+    
+    Moreover, the authors of these synthetic data implement their own Split_edges function, 
+    but it does not work with our project.
+
+    TODO: Do we need the Split_edges function or use our get_edge_split function?
+    """    
+    
     # seed = 0
     data = load_graph_synthetic(cfg, False)
     

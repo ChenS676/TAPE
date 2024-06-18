@@ -440,8 +440,33 @@ def load_tag_product() -> Tuple[Data, List[str]]:
     return data, text
 
 # first parameter can be: random, global, local
-# second parameter can be: diag, offdiag, _
+# second parameter can be: diag, offdiag, uniform
 def load_graph_synthetic(cfg, use_mask):
+    """
+        For generating data in synthetic/gcns/ns_gnn_models.yaml have added new parameters in part: data
+
+        New input parameters:
+            gen_type: It contains from two parts
+                - First parameter: 
+                    - random : generates random binary features
+                    - global : generates global features based on random walks
+                    - local  : also generates global features, but then splits them into clusters, making them local
+                - Second parameter:
+                    - diag   : generate list of edges with identical indices ([(0, 0), (1, 1), ...])
+                    - offdiag: generate list of edges with consecutive indices ([(0, 1), (2, 3), ...])
+                    - uniform: instead of generating a list of edges, an adjacency matrix is ​​immediately generated
+            num_nodes    : number of nodes
+            num_features : number of features
+            num_classes  : number of classes, used to create clusters from all points
+            x_type       : first parameter from gen_type
+            e_type       : second parameter from gen_type
+            edge_density : same as edge_noise, but used when creating adjacency matrices without noise edges
+            edge_noise   : probability with which random nodes are selected between which edges are built, called “noise edges”
+            feature_noise: If value is greater than zero and x_type is not 'random', adds noise to the features
+        
+        New output parameters:
+            g: generated graph
+    """
     keys = cfg.gen_type.split('-')
     if keys[1] == 'diag' or keys[1] == 'offdiag':
         data = Synthetic(num_nodes=cfg.num_nodes, num_features=cfg.num_features, num_classes=cfg.num_classes,

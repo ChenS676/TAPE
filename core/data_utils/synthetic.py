@@ -165,13 +165,12 @@ class Synthetic():
         self.clusters = assign_clusters(self.num_nodes, self.num_classes)
 
         edge_index = self.make_adjacency()
-        edge_index = make_noisy_edges(edge_index, self.clusters, self.pairs, self.edge_noise)
-        self.edge_index = edge_index
+        self.edge_index = make_noisy_edges(edge_index, self.clusters, self.pairs, self.edge_noise)
         
         y = self.make_labels()
-        x = self.make_features(edge_index, self.num_features)
+        x = self.make_features(self.edge_index, self.num_features)
 
-        self.g = dgl.graph((edge_index[0], edge_index[1]), num_nodes=num_nodes)
+        self.g = dgl.graph((self.edge_index[0], self.edge_index[1]), num_nodes=num_nodes)
         self.g.ndata['feat'] = x
         self.g.ndata['label'] = y
 
@@ -219,13 +218,15 @@ class Synthetic():
         if self.x_type == 'random':
             out = torch.randint(0, 2, (self.num_nodes, num_features)).float()
         elif self.x_type == 'global':
-            u, s, _ = torch.svd_lowrank(make_global_features(), num_features) # You can change on make_structural_features
+            # You can change make_global_features on make_structural_features
+            u, s, _ = torch.svd_lowrank(make_global_features(), num_features)
             u = u * s.sqrt().unsqueeze(0)
             u -= u.min()
             out = u
         elif self.x_type == 'local':
             f_num = int(self.num_features / self.num_classes_)
-            u, s, _ = torch.svd_lowrank(make_global_features(), f_num) # You can change on make_structural_features
+            # You can change make_global_features on make_structural_features
+            u, s, _ = torch.svd_lowrank(make_global_features(), f_num)
             u = u * s.sqrt().unsqueeze(0)
             u -= u.min()
 
