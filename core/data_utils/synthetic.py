@@ -22,8 +22,8 @@ from torch import spmm
 
 import dgl
 
-import rwcpp
-from utils_synthetic import normalize_adj, to_adj_matrix
+from data_utils import rwcpp
+from data_utils.utils_synthetic import normalize_adj, to_adj_matrix
 
 def make_intra_edges_block(nodes, density):
     edge_index, visited_nodes = set(), np.zeros(len(nodes))

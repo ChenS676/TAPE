@@ -148,19 +148,26 @@ def load_taglp_pubmed(cfg: CN) -> Tuple[Dict[str, Data], List[str]]:
     return splits, text, data
 
 def load_taglp_synthetic(cfg: CN) -> Tuple[Dict[str, Data], List[str]]:
-    # Сделать передаваемыми параметрами
-    type = 'random-diag'
-    seed = 0
-    data = load_graph_synthetic(type, False)
+    # seed = 0
+    data = load_graph_synthetic(cfg, False)
     
     # To think how implement
     text = ''
 
-    # undirected = data.is_directed()
+    undirected = data.is_directed()
     
     cfg = config_device(cfg)
 
-    splits = split_edges(data.g, ratio=(0.7, 0.1, 0.2), seed=seed)   
+    splits = get_edge_split(data, 
+                    undirected,
+                    cfg.device,
+                    cfg.split_index[1], 
+                    cfg.split_index[2],
+                    cfg.include_negatives,
+                    cfg.split_labels
+                    )   
+    # Authors implementation
+    #split_edges(data.graph, ratio=(0.7, 0.1, 0.2), seed=seed)   
     return splits, text, data
 
 # TEST CODE

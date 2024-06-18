@@ -1,10 +1,16 @@
 accelerator: auto
 cfg_dest: ns_gnn_models.yaml
 data:
-  device: 0
+  device: cpu
+  edge_density: 0.01
+  edge_noise: 0.0002
+  feature_noise: 0.002
+  gen_type: random-diag
   include_negatives: true
-  name: cora
+  name: synthetic
+  num_classes: 4
   num_features: 1433
+  num_nodes: 4000
   split_index:
   - 0.8
   - 0.15
@@ -13,7 +19,7 @@ data:
   test_pct: 0.05
   undirected: true
   val_pct: 0.15
-device: 0
+device: cpu
 metric_best:
 - Hits@10
 - MRR
@@ -25,14 +31,11 @@ model:
     k: 2
     num_layers: 3
   GAE:
-    batch_size_sampler: 128
     dropout: 0
-    hidden_channels: 128
+    hidden_channels: 256
     in_channels: 1433
     negative_slope: 0.2
-    num_hops: 5
     num_layers: 3
-    num_neighbors: 10
     out_channels: 128
   GAT:
     dropout: 0
@@ -71,14 +74,13 @@ model:
     negative_slope: 0.2
     num_layers: 3
     out_channels: 128
-  batch_size_sampler: 128
-  device: cuda:0
+  batch_size_sampler: 1024
+  device: cpu:0
   mlp_model:
     dropout: 0.1
     hidden_channels: None
     in_channels: 128
     num_layers_predictor: 3
-  params: 216576
   sampler: gsaint
   type: GAE
 num_threads: 11
@@ -93,7 +95,7 @@ run:
   num_threads: 11
   seed: 0
 run_dir: results/ns_gnn_models-Tune/Tune
-run_id: 2
+run_id: 0
 sampler:
   gsaint:
     num_steps: 10
@@ -115,17 +117,17 @@ score:
     score_num_layers_predictor: 3
     score_out_channels: 1
   type: mlp_score
-seed: 2
+seed: 0
 train:
   auto_resume: false
-  batch_size: 512
+  batch_size: 1024
   device: 0
-  epochs: 20
+  epochs: 6
   eval_period: 1
   finetune: false
   kill_cnt: 30
   l2: 0.0
-  lr: 0.015
+  lr: 0.001
   mode: custom
   runs: 10
   use_valedges_as_input: true

@@ -19,7 +19,7 @@ from typing import Tuple, List, Dict, Set, Any
 from dgl.transforms import RowFeatNormalizer
 from ogb.nodeproppred import DglNodePropPredDataset
 
-from synthetic import Synthetic
+from data_utils.synthetic import Synthetic
 
 FILE = 'core/dataset/ogbn_products_orig/ogbn-products.csv'
 FILE_PATH = get_git_repo_root_path() + '/'
@@ -441,18 +441,14 @@ def load_tag_product() -> Tuple[Data, List[str]]:
 
 # first parameter can be: random, global, local
 # second parameter can be: diag, offdiag, _
-def load_graph_synthetic(type, use_mask):
-    keys = type.split('-')
-    if keys[1] == 'diag':
-        data = Synthetic(num_nodes=4000, num_features=800, num_classes=4,
+def load_graph_synthetic(cfg, use_mask):
+    keys = cfg.gen_type.split('-')
+    if keys[1] == 'diag' or keys[1] == 'offdiag':
+        data = Synthetic(num_nodes=cfg.num_nodes, num_features=cfg.num_features, num_classes=cfg.num_classes,
                         x_type=keys[0], e_type=keys[1],
-                        edge_density=0.01, edge_noise=0.0002, feature_noise=0.002)
-    elif keys[1] == 'offdiag':
-        data = Synthetic(num_nodes=4000, num_features=800, num_classes=4,
-                        x_type=keys[0], e_type=keys[1],
-                        edge_density=0.01, edge_noise=0.0001, feature_noise=0.002)
+                        edge_density=cfg.edge_density, edge_noise=cfg.edge_noise, feature_noise=cfg.feature_noise)
     else:
-        data = Synthetic(num_nodes=4000, num_features=800, num_classes=4,
+        data = Synthetic(num_nodes=cfg.num_nodes, num_features=cfg.num_features, num_classes=cfg.num_classes,
                         x_type=keys[0], e_type=keys[1])
 
     print('Created Synthetic Graph!')
@@ -481,7 +477,8 @@ def load_graph_synthetic(type, use_mask):
             graph_attrs = None,
             train_id = train_id,
             val_id = val_id,
-            test_id = test_id
+            test_id = test_id,
+            graph = data.g
         ) 
     else:
         return Data(x=x,
@@ -489,7 +486,8 @@ def load_graph_synthetic(type, use_mask):
             num_nodes=num_nodes,
             node_attrs=x, 
             edge_attrs = None, 
-            graph_attrs = None
+            graph_attrs = None,
+            graph = data.g
         )
 
 # Test code
