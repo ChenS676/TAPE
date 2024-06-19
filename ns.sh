@@ -11,7 +11,7 @@
 #SBATCH --error=error/TAG_Benchmark_%j.error
 #SBATCH --gres=gpu:full:4
 
-#SBATCH --chdir=/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_gerrman/core/res_outputs
+#SBATCH --chdir=/hkfs/work/workspace_haic/scratch/cc7738-TAGBench/TAPE_gerrman/TAPE/core/res_outputs
 
 # Notification settings:
 #SBATCH --mail-type=ALL
@@ -21,9 +21,9 @@
 source /hkfs/home/project/hk-project-test-p0021478/cc7738/anaconda3/etc/profile.d/conda.sh
 
 conda activate ss
-cd /hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_gerrman/core/data_utils
+cd /hkfs/work/workspace_haic/scratch/cc7738-TAGBench/TAPE_gerrman/TAPE/core/data_utils
 g++ -O3 -Wall -shared -std=c++11 -fPIC $(python3 -m pybind11 --includes) rwcpp.cpp -o rwcpp$(python3-config --extension-suffix)
-cd /hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_gerrman/core/gcns
+cd /hkfs/work/workspace_haic/scratch/cc7738-TAGBench/TAPE_gerrman/TAPE/core/gcns
 # <<< conda initialize <<<
 module purge
 module load devel/cmake/3.18
