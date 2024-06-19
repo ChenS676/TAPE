@@ -1,20 +1,14 @@
 accelerator: auto
 cfg_dest: ns_gnn_models.yaml
 data:
-  device: cpu
-  edge_density: 0.01
-  edge_noise: 0.0002
-  feature_noise: 0.002
-  gen_type: random-diag
+  device: cpu:2
   include_negatives: true
-  name: synthetic
-  num_classes: 4
+  name: arxiv_2023
   num_features: 1433
-  num_nodes: 4000
   split_index:
-  - 0.8
-  - 0.15
-  - 0.05
+  - 0.2
+  - 0.08
+  - 0.015
   split_labels: true
   test_pct: 0.05
   undirected: true
@@ -31,14 +25,11 @@ model:
     k: 2
     num_layers: 3
   GAE:
-    batch_size_sampler: 128
     dropout: 0
-    hidden_channels: 128
-    in_channels: 1433
+    hidden_channels: 256
+    in_channels: None
     negative_slope: 0.2
-    num_hops: 5
     num_layers: 3
-    num_neighbors: 10
     out_channels: 128
   GAT:
     dropout: 0
@@ -71,22 +62,25 @@ model:
     num_layers: 3
     out_channels: 128
   VGAE:
+    batch_size_sampler: 128
     dropout: 0
-    hidden_channels: 256
-    in_channels: None
+    hidden_channels: 32
+    in_channels: 300
     negative_slope: 0.2
+    num_hops: 5
     num_layers: 3
-    out_channels: 128
+    num_neighbors: 5
+    out_channels: 32
   batch_size_sampler: 128
-  device: cpu:0
+  device: cpu:2
   mlp_model:
     dropout: 0.1
     hidden_channels: None
     in_channels: 128
     num_layers_predictor: 3
-  params: 216576
+  params: 12800
   sampler: gsaint
-  type: GAE
+  type: VGAE
 num_threads: 11
 optimizer:
   base_lr: 0.001
@@ -98,7 +92,7 @@ run:
   multiple_splits: None
   num_threads: 11
   seed: 0
-run_dir: results/ns_gnn_models-Tune/Tune
+run_dir: results/ns_gnn_models-Tune/arxiv_2023_run189jo3eq_VGAE
 run_id: 0
 sampler:
   gsaint:
@@ -126,7 +120,7 @@ train:
   auto_resume: false
   batch_size: 512
   device: 0
-  epochs: 6
+  epochs: 100
   eval_period: 1
   finetune: false
   kill_cnt: 30
@@ -136,6 +130,6 @@ train:
   runs: 10
   use_valedges_as_input: true
 wandb:
-  name_tag: Tune
+  name_tag: arxiv_2023_run189jo3eq_VGAE_hypermg4h18aj
   project: gtblueprint
   use: false

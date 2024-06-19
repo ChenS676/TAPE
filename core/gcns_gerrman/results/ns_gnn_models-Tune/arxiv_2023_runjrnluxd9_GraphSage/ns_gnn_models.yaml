@@ -1,16 +1,10 @@
 accelerator: auto
 cfg_dest: ns_gnn_models.yaml
 data:
-  device: cpu
-  edge_density: 0.01
-  edge_noise: 0.0002
-  feature_noise: 0.002
-  gen_type: random-diag
+  device: cpu:3
   include_negatives: true
-  name: synthetic
-  num_classes: 4
+  name: arxiv_2023
   num_features: 1433
-  num_nodes: 4000
   split_index:
   - 0.8
   - 0.15
@@ -31,14 +25,11 @@ model:
     k: 2
     num_layers: 3
   GAE:
-    batch_size_sampler: 128
     dropout: 0
-    hidden_channels: 128
-    in_channels: 1433
+    hidden_channels: 256
+    in_channels: None
     negative_slope: 0.2
-    num_hops: 5
     num_layers: 3
-    num_neighbors: 10
     out_channels: 128
   GAT:
     dropout: 0
@@ -64,12 +55,15 @@ model:
     num_layers: 3
     out_channels: 128
   GraphSage:
+    batch_size_sampler: 128
     dropout: 0.1
     emb: false
-    hidden_channels: 256
-    in_channels: None
+    hidden_channels: 16
+    in_channels: 300
+    num_hops: 6
     num_layers: 3
-    out_channels: 128
+    num_neighbors: 5
+    out_channels: 16
   VGAE:
     dropout: 0
     hidden_channels: 256
@@ -78,15 +72,15 @@ model:
     num_layers: 3
     out_channels: 128
   batch_size_sampler: 128
-  device: cpu:0
+  device: cpu:3
   mlp_model:
     dropout: 0.1
     hidden_channels: None
     in_channels: 128
     num_layers_predictor: 3
-  params: 216576
+  params: 11233
   sampler: gsaint
-  type: GAE
+  type: GraphSage
 num_threads: 11
 optimizer:
   base_lr: 0.001
@@ -98,7 +92,7 @@ run:
   multiple_splits: None
   num_threads: 11
   seed: 0
-run_dir: results/ns_gnn_models-Tune/Tune
+run_dir: results/ns_gnn_models-Tune/arxiv_2023_runjrnluxd9_GraphSage
 run_id: 0
 sampler:
   gsaint:
@@ -110,23 +104,25 @@ save:
   output_dir: ./
 score:
   mlp_score:
-    product: inner
+    in_channels: 16
+    product: dot
     score_cat_n2v_feat: false
     score_cat_node_feat_mf: false
     score_dropout: 0.1
     score_gin_mlp_layer: 2
-    score_hidden_channels: 64
+    score_hidden_channels: 16
     score_in_channels: 128
-    score_num_layers: 1
+    score_num_layers: 3
     score_num_layers_predictor: 3
     score_out_channels: 1
   type: mlp_score
 seed: 0
 train:
   auto_resume: false
-  batch_size: 512
+  base_lr: 0.015
+  batch_size: 64
   device: 0
-  epochs: 6
+  epochs: 100
   eval_period: 1
   finetune: false
   kill_cnt: 30
@@ -136,6 +132,6 @@ train:
   runs: 10
   use_valedges_as_input: true
 wandb:
-  name_tag: Tune
+  name_tag: arxiv_2023_runjrnluxd9_GraphSage_hyperdkxdudgk
   project: gtblueprint
   use: false

@@ -7,6 +7,7 @@ import numpy as np
 import torch
 import random
 import json
+import dgl
 from ogb.nodeproppred import PygNodePropPredDataset
 import torch_geometric.transforms as T
 from sklearn.preprocessing import normalize
@@ -15,6 +16,10 @@ from torch_geometric.datasets import Planetoid
 from torch_geometric.transforms import RandomLinkSplit
 from graphgps.utility.utils import get_git_repo_root_path, time_logger
 from typing import Tuple, List, Dict, Set, Any 
+from dgl.transforms import RowFeatNormalizer
+from ogb.nodeproppred import DglNodePropPredDataset
+
+from data_utils.synthetic import Synthetic
 
 FILE = 'core/dataset/ogbn_products_orig/ogbn-products.csv'
 FILE_PATH = get_git_repo_root_path() + '/'
@@ -434,29 +439,108 @@ def load_tag_product() -> Tuple[Data, List[str]]:
 
     return data, text
 
+# first parameter can be: random, global, local
+# second parameter can be: diag, offdiag, uniform
+def load_graph_synthetic(cfg, use_mask):
+    """
+        For generating data in synthetic/gcns/ns_gnn_models.yaml have added new parameters in part: data
+
+        New input parameters:
+            gen_type: It contains from two parts
+                - First parameter: 
+                    - random : generates random binary features
+                    - global : generates global features based on random walks
+                    - local  : also generates global features, but then splits them into clusters, making them local
+                - Second parameter:
+                    - diag   : generate list of edges with identical indices ([(0, 0), (1, 1), ...])
+                    - offdiag: generate list of edges with consecutive indices ([(0, 1), (2, 3), ...])
+                    - uniform: instead of generating a list of edges, an adjacency matrix is ​​immediately generated
+            num_nodes    : number of nodes
+            num_features : number of features
+            num_classes  : number of classes, used to create clusters from all points
+            x_type       : first parameter from gen_type
+            e_type       : second parameter from gen_type
+            edge_density : same as edge_noise, but used when creating adjacency matrices without noise edges
+            edge_noise   : probability with which random nodes are selected between which edges are built, called “noise edges”
+            feature_noise: If value is greater than zero and x_type is not 'random', adds noise to the features
+        
+        New output parameters:
+            g: generated graph
+    """
+    keys = cfg.gen_type.split('-')
+    if keys[1] == 'diag' or keys[1] == 'offdiag':
+        data = Synthetic(num_nodes=cfg.num_nodes, num_features=cfg.num_features, num_classes=cfg.num_classes,
+                        x_type=keys[0], e_type=keys[1],
+                        edge_density=cfg.edge_density, edge_noise=cfg.edge_noise, feature_noise=cfg.feature_noise)
+    else:
+        data = Synthetic(num_nodes=cfg.num_nodes, num_features=cfg.num_features, num_classes=cfg.num_classes,
+                        x_type=keys[0], e_type=keys[1])
+
+    print('Created Synthetic Graph!')
+
+    g = dgl.remove_self_loop(data.g)
+    data.g = dgl.to_bidirected(g, copy_ndata=True)
+    
+    x = torch.tensor(data.g.ndata['feat'])
+    edge_index = torch.tensor(data.edge_index)
+    num_nodes = data.num_nodes
+
+    # split data
+    if use_mask:
+        y = torch.tensor(data.g.ndata['label'])
+        train_id, val_id, test_id, train_mask, val_mask, test_mask = get_node_mask(num_nodes)
+        
+        return Data(x=x,
+            edge_index=edge_index,
+            y=y,
+            num_nodes=num_nodes,
+            train_mask=train_mask,
+            test_mask=test_mask,
+            val_mask=val_mask,
+            node_attrs=x, 
+            edge_attrs = None, 
+            graph_attrs = None,
+            train_id = train_id,
+            val_id = val_id,
+            test_id = test_id,
+            graph = data.g
+        ) 
+    else:
+        return Data(x=x,
+            edge_index=edge_index,
+            num_nodes=num_nodes,
+            node_attrs=x, 
+            edge_attrs = None, 
+            graph_attrs = None,
+            graph = data.g
+        )
+
 # Test code
 if __name__ == '__main__':
-    graph = load_graph_arxiv23()
+    graph = load_graph_synthetic('random-diag', True)
+    print(graph)
+    # graph = load_graph_arxiv23()
+    # # print(type(graph))
+    # graph, text = load_tag_arxiv23()
     # print(type(graph))
-    graph, text = load_tag_arxiv23()
-    print(type(graph))
-    print(type(text))
+    # print(type(text))
 
     graph, _ = load_graph_cora(True)
+    print(graph)
+    # # print(type(graph))
+    # graph, text = load_tag_cora()
     # print(type(graph))
-    graph, text = load_tag_cora()
-    print(type(graph))
-    print(type(text))
+    # print(type(text))
 
-    graph, text = load_tag_ogbn_arxiv()
-    print(type(graph))
-    print(type(text))
+    # graph, text = load_tag_ogbn_arxiv()
+    # print(type(graph))
+    # print(type(text))
     
-    graph, text = load_tag_product()
-    print(type(graph))
-    print(type(text))
+    # graph, text = load_tag_product()
+    # print(type(graph))
+    # print(type(text))
     
-    graph = load_graph_pubmed()
-    graph, text = load_tag_pubmed()
-    print(type(graph))
-    print(type(text))
+    # graph = load_graph_pubmed()
+    # graph, text = load_tag_pubmed()
+    # print(type(graph))
+    # print(type(text))

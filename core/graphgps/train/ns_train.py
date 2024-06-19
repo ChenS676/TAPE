@@ -33,6 +33,7 @@ report_step = {
     'arxiv_2023': 5, #100,
     'ogbn-arxiv': 1,
     'ogbn-products': 1,
+    'synthetic': 2,
 }
 
 def data_loader(data, batch_size_sampler, num_neighbors, num_hops):
