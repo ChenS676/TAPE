@@ -59,11 +59,11 @@ class Trainer():
         self.print_logger = print_logger
         
         report_step = {
-                'cora': 1,
-                'pubmed': 100,
-                'arxiv_2023': 100,
-                'ogbn-arxiv': 1,
-                'ogbn-products': 1,
+            'cora': 1,
+            'pubmed': 100,
+            'arxiv_2023': 100,
+            'ogbn-arxiv': 1,
+            'ogbn-products': 1,
         }
 
         self.report_step = report_step[cfg.data.name]

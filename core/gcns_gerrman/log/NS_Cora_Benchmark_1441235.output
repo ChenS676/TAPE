@@ -1,0 +1,33 @@
+Namespace(cfg_file='core/yamls/pubmed/gcns/ns_gnn_models.yaml', sweep_file='core/yamls/cora/gcns/gae_sp1.yaml', data='pubmed', bs=32768, device='cuda:0', epochs=200, model='VGAE', score='mlp_score', wandb=None, repeat=3, mark_done=False, opts=[])
+DDEVICE:  cuda:0 cuda:0
+cuda
+Number of available CUDA devices: 4
+Number of available CUDA devices: 4
+dropout: 0
+hidden_channels: 256
+in_channels: None
+negative_slope: 0.2
+num_layers: 3
+out_channels: 128
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+
+============================= JOB FEEDBACK =============================
+
+Job ID: 1441235
+Cluster: haic
+User/Group: cc7738/aifb
+Account: aifb
+State: CANCELLED (exit code 0)
+Partition: normal
+Nodes: 1
+Cores per node: 2
+Nodelist: haicn1710
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 01:01:52 core-walltime
+Job Wall-clock time: 00:30:56
+Starttime: Sat Jun 15 07:19:47 2024
+Endtime: Sat Jun 15 07:50:43 2024
+Memory Utilized: 1.23 GB
+Memory Efficiency: 0.25% of 489.84 GB
+Energy Consumed: 1058502 Joule / 294.028333333333 Watthours
+Average node power draw: 570.313577586207 Watt

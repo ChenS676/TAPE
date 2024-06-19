@@ -1,0 +1,1449 @@
+/home/aifb/cc7738/anaconda3/envs/ss/lib/python3.9/site-packages/torch_geometric/graphgym/imports.py:14: UserWarning: Please install 'pytorch_lightning' via  'pip install pytorch_lightning' in order to use GraphGym
+  warnings.warn("Please install 'pytorch_lightning' via  "
+2024-06-14 23:29:59,952 - The pubmed graph with shape torch.Size([19717, 500]) is loaded on cuda:0,
+Split index: [0.8, 0.15, 0.05] based on 88648 samples.
+Train: 0.8% (141838 samples),
+Valid: 0.15% (26594 samples),
+Test:  0.05% (8864 samples)
+2024-06-14 23:29:59,958 - hypersearch space: {'out_channels': [128], 'hidden_channels': [128], 'batch_size': [1024]}
+0it [00:00, ?it/s]2024-06-14 23:29:59,959 - Object cfg_model has attribute 'out_channels' with value: 128
+2024-06-14 23:29:59,959 - Object cfg_model.out_channels updated to 128 
+
+2024-06-14 23:29:59,959 - Object cfg_model has attribute 'hidden_channels' with value: 256
+2024-06-14 23:29:59,959 - Object cfg_model.hidden_channels updated to 128 
+
+2024-06-14 23:29:59,959 - Object cfg.train has attribute 'batch_size' with values 1024
+2024-06-14 23:29:59,959 - Object cfg.train.batch_size updated to 256 
+
+2024-06-14 23:29:59,959 - Object cfg.train has attribute 'lr' with values 0.001
+2024-06-14 23:29:59,960 - Object cfg.train.lr updated to 0.015 
+
+2024-06-14 23:29:59,960 - Object cfg_model.batch_size_sampler get new attribute 32 
+
+2024-06-14 23:29:59,960 - Object cfg_model.num_neighbors get new attribute 5 
+
+2024-06-14 23:29:59,960 - Object cfg_model.num_hops get new attribute 5 
+
+2024-06-14 23:29:59,960 - out : 128, hidden: 128
+2024-06-14 23:29:59,960 - bs : 256, lr: 0.001
+2024-06-14 23:29:59,960 - The model GAE is initialized.
+2024-06-14 23:30:00,000 - GAE_forall(
+  (encoder): GCNEncoder(
+    (conv_first): GCNConv(500, 128)
+    (conv_middle): GCNConv(128, 128)
+    (conv_last): GCNConv(128, 128)
+  )
+  (decoder): InnerProduct()
+) on cuda:0
+2024-06-14 23:30:00,000 - Num parameters: 97152
+2024-06-14 23:30:00,007 - config saved into results/ns_gnn_models-Tune/Tune
+2024-06-14 23:30:00,007 - Run 0 with seed 0 and split 0 on device cuda:0
+/hkfs/work/workspace_haic/scratch/cc7738-TAGBench/TAPE_gerrman/TAPE/core/graphgps/splits/neighbor_sampler.py:55: UserWarning: The usage of the 'directed' argument in 'NeighborSampler' is deprecated. Use `subgraph_type='induced'` instead.
+  warnings.warn(f"The usage of the 'directed' argument in "
+2024-06-14 23:40:46,610 - Epoch: 005, Loss_train: 0.9232, AUC: 0.9739, AP: 0.9988, MRR: 0.3332, Hit@10 0.6596
+INFO:graphgps.utility.utils:Epoch: 005, Loss_train: 0.9232, AUC: 0.9739, AP: 0.9988, MRR: 0.3332, Hit@10 0.6596
+2024-06-14 23:40:46,610 - Epoch: 005, Loss_valid: 0.9232, AUC: 0.9240, AP: 0.9838, MRR: 0.1760, Hit@10 0.3732
+INFO:graphgps.utility.utils:Epoch: 005, Loss_valid: 0.9232, AUC: 0.9240, AP: 0.9838, MRR: 0.1760, Hit@10 0.3732
+2024-06-14 23:40:46,611 - Epoch: 005, Loss_test: 0.9232, AUC: 0.9522, AP: 0.9898, MRR: 0.4488, Hit@10 0.7702
+INFO:graphgps.utility.utils:Epoch: 005, Loss_test: 0.9232, AUC: 0.9522, AP: 0.9898, MRR: 0.4488, Hit@10 0.7702
+2024-06-14 23:40:46,611 - Run: 01, Key: Hits@1, Epoch: 05, Loss: 0.9232, Train: 19.38, Valid: 8.12, Test: 30.52%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 05, Loss: 0.9232, Train: 19.38, Valid: 8.12, Test: 30.52%
+2024-06-14 23:40:46,611 - Run: 01, Key: Hits@3, Epoch: 05, Loss: 0.9232, Train: 39.34, Valid: 12.92, Test: 47.50%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 05, Loss: 0.9232, Train: 39.34, Valid: 12.92, Test: 47.50%
+2024-06-14 23:40:46,611 - Run: 01, Key: Hits@10, Epoch: 05, Loss: 0.9232, Train: 65.96, Valid: 37.32, Test: 77.02%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 05, Loss: 0.9232, Train: 65.96, Valid: 37.32, Test: 77.02%
+2024-06-14 23:40:46,611 - Run: 01, Key: Hits@20, Epoch: 05, Loss: 0.9232, Train: 75.97, Valid: 54.28, Test: 85.56%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 05, Loss: 0.9232, Train: 75.97, Valid: 54.28, Test: 85.56%
+2024-06-14 23:40:46,611 - Run: 01, Key: Hits@50, Epoch: 05, Loss: 0.9232, Train: 90.00, Valid: 79.75, Test: 96.28%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 05, Loss: 0.9232, Train: 90.00, Valid: 79.75, Test: 96.28%
+2024-06-14 23:40:46,614 - Run: 01, Key: Hits@100, Epoch: 05, Loss: 0.9232, Train: 95.62, Valid: 92.32, Test: 98.46%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 05, Loss: 0.9232, Train: 95.62, Valid: 92.32, Test: 98.46%
+2024-06-14 23:40:46,614 - Run: 01, Key: MRR, Epoch: 05, Loss: 0.9232, Train: 33.32, Valid: 17.60, Test: 44.88%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 05, Loss: 0.9232, Train: 33.32, Valid: 17.60, Test: 44.88%
+2024-06-14 23:40:46,614 - Run: 01, Key: mrr_hit1, Epoch: 05, Loss: 0.9232, Train: 19.38, Valid: 8.12, Test: 30.52%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 05, Loss: 0.9232, Train: 19.38, Valid: 8.12, Test: 30.52%
+2024-06-14 23:40:46,614 - Run: 01, Key: mrr_hit3, Epoch: 05, Loss: 0.9232, Train: 39.34, Valid: 12.92, Test: 47.50%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 05, Loss: 0.9232, Train: 39.34, Valid: 12.92, Test: 47.50%
+2024-06-14 23:40:46,614 - Run: 01, Key: mrr_hit10, Epoch: 05, Loss: 0.9232, Train: 65.96, Valid: 37.32, Test: 77.02%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 05, Loss: 0.9232, Train: 65.96, Valid: 37.32, Test: 77.02%
+2024-06-14 23:40:46,614 - Run: 01, Key: mrr_hit20, Epoch: 05, Loss: 0.9232, Train: 75.97, Valid: 54.28, Test: 85.56%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 05, Loss: 0.9232, Train: 75.97, Valid: 54.28, Test: 85.56%
+2024-06-14 23:40:46,614 - Run: 01, Key: mrr_hit50, Epoch: 05, Loss: 0.9232, Train: 90.00, Valid: 79.75, Test: 96.28%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 05, Loss: 0.9232, Train: 90.00, Valid: 79.75, Test: 96.28%
+2024-06-14 23:40:46,614 - Run: 01, Key: mrr_hit100, Epoch: 05, Loss: 0.9232, Train: 95.62, Valid: 92.32, Test: 98.46%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 05, Loss: 0.9232, Train: 95.62, Valid: 92.32, Test: 98.46%
+2024-06-14 23:40:46,614 - Run: 01, Key: AUC, Epoch: 05, Loss: 0.9232, Train: 97.39, Valid: 92.40, Test: 95.22%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 05, Loss: 0.9232, Train: 97.39, Valid: 92.40, Test: 95.22%
+2024-06-14 23:40:46,614 - Run: 01, Key: AP, Epoch: 05, Loss: 0.9232, Train: 99.88, Valid: 98.38, Test: 98.98%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 05, Loss: 0.9232, Train: 99.88, Valid: 98.38, Test: 98.98%
+2024-06-14 23:40:46,615 - Run: 01, Key: ACC, Epoch: 05, Loss: 0.9232, Train: 98.00, Valid: 90.81, Test: 92.36%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 05, Loss: 0.9232, Train: 98.00, Valid: 90.81, Test: 92.36%
+2024-06-14 23:40:46,615 - ---
+INFO:graphgps.utility.utils:---
+2024-06-14 23:51:38,239 - Epoch: 010, Loss_train: 0.7054, AUC: 0.9819, AP: 0.9991, MRR: 0.3621, Hit@10 0.7473
+INFO:graphgps.utility.utils:Epoch: 010, Loss_train: 0.7054, AUC: 0.9819, AP: 0.9991, MRR: 0.3621, Hit@10 0.7473
+2024-06-14 23:51:38,239 - Epoch: 010, Loss_valid: 0.7054, AUC: 0.9210, AP: 0.9819, MRR: 0.2072, Hit@10 0.3318
+INFO:graphgps.utility.utils:Epoch: 010, Loss_valid: 0.7054, AUC: 0.9210, AP: 0.9819, MRR: 0.2072, Hit@10 0.3318
+2024-06-14 23:51:38,239 - Epoch: 010, Loss_test: 0.7054, AUC: 0.9430, AP: 0.9881, MRR: 0.3906, Hit@10 0.6602
+INFO:graphgps.utility.utils:Epoch: 010, Loss_test: 0.7054, AUC: 0.9430, AP: 0.9881, MRR: 0.3906, Hit@10 0.6602
+2024-06-14 23:51:38,239 - Run: 01, Key: Hits@1, Epoch: 10, Loss: 0.7054, Train: 14.37, Valid: 13.59, Test: 26.69%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 10, Loss: 0.7054, Train: 14.37, Valid: 13.59, Test: 26.69%
+2024-06-14 23:51:38,239 - Run: 01, Key: Hits@3, Epoch: 10, Loss: 0.7054, Train: 48.31, Valid: 18.43, Test: 38.64%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 10, Loss: 0.7054, Train: 48.31, Valid: 18.43, Test: 38.64%
+2024-06-14 23:51:38,239 - Run: 01, Key: Hits@10, Epoch: 10, Loss: 0.7054, Train: 74.73, Valid: 33.18, Test: 66.02%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 10, Loss: 0.7054, Train: 74.73, Valid: 33.18, Test: 66.02%
+2024-06-14 23:51:38,239 - Run: 01, Key: Hits@20, Epoch: 10, Loss: 0.7054, Train: 82.01, Valid: 52.98, Test: 86.27%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 10, Loss: 0.7054, Train: 82.01, Valid: 52.98, Test: 86.27%
+2024-06-14 23:51:38,239 - Run: 01, Key: Hits@50, Epoch: 10, Loss: 0.7054, Train: 92.63, Valid: 77.14, Test: 95.59%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 10, Loss: 0.7054, Train: 92.63, Valid: 77.14, Test: 95.59%
+2024-06-14 23:51:38,239 - Run: 01, Key: Hits@100, Epoch: 10, Loss: 0.7054, Train: 97.17, Valid: 90.55, Test: 97.88%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 10, Loss: 0.7054, Train: 97.17, Valid: 90.55, Test: 97.88%
+2024-06-14 23:51:38,239 - Run: 01, Key: MRR, Epoch: 10, Loss: 0.7054, Train: 36.21, Valid: 20.72, Test: 39.06%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 10, Loss: 0.7054, Train: 36.21, Valid: 20.72, Test: 39.06%
+2024-06-14 23:51:38,239 - Run: 01, Key: mrr_hit1, Epoch: 10, Loss: 0.7054, Train: 14.37, Valid: 13.59, Test: 26.69%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 10, Loss: 0.7054, Train: 14.37, Valid: 13.59, Test: 26.69%
+2024-06-14 23:51:38,239 - Run: 01, Key: mrr_hit3, Epoch: 10, Loss: 0.7054, Train: 48.31, Valid: 18.43, Test: 38.64%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 10, Loss: 0.7054, Train: 48.31, Valid: 18.43, Test: 38.64%
+2024-06-14 23:51:38,239 - Run: 01, Key: mrr_hit10, Epoch: 10, Loss: 0.7054, Train: 74.73, Valid: 33.18, Test: 66.02%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 10, Loss: 0.7054, Train: 74.73, Valid: 33.18, Test: 66.02%
+2024-06-14 23:51:38,239 - Run: 01, Key: mrr_hit20, Epoch: 10, Loss: 0.7054, Train: 82.01, Valid: 52.98, Test: 86.27%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 10, Loss: 0.7054, Train: 82.01, Valid: 52.98, Test: 86.27%
+2024-06-14 23:51:38,239 - Run: 01, Key: mrr_hit50, Epoch: 10, Loss: 0.7054, Train: 92.63, Valid: 77.14, Test: 95.59%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 10, Loss: 0.7054, Train: 92.63, Valid: 77.14, Test: 95.59%
+2024-06-14 23:51:38,240 - Run: 01, Key: mrr_hit100, Epoch: 10, Loss: 0.7054, Train: 97.17, Valid: 90.55, Test: 97.88%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 10, Loss: 0.7054, Train: 97.17, Valid: 90.55, Test: 97.88%
+2024-06-14 23:51:38,240 - Run: 01, Key: AUC, Epoch: 10, Loss: 0.7054, Train: 98.19, Valid: 92.10, Test: 94.30%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 10, Loss: 0.7054, Train: 98.19, Valid: 92.10, Test: 94.30%
+2024-06-14 23:51:38,240 - Run: 01, Key: AP, Epoch: 10, Loss: 0.7054, Train: 99.91, Valid: 98.19, Test: 98.81%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 10, Loss: 0.7054, Train: 99.91, Valid: 98.19, Test: 98.81%
+2024-06-14 23:51:38,240 - Run: 01, Key: ACC, Epoch: 10, Loss: 0.7054, Train: 98.12, Valid: 90.04, Test: 90.94%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 10, Loss: 0.7054, Train: 98.12, Valid: 90.04, Test: 90.94%
+2024-06-14 23:51:38,240 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 00:02:31,155 - Epoch: 015, Loss_train: 0.4873, AUC: 0.9880, AP: 0.9994, MRR: 0.4449, Hit@10 0.8413
+INFO:graphgps.utility.utils:Epoch: 015, Loss_train: 0.4873, AUC: 0.9880, AP: 0.9994, MRR: 0.4449, Hit@10 0.8413
+2024-06-15 00:02:31,155 - Epoch: 015, Loss_valid: 0.4873, AUC: 0.9286, AP: 0.9852, MRR: 0.1793, Hit@10 0.2626
+INFO:graphgps.utility.utils:Epoch: 015, Loss_valid: 0.4873, AUC: 0.9286, AP: 0.9852, MRR: 0.1793, Hit@10 0.2626
+2024-06-15 00:02:31,155 - Epoch: 015, Loss_test: 0.4873, AUC: 0.9474, AP: 0.9902, MRR: 0.5245, Hit@10 0.7668
+INFO:graphgps.utility.utils:Epoch: 015, Loss_test: 0.4873, AUC: 0.9474, AP: 0.9902, MRR: 0.5245, Hit@10 0.7668
+2024-06-15 00:02:31,155 - Run: 01, Key: Hits@1, Epoch: 15, Loss: 0.4873, Train: 17.84, Valid: 9.69, Test: 42.66%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 15, Loss: 0.4873, Train: 17.84, Valid: 9.69, Test: 42.66%
+2024-06-15 00:02:31,155 - Run: 01, Key: Hits@3, Epoch: 15, Loss: 0.4873, Train: 65.99, Valid: 16.77, Test: 47.16%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 15, Loss: 0.4873, Train: 65.99, Valid: 16.77, Test: 47.16%
+2024-06-15 00:02:31,155 - Run: 01, Key: Hits@10, Epoch: 15, Loss: 0.4873, Train: 84.13, Valid: 26.26, Test: 76.68%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 15, Loss: 0.4873, Train: 84.13, Valid: 26.26, Test: 76.68%
+2024-06-15 00:02:31,155 - Run: 01, Key: Hits@20, Epoch: 15, Loss: 0.4873, Train: 89.22, Valid: 57.39, Test: 85.58%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 15, Loss: 0.4873, Train: 89.22, Valid: 57.39, Test: 85.58%
+2024-06-15 00:02:31,155 - Run: 01, Key: Hits@50, Epoch: 15, Loss: 0.4873, Train: 95.67, Valid: 80.29, Test: 93.13%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 15, Loss: 0.4873, Train: 95.67, Valid: 80.29, Test: 93.13%
+2024-06-15 00:02:31,155 - Run: 01, Key: Hits@100, Epoch: 15, Loss: 0.4873, Train: 97.93, Valid: 92.56, Test: 98.05%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 15, Loss: 0.4873, Train: 97.93, Valid: 92.56, Test: 98.05%
+2024-06-15 00:02:31,155 - Run: 01, Key: MRR, Epoch: 15, Loss: 0.4873, Train: 44.49, Valid: 17.93, Test: 52.45%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 15, Loss: 0.4873, Train: 44.49, Valid: 17.93, Test: 52.45%
+2024-06-15 00:02:31,155 - Run: 01, Key: mrr_hit1, Epoch: 15, Loss: 0.4873, Train: 17.84, Valid: 9.69, Test: 42.66%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 15, Loss: 0.4873, Train: 17.84, Valid: 9.69, Test: 42.66%
+2024-06-15 00:02:31,155 - Run: 01, Key: mrr_hit3, Epoch: 15, Loss: 0.4873, Train: 65.99, Valid: 16.77, Test: 47.16%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 15, Loss: 0.4873, Train: 65.99, Valid: 16.77, Test: 47.16%
+2024-06-15 00:02:31,155 - Run: 01, Key: mrr_hit10, Epoch: 15, Loss: 0.4873, Train: 84.13, Valid: 26.26, Test: 76.68%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 15, Loss: 0.4873, Train: 84.13, Valid: 26.26, Test: 76.68%
+2024-06-15 00:02:31,155 - Run: 01, Key: mrr_hit20, Epoch: 15, Loss: 0.4873, Train: 89.22, Valid: 57.39, Test: 85.58%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 15, Loss: 0.4873, Train: 89.22, Valid: 57.39, Test: 85.58%
+2024-06-15 00:02:31,155 - Run: 01, Key: mrr_hit50, Epoch: 15, Loss: 0.4873, Train: 95.67, Valid: 80.29, Test: 93.13%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 15, Loss: 0.4873, Train: 95.67, Valid: 80.29, Test: 93.13%
+2024-06-15 00:02:31,155 - Run: 01, Key: mrr_hit100, Epoch: 15, Loss: 0.4873, Train: 97.93, Valid: 92.56, Test: 98.05%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 15, Loss: 0.4873, Train: 97.93, Valid: 92.56, Test: 98.05%
+2024-06-15 00:02:31,156 - Run: 01, Key: AUC, Epoch: 15, Loss: 0.4873, Train: 98.80, Valid: 92.86, Test: 94.74%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 15, Loss: 0.4873, Train: 98.80, Valid: 92.86, Test: 94.74%
+2024-06-15 00:02:31,156 - Run: 01, Key: AP, Epoch: 15, Loss: 0.4873, Train: 99.94, Valid: 98.52, Test: 99.02%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 15, Loss: 0.4873, Train: 99.94, Valid: 98.52, Test: 99.02%
+2024-06-15 00:02:31,156 - Run: 01, Key: ACC, Epoch: 15, Loss: 0.4873, Train: 98.08, Valid: 92.02, Test: 91.62%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 15, Loss: 0.4873, Train: 98.08, Valid: 92.02, Test: 91.62%
+2024-06-15 00:02:31,156 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 00:13:24,114 - Epoch: 020, Loss_train: 0.4526, AUC: 0.9876, AP: 0.9994, MRR: 0.5041, Hit@10 0.8468
+INFO:graphgps.utility.utils:Epoch: 020, Loss_train: 0.4526, AUC: 0.9876, AP: 0.9994, MRR: 0.5041, Hit@10 0.8468
+2024-06-15 00:13:24,114 - Epoch: 020, Loss_valid: 0.4526, AUC: 0.9232, AP: 0.9847, MRR: 0.2336, Hit@10 0.3854
+INFO:graphgps.utility.utils:Epoch: 020, Loss_valid: 0.4526, AUC: 0.9232, AP: 0.9847, MRR: 0.2336, Hit@10 0.3854
+2024-06-15 00:13:24,114 - Epoch: 020, Loss_test: 0.4526, AUC: 0.9361, AP: 0.9825, MRR: 0.1887, Hit@10 0.5533
+INFO:graphgps.utility.utils:Epoch: 020, Loss_test: 0.4526, AUC: 0.9361, AP: 0.9825, MRR: 0.1887, Hit@10 0.5533
+2024-06-15 00:13:24,114 - Run: 01, Key: Hits@1, Epoch: 20, Loss: 0.4526, Train: 29.56, Valid: 15.94, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 20, Loss: 0.4526, Train: 29.56, Valid: 15.94, Test: 0.00%
+2024-06-15 00:13:24,114 - Run: 01, Key: Hits@3, Epoch: 20, Loss: 0.4526, Train: 71.56, Valid: 21.37, Test: 21.33%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 20, Loss: 0.4526, Train: 71.56, Valid: 21.37, Test: 21.33%
+2024-06-15 00:13:24,114 - Run: 01, Key: Hits@10, Epoch: 20, Loss: 0.4526, Train: 84.68, Valid: 38.54, Test: 55.33%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 20, Loss: 0.4526, Train: 84.68, Valid: 38.54, Test: 55.33%
+2024-06-15 00:13:24,114 - Run: 01, Key: Hits@20, Epoch: 20, Loss: 0.4526, Train: 90.18, Valid: 55.27, Test: 84.97%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 20, Loss: 0.4526, Train: 90.18, Valid: 55.27, Test: 84.97%
+2024-06-15 00:13:24,114 - Run: 01, Key: Hits@50, Epoch: 20, Loss: 0.4526, Train: 95.44, Valid: 80.38, Test: 94.46%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 20, Loss: 0.4526, Train: 95.44, Valid: 80.38, Test: 94.46%
+2024-06-15 00:13:24,114 - Run: 01, Key: Hits@100, Epoch: 20, Loss: 0.4526, Train: 97.62, Valid: 91.05, Test: 98.40%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 20, Loss: 0.4526, Train: 97.62, Valid: 91.05, Test: 98.40%
+2024-06-15 00:13:24,114 - Run: 01, Key: MRR, Epoch: 20, Loss: 0.4526, Train: 50.41, Valid: 23.36, Test: 18.87%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 20, Loss: 0.4526, Train: 50.41, Valid: 23.36, Test: 18.87%
+2024-06-15 00:13:24,114 - Run: 01, Key: mrr_hit1, Epoch: 20, Loss: 0.4526, Train: 29.56, Valid: 15.94, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 20, Loss: 0.4526, Train: 29.56, Valid: 15.94, Test: 0.00%
+2024-06-15 00:13:24,114 - Run: 01, Key: mrr_hit3, Epoch: 20, Loss: 0.4526, Train: 71.56, Valid: 21.37, Test: 21.33%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 20, Loss: 0.4526, Train: 71.56, Valid: 21.37, Test: 21.33%
+2024-06-15 00:13:24,114 - Run: 01, Key: mrr_hit10, Epoch: 20, Loss: 0.4526, Train: 84.68, Valid: 38.54, Test: 55.33%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 20, Loss: 0.4526, Train: 84.68, Valid: 38.54, Test: 55.33%
+2024-06-15 00:13:24,114 - Run: 01, Key: mrr_hit20, Epoch: 20, Loss: 0.4526, Train: 90.18, Valid: 55.27, Test: 84.97%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 20, Loss: 0.4526, Train: 90.18, Valid: 55.27, Test: 84.97%
+2024-06-15 00:13:24,114 - Run: 01, Key: mrr_hit50, Epoch: 20, Loss: 0.4526, Train: 95.44, Valid: 80.38, Test: 94.46%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 20, Loss: 0.4526, Train: 95.44, Valid: 80.38, Test: 94.46%
+2024-06-15 00:13:24,114 - Run: 01, Key: mrr_hit100, Epoch: 20, Loss: 0.4526, Train: 97.62, Valid: 91.05, Test: 98.40%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 20, Loss: 0.4526, Train: 97.62, Valid: 91.05, Test: 98.40%
+2024-06-15 00:13:24,114 - Run: 01, Key: AUC, Epoch: 20, Loss: 0.4526, Train: 98.76, Valid: 92.32, Test: 93.61%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 20, Loss: 0.4526, Train: 98.76, Valid: 92.32, Test: 93.61%
+2024-06-15 00:13:24,115 - Run: 01, Key: AP, Epoch: 20, Loss: 0.4526, Train: 99.94, Valid: 98.47, Test: 98.25%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 20, Loss: 0.4526, Train: 99.94, Valid: 98.47, Test: 98.25%
+2024-06-15 00:13:24,115 - Run: 01, Key: ACC, Epoch: 20, Loss: 0.4526, Train: 98.30, Valid: 91.07, Test: 91.50%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 20, Loss: 0.4526, Train: 98.30, Valid: 91.07, Test: 91.50%
+2024-06-15 00:13:24,115 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 00:24:17,831 - Epoch: 025, Loss_train: 0.5009, AUC: 0.9893, AP: 0.9996, MRR: 0.5389, Hit@10 0.8554
+INFO:graphgps.utility.utils:Epoch: 025, Loss_train: 0.5009, AUC: 0.9893, AP: 0.9996, MRR: 0.5389, Hit@10 0.8554
+2024-06-15 00:24:17,831 - Epoch: 025, Loss_valid: 0.5009, AUC: 0.9266, AP: 0.9842, MRR: 0.1510, Hit@10 0.4205
+INFO:graphgps.utility.utils:Epoch: 025, Loss_valid: 0.5009, AUC: 0.9266, AP: 0.9842, MRR: 0.1510, Hit@10 0.4205
+2024-06-15 00:24:17,832 - Epoch: 025, Loss_test: 0.5009, AUC: 0.9398, AP: 0.9881, MRR: 0.3879, Hit@10 0.6619
+INFO:graphgps.utility.utils:Epoch: 025, Loss_test: 0.5009, AUC: 0.9398, AP: 0.9881, MRR: 0.3879, Hit@10 0.6619
+2024-06-15 00:24:17,832 - Run: 01, Key: Hits@1, Epoch: 25, Loss: 0.5009, Train: 42.97, Valid: 0.00, Test: 26.44%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 25, Loss: 0.5009, Train: 42.97, Valid: 0.00, Test: 26.44%
+2024-06-15 00:24:17,832 - Run: 01, Key: Hits@3, Epoch: 25, Loss: 0.5009, Train: 59.25, Valid: 15.34, Test: 47.78%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 25, Loss: 0.5009, Train: 59.25, Valid: 15.34, Test: 47.78%
+2024-06-15 00:24:17,832 - Run: 01, Key: Hits@10, Epoch: 25, Loss: 0.5009, Train: 85.54, Valid: 42.05, Test: 66.19%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 25, Loss: 0.5009, Train: 85.54, Valid: 42.05, Test: 66.19%
+2024-06-15 00:24:17,832 - Run: 01, Key: Hits@20, Epoch: 25, Loss: 0.5009, Train: 92.27, Valid: 52.46, Test: 82.53%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 25, Loss: 0.5009, Train: 92.27, Valid: 52.46, Test: 82.53%
+2024-06-15 00:24:17,832 - Run: 01, Key: Hits@50, Epoch: 25, Loss: 0.5009, Train: 97.01, Valid: 80.61, Test: 96.22%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 25, Loss: 0.5009, Train: 97.01, Valid: 80.61, Test: 96.22%
+2024-06-15 00:24:17,832 - Run: 01, Key: Hits@100, Epoch: 25, Loss: 0.5009, Train: 98.82, Valid: 92.05, Test: 98.96%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 25, Loss: 0.5009, Train: 98.82, Valid: 92.05, Test: 98.96%
+2024-06-15 00:24:17,832 - Run: 01, Key: MRR, Epoch: 25, Loss: 0.5009, Train: 53.89, Valid: 15.10, Test: 38.79%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 25, Loss: 0.5009, Train: 53.89, Valid: 15.10, Test: 38.79%
+2024-06-15 00:24:17,832 - Run: 01, Key: mrr_hit1, Epoch: 25, Loss: 0.5009, Train: 42.97, Valid: 0.00, Test: 26.44%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 25, Loss: 0.5009, Train: 42.97, Valid: 0.00, Test: 26.44%
+2024-06-15 00:24:17,832 - Run: 01, Key: mrr_hit3, Epoch: 25, Loss: 0.5009, Train: 59.25, Valid: 15.34, Test: 47.78%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 25, Loss: 0.5009, Train: 59.25, Valid: 15.34, Test: 47.78%
+2024-06-15 00:24:17,832 - Run: 01, Key: mrr_hit10, Epoch: 25, Loss: 0.5009, Train: 85.54, Valid: 42.05, Test: 66.19%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 25, Loss: 0.5009, Train: 85.54, Valid: 42.05, Test: 66.19%
+2024-06-15 00:24:17,832 - Run: 01, Key: mrr_hit20, Epoch: 25, Loss: 0.5009, Train: 92.27, Valid: 52.46, Test: 82.53%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 25, Loss: 0.5009, Train: 92.27, Valid: 52.46, Test: 82.53%
+2024-06-15 00:24:17,832 - Run: 01, Key: mrr_hit50, Epoch: 25, Loss: 0.5009, Train: 97.01, Valid: 80.61, Test: 96.22%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 25, Loss: 0.5009, Train: 97.01, Valid: 80.61, Test: 96.22%
+2024-06-15 00:24:17,832 - Run: 01, Key: mrr_hit100, Epoch: 25, Loss: 0.5009, Train: 98.82, Valid: 92.05, Test: 98.96%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 25, Loss: 0.5009, Train: 98.82, Valid: 92.05, Test: 98.96%
+2024-06-15 00:24:17,832 - Run: 01, Key: AUC, Epoch: 25, Loss: 0.5009, Train: 98.93, Valid: 92.66, Test: 93.98%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 25, Loss: 0.5009, Train: 98.93, Valid: 92.66, Test: 93.98%
+2024-06-15 00:24:17,832 - Run: 01, Key: AP, Epoch: 25, Loss: 0.5009, Train: 99.96, Valid: 98.42, Test: 98.81%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 25, Loss: 0.5009, Train: 99.96, Valid: 98.42, Test: 98.81%
+2024-06-15 00:24:17,832 - Run: 01, Key: ACC, Epoch: 25, Loss: 0.5009, Train: 98.61, Valid: 91.47, Test: 91.96%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 25, Loss: 0.5009, Train: 98.61, Valid: 91.47, Test: 91.96%
+2024-06-15 00:24:17,832 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 00:35:11,951 - Epoch: 030, Loss_train: 0.4908, AUC: 0.9912, AP: 0.9996, MRR: 0.7363, Hit@10 0.8726
+INFO:graphgps.utility.utils:Epoch: 030, Loss_train: 0.4908, AUC: 0.9912, AP: 0.9996, MRR: 0.7363, Hit@10 0.8726
+2024-06-15 00:35:11,952 - Epoch: 030, Loss_valid: 0.4908, AUC: 0.9257, AP: 0.9840, MRR: 0.1702, Hit@10 0.4010
+INFO:graphgps.utility.utils:Epoch: 030, Loss_valid: 0.4908, AUC: 0.9257, AP: 0.9840, MRR: 0.1702, Hit@10 0.4010
+2024-06-15 00:35:11,952 - Epoch: 030, Loss_test: 0.4908, AUC: 0.9387, AP: 0.9843, MRR: 0.2654, Hit@10 0.6228
+INFO:graphgps.utility.utils:Epoch: 030, Loss_test: 0.4908, AUC: 0.9387, AP: 0.9843, MRR: 0.2654, Hit@10 0.6228
+2024-06-15 00:35:11,952 - Run: 01, Key: Hits@1, Epoch: 30, Loss: 0.4908, Train: 67.93, Valid: 0.00, Test: 13.66%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 30, Loss: 0.4908, Train: 67.93, Valid: 0.00, Test: 13.66%
+2024-06-15 00:35:11,952 - Run: 01, Key: Hits@3, Epoch: 30, Loss: 0.4908, Train: 73.29, Valid: 19.48, Test: 26.40%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 30, Loss: 0.4908, Train: 73.29, Valid: 19.48, Test: 26.40%
+2024-06-15 00:35:11,952 - Run: 01, Key: Hits@10, Epoch: 30, Loss: 0.4908, Train: 87.26, Valid: 40.10, Test: 62.28%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 30, Loss: 0.4908, Train: 87.26, Valid: 40.10, Test: 62.28%
+2024-06-15 00:35:11,952 - Run: 01, Key: Hits@20, Epoch: 30, Loss: 0.4908, Train: 91.93, Valid: 60.04, Test: 79.21%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 30, Loss: 0.4908, Train: 91.93, Valid: 60.04, Test: 79.21%
+2024-06-15 00:35:11,952 - Run: 01, Key: Hits@50, Epoch: 30, Loss: 0.4908, Train: 97.16, Valid: 79.81, Test: 96.06%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 30, Loss: 0.4908, Train: 97.16, Valid: 79.81, Test: 96.06%
+2024-06-15 00:35:11,952 - Run: 01, Key: Hits@100, Epoch: 30, Loss: 0.4908, Train: 98.81, Valid: 90.52, Test: 98.32%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 30, Loss: 0.4908, Train: 98.81, Valid: 90.52, Test: 98.32%
+2024-06-15 00:35:11,952 - Run: 01, Key: MRR, Epoch: 30, Loss: 0.4908, Train: 73.63, Valid: 17.02, Test: 26.54%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 30, Loss: 0.4908, Train: 73.63, Valid: 17.02, Test: 26.54%
+2024-06-15 00:35:11,952 - Run: 01, Key: mrr_hit1, Epoch: 30, Loss: 0.4908, Train: 67.93, Valid: 0.00, Test: 13.66%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 30, Loss: 0.4908, Train: 67.93, Valid: 0.00, Test: 13.66%
+2024-06-15 00:35:11,952 - Run: 01, Key: mrr_hit3, Epoch: 30, Loss: 0.4908, Train: 73.29, Valid: 19.48, Test: 26.40%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 30, Loss: 0.4908, Train: 73.29, Valid: 19.48, Test: 26.40%
+2024-06-15 00:35:11,952 - Run: 01, Key: mrr_hit10, Epoch: 30, Loss: 0.4908, Train: 87.26, Valid: 40.10, Test: 62.28%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 30, Loss: 0.4908, Train: 87.26, Valid: 40.10, Test: 62.28%
+2024-06-15 00:35:11,952 - Run: 01, Key: mrr_hit20, Epoch: 30, Loss: 0.4908, Train: 91.93, Valid: 60.04, Test: 79.21%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 30, Loss: 0.4908, Train: 91.93, Valid: 60.04, Test: 79.21%
+2024-06-15 00:35:11,952 - Run: 01, Key: mrr_hit50, Epoch: 30, Loss: 0.4908, Train: 97.16, Valid: 79.81, Test: 96.06%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 30, Loss: 0.4908, Train: 97.16, Valid: 79.81, Test: 96.06%
+2024-06-15 00:35:11,952 - Run: 01, Key: mrr_hit100, Epoch: 30, Loss: 0.4908, Train: 98.81, Valid: 90.52, Test: 98.32%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 30, Loss: 0.4908, Train: 98.81, Valid: 90.52, Test: 98.32%
+2024-06-15 00:35:11,952 - Run: 01, Key: AUC, Epoch: 30, Loss: 0.4908, Train: 99.12, Valid: 92.57, Test: 93.87%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 30, Loss: 0.4908, Train: 99.12, Valid: 92.57, Test: 93.87%
+2024-06-15 00:35:11,952 - Run: 01, Key: AP, Epoch: 30, Loss: 0.4908, Train: 99.96, Valid: 98.40, Test: 98.43%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 30, Loss: 0.4908, Train: 99.96, Valid: 98.40, Test: 98.43%
+2024-06-15 00:35:11,952 - Run: 01, Key: ACC, Epoch: 30, Loss: 0.4908, Train: 98.61, Valid: 91.99, Test: 91.57%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 30, Loss: 0.4908, Train: 98.61, Valid: 91.99, Test: 91.57%
+2024-06-15 00:35:11,952 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 00:45:58,856 - Epoch: 035, Loss_train: 0.2163, AUC: 0.9895, AP: 0.9995, MRR: 0.4603, Hit@10 0.8426
+INFO:graphgps.utility.utils:Epoch: 035, Loss_train: 0.2163, AUC: 0.9895, AP: 0.9995, MRR: 0.4603, Hit@10 0.8426
+2024-06-15 00:45:58,856 - Epoch: 035, Loss_valid: 0.2163, AUC: 0.9154, AP: 0.9793, MRR: 0.0855, Hit@10 0.3672
+INFO:graphgps.utility.utils:Epoch: 035, Loss_valid: 0.2163, AUC: 0.9154, AP: 0.9793, MRR: 0.0855, Hit@10 0.3672
+2024-06-15 00:45:58,856 - Epoch: 035, Loss_test: 0.2163, AUC: 0.9345, AP: 0.9857, MRR: 0.3443, Hit@10 0.6956
+INFO:graphgps.utility.utils:Epoch: 035, Loss_test: 0.2163, AUC: 0.9345, AP: 0.9857, MRR: 0.3443, Hit@10 0.6956
+2024-06-15 00:45:58,856 - Run: 01, Key: Hits@1, Epoch: 35, Loss: 0.2163, Train: 28.84, Valid: 0.00, Test: 11.34%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 35, Loss: 0.2163, Train: 28.84, Valid: 0.00, Test: 11.34%
+2024-06-15 00:45:58,856 - Run: 01, Key: Hits@3, Epoch: 35, Loss: 0.2163, Train: 46.35, Valid: 0.00, Test: 49.13%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 35, Loss: 0.2163, Train: 46.35, Valid: 0.00, Test: 49.13%
+2024-06-15 00:45:58,856 - Run: 01, Key: Hits@10, Epoch: 35, Loss: 0.2163, Train: 84.26, Valid: 36.72, Test: 69.56%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 35, Loss: 0.2163, Train: 84.26, Valid: 36.72, Test: 69.56%
+2024-06-15 00:45:58,856 - Run: 01, Key: Hits@20, Epoch: 35, Loss: 0.2163, Train: 93.44, Valid: 52.17, Test: 79.78%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 35, Loss: 0.2163, Train: 93.44, Valid: 52.17, Test: 79.78%
+2024-06-15 00:45:58,856 - Run: 01, Key: Hits@50, Epoch: 35, Loss: 0.2163, Train: 97.80, Valid: 71.68, Test: 94.99%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 35, Loss: 0.2163, Train: 97.80, Valid: 71.68, Test: 94.99%
+2024-06-15 00:45:58,856 - Run: 01, Key: Hits@100, Epoch: 35, Loss: 0.2163, Train: 99.02, Valid: 85.46, Test: 98.57%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 35, Loss: 0.2163, Train: 99.02, Valid: 85.46, Test: 98.57%
+2024-06-15 00:45:58,856 - Run: 01, Key: MRR, Epoch: 35, Loss: 0.2163, Train: 46.03, Valid: 8.55, Test: 34.43%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 35, Loss: 0.2163, Train: 46.03, Valid: 8.55, Test: 34.43%
+2024-06-15 00:45:58,857 - Run: 01, Key: mrr_hit1, Epoch: 35, Loss: 0.2163, Train: 28.84, Valid: 0.00, Test: 11.34%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 35, Loss: 0.2163, Train: 28.84, Valid: 0.00, Test: 11.34%
+2024-06-15 00:45:58,857 - Run: 01, Key: mrr_hit3, Epoch: 35, Loss: 0.2163, Train: 46.35, Valid: 0.00, Test: 49.13%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 35, Loss: 0.2163, Train: 46.35, Valid: 0.00, Test: 49.13%
+2024-06-15 00:45:58,857 - Run: 01, Key: mrr_hit10, Epoch: 35, Loss: 0.2163, Train: 84.26, Valid: 36.72, Test: 69.56%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 35, Loss: 0.2163, Train: 84.26, Valid: 36.72, Test: 69.56%
+2024-06-15 00:45:58,857 - Run: 01, Key: mrr_hit20, Epoch: 35, Loss: 0.2163, Train: 93.44, Valid: 52.17, Test: 79.78%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 35, Loss: 0.2163, Train: 93.44, Valid: 52.17, Test: 79.78%
+2024-06-15 00:45:58,857 - Run: 01, Key: mrr_hit50, Epoch: 35, Loss: 0.2163, Train: 97.80, Valid: 71.68, Test: 94.99%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 35, Loss: 0.2163, Train: 97.80, Valid: 71.68, Test: 94.99%
+2024-06-15 00:45:58,857 - Run: 01, Key: mrr_hit100, Epoch: 35, Loss: 0.2163, Train: 99.02, Valid: 85.46, Test: 98.57%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 35, Loss: 0.2163, Train: 99.02, Valid: 85.46, Test: 98.57%
+2024-06-15 00:45:58,857 - Run: 01, Key: AUC, Epoch: 35, Loss: 0.2163, Train: 98.95, Valid: 91.54, Test: 93.45%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 35, Loss: 0.2163, Train: 98.95, Valid: 91.54, Test: 93.45%
+2024-06-15 00:45:58,857 - Run: 01, Key: AP, Epoch: 35, Loss: 0.2163, Train: 99.95, Valid: 97.93, Test: 98.57%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 35, Loss: 0.2163, Train: 99.95, Valid: 97.93, Test: 98.57%
+2024-06-15 00:45:58,857 - Run: 01, Key: ACC, Epoch: 35, Loss: 0.2163, Train: 98.53, Valid: 90.35, Test: 90.42%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 35, Loss: 0.2163, Train: 98.53, Valid: 90.35, Test: 90.42%
+2024-06-15 00:45:58,857 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 00:56:41,538 - Epoch: 040, Loss_train: 0.6021, AUC: 0.9938, AP: 0.9997, MRR: 0.7784, Hit@10 0.8805
+INFO:graphgps.utility.utils:Epoch: 040, Loss_train: 0.6021, AUC: 0.9938, AP: 0.9997, MRR: 0.7784, Hit@10 0.8805
+2024-06-15 00:56:41,539 - Epoch: 040, Loss_valid: 0.6021, AUC: 0.9337, AP: 0.9863, MRR: 0.1472, Hit@10 0.3257
+INFO:graphgps.utility.utils:Epoch: 040, Loss_valid: 0.6021, AUC: 0.9337, AP: 0.9863, MRR: 0.1472, Hit@10 0.3257
+2024-06-15 00:56:41,539 - Epoch: 040, Loss_test: 0.6021, AUC: 0.9379, AP: 0.9833, MRR: 0.2823, Hit@10 0.6567
+INFO:graphgps.utility.utils:Epoch: 040, Loss_test: 0.6021, AUC: 0.9379, AP: 0.9833, MRR: 0.2823, Hit@10 0.6567
+2024-06-15 00:56:41,539 - Run: 01, Key: Hits@1, Epoch: 40, Loss: 0.6021, Train: 69.22, Valid: 0.00, Test: 16.70%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 40, Loss: 0.6021, Train: 69.22, Valid: 0.00, Test: 16.70%
+2024-06-15 00:56:41,539 - Run: 01, Key: Hits@3, Epoch: 40, Loss: 0.6021, Train: 84.86, Valid: 18.56, Test: 28.62%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 40, Loss: 0.6021, Train: 84.86, Valid: 18.56, Test: 28.62%
+2024-06-15 00:56:41,539 - Run: 01, Key: Hits@10, Epoch: 40, Loss: 0.6021, Train: 88.05, Valid: 32.57, Test: 65.67%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 40, Loss: 0.6021, Train: 88.05, Valid: 32.57, Test: 65.67%
+2024-06-15 00:56:41,539 - Run: 01, Key: Hits@20, Epoch: 40, Loss: 0.6021, Train: 95.76, Valid: 60.27, Test: 75.89%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 40, Loss: 0.6021, Train: 95.76, Valid: 60.27, Test: 75.89%
+2024-06-15 00:56:41,539 - Run: 01, Key: Hits@50, Epoch: 40, Loss: 0.6021, Train: 97.93, Valid: 81.25, Test: 92.76%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 40, Loss: 0.6021, Train: 97.93, Valid: 81.25, Test: 92.76%
+2024-06-15 00:56:41,539 - Run: 01, Key: Hits@100, Epoch: 40, Loss: 0.6021, Train: 99.02, Valid: 92.16, Test: 98.30%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 40, Loss: 0.6021, Train: 99.02, Valid: 92.16, Test: 98.30%
+2024-06-15 00:56:41,539 - Run: 01, Key: MRR, Epoch: 40, Loss: 0.6021, Train: 77.84, Valid: 14.72, Test: 28.23%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 40, Loss: 0.6021, Train: 77.84, Valid: 14.72, Test: 28.23%
+2024-06-15 00:56:41,539 - Run: 01, Key: mrr_hit1, Epoch: 40, Loss: 0.6021, Train: 69.22, Valid: 0.00, Test: 16.70%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 40, Loss: 0.6021, Train: 69.22, Valid: 0.00, Test: 16.70%
+2024-06-15 00:56:41,539 - Run: 01, Key: mrr_hit3, Epoch: 40, Loss: 0.6021, Train: 84.86, Valid: 18.56, Test: 28.62%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 40, Loss: 0.6021, Train: 84.86, Valid: 18.56, Test: 28.62%
+2024-06-15 00:56:41,539 - Run: 01, Key: mrr_hit10, Epoch: 40, Loss: 0.6021, Train: 88.05, Valid: 32.57, Test: 65.67%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 40, Loss: 0.6021, Train: 88.05, Valid: 32.57, Test: 65.67%
+2024-06-15 00:56:41,539 - Run: 01, Key: mrr_hit20, Epoch: 40, Loss: 0.6021, Train: 95.76, Valid: 60.27, Test: 75.89%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 40, Loss: 0.6021, Train: 95.76, Valid: 60.27, Test: 75.89%
+2024-06-15 00:56:41,539 - Run: 01, Key: mrr_hit50, Epoch: 40, Loss: 0.6021, Train: 97.93, Valid: 81.25, Test: 92.76%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 40, Loss: 0.6021, Train: 97.93, Valid: 81.25, Test: 92.76%
+2024-06-15 00:56:41,539 - Run: 01, Key: mrr_hit100, Epoch: 40, Loss: 0.6021, Train: 99.02, Valid: 92.16, Test: 98.30%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 40, Loss: 0.6021, Train: 99.02, Valid: 92.16, Test: 98.30%
+2024-06-15 00:56:41,539 - Run: 01, Key: AUC, Epoch: 40, Loss: 0.6021, Train: 99.38, Valid: 93.37, Test: 93.79%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 40, Loss: 0.6021, Train: 99.38, Valid: 93.37, Test: 93.79%
+2024-06-15 00:56:41,539 - Run: 01, Key: AP, Epoch: 40, Loss: 0.6021, Train: 99.97, Valid: 98.63, Test: 98.33%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 40, Loss: 0.6021, Train: 99.97, Valid: 98.63, Test: 98.33%
+2024-06-15 00:56:41,539 - Run: 01, Key: ACC, Epoch: 40, Loss: 0.6021, Train: 98.64, Valid: 92.04, Test: 91.51%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 40, Loss: 0.6021, Train: 98.64, Valid: 92.04, Test: 91.51%
+2024-06-15 00:56:41,539 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 01:07:24,012 - Epoch: 045, Loss_train: 0.2526, AUC: 0.9947, AP: 0.9998, MRR: 0.7498, Hit@10 0.9101
+INFO:graphgps.utility.utils:Epoch: 045, Loss_train: 0.2526, AUC: 0.9947, AP: 0.9998, MRR: 0.7498, Hit@10 0.9101
+2024-06-15 01:07:24,012 - Epoch: 045, Loss_valid: 0.2526, AUC: 0.9268, AP: 0.9836, MRR: 0.1228, Hit@10 0.3860
+INFO:graphgps.utility.utils:Epoch: 045, Loss_valid: 0.2526, AUC: 0.9268, AP: 0.9836, MRR: 0.1228, Hit@10 0.3860
+2024-06-15 01:07:24,012 - Epoch: 045, Loss_test: 0.2526, AUC: 0.9410, AP: 0.9855, MRR: 0.2676, Hit@10 0.6492
+INFO:graphgps.utility.utils:Epoch: 045, Loss_test: 0.2526, AUC: 0.9410, AP: 0.9855, MRR: 0.2676, Hit@10 0.6492
+2024-06-15 01:07:24,013 - Run: 01, Key: Hits@1, Epoch: 45, Loss: 0.2526, Train: 66.07, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 45, Loss: 0.2526, Train: 66.07, Valid: 0.00, Test: 0.00%
+2024-06-15 01:07:24,013 - Run: 01, Key: Hits@3, Epoch: 45, Loss: 0.2526, Train: 79.84, Valid: 0.00, Test: 31.56%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 45, Loss: 0.2526, Train: 79.84, Valid: 0.00, Test: 31.56%
+2024-06-15 01:07:24,013 - Run: 01, Key: Hits@10, Epoch: 45, Loss: 0.2526, Train: 91.01, Valid: 38.60, Test: 64.92%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 45, Loss: 0.2526, Train: 91.01, Valid: 38.60, Test: 64.92%
+2024-06-15 01:07:24,013 - Run: 01, Key: Hits@20, Epoch: 45, Loss: 0.2526, Train: 95.58, Valid: 61.37, Test: 78.09%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 45, Loss: 0.2526, Train: 95.58, Valid: 61.37, Test: 78.09%
+2024-06-15 01:07:24,013 - Run: 01, Key: Hits@50, Epoch: 45, Loss: 0.2526, Train: 98.36, Valid: 78.09, Test: 93.46%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 45, Loss: 0.2526, Train: 98.36, Valid: 78.09, Test: 93.46%
+2024-06-15 01:07:24,013 - Run: 01, Key: Hits@100, Epoch: 45, Loss: 0.2526, Train: 99.34, Valid: 91.04, Test: 98.61%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 45, Loss: 0.2526, Train: 99.34, Valid: 91.04, Test: 98.61%
+2024-06-15 01:07:24,013 - Run: 01, Key: MRR, Epoch: 45, Loss: 0.2526, Train: 74.98, Valid: 12.28, Test: 26.76%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 45, Loss: 0.2526, Train: 74.98, Valid: 12.28, Test: 26.76%
+2024-06-15 01:07:24,013 - Run: 01, Key: mrr_hit1, Epoch: 45, Loss: 0.2526, Train: 66.07, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 45, Loss: 0.2526, Train: 66.07, Valid: 0.00, Test: 0.00%
+2024-06-15 01:07:24,013 - Run: 01, Key: mrr_hit3, Epoch: 45, Loss: 0.2526, Train: 79.84, Valid: 23.20, Test: 31.56%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 45, Loss: 0.2526, Train: 79.84, Valid: 23.20, Test: 31.56%
+2024-06-15 01:07:24,013 - Run: 01, Key: mrr_hit10, Epoch: 45, Loss: 0.2526, Train: 91.01, Valid: 38.60, Test: 64.92%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 45, Loss: 0.2526, Train: 91.01, Valid: 38.60, Test: 64.92%
+2024-06-15 01:07:24,013 - Run: 01, Key: mrr_hit20, Epoch: 45, Loss: 0.2526, Train: 95.58, Valid: 61.37, Test: 78.09%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 45, Loss: 0.2526, Train: 95.58, Valid: 61.37, Test: 78.09%
+2024-06-15 01:07:24,013 - Run: 01, Key: mrr_hit50, Epoch: 45, Loss: 0.2526, Train: 98.36, Valid: 78.09, Test: 93.46%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 45, Loss: 0.2526, Train: 98.36, Valid: 78.09, Test: 93.46%
+2024-06-15 01:07:24,013 - Run: 01, Key: mrr_hit100, Epoch: 45, Loss: 0.2526, Train: 99.34, Valid: 91.04, Test: 98.61%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 45, Loss: 0.2526, Train: 99.34, Valid: 91.04, Test: 98.61%
+2024-06-15 01:07:24,013 - Run: 01, Key: AUC, Epoch: 45, Loss: 0.2526, Train: 99.47, Valid: 92.68, Test: 94.10%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 45, Loss: 0.2526, Train: 99.47, Valid: 92.68, Test: 94.10%
+2024-06-15 01:07:24,013 - Run: 01, Key: AP, Epoch: 45, Loss: 0.2526, Train: 99.98, Valid: 98.36, Test: 98.55%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 45, Loss: 0.2526, Train: 99.98, Valid: 98.36, Test: 98.55%
+2024-06-15 01:07:24,013 - Run: 01, Key: ACC, Epoch: 45, Loss: 0.2526, Train: 98.98, Valid: 91.14, Test: 92.05%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 45, Loss: 0.2526, Train: 98.98, Valid: 91.14, Test: 92.05%
+2024-06-15 01:07:24,013 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 01:18:07,219 - Epoch: 050, Loss_train: 1.1254, AUC: 0.9939, AP: 0.9997, MRR: 0.6753, Hit@10 0.9392
+INFO:graphgps.utility.utils:Epoch: 050, Loss_train: 1.1254, AUC: 0.9939, AP: 0.9997, MRR: 0.6753, Hit@10 0.9392
+2024-06-15 01:18:07,219 - Epoch: 050, Loss_valid: 1.1254, AUC: 0.9088, AP: 0.9795, MRR: 0.0849, Hit@10 0.3459
+INFO:graphgps.utility.utils:Epoch: 050, Loss_valid: 1.1254, AUC: 0.9088, AP: 0.9795, MRR: 0.0849, Hit@10 0.3459
+2024-06-15 01:18:07,219 - Epoch: 050, Loss_test: 1.1254, AUC: 0.9495, AP: 0.9896, MRR: 0.4739, Hit@10 0.7351
+INFO:graphgps.utility.utils:Epoch: 050, Loss_test: 1.1254, AUC: 0.9495, AP: 0.9896, MRR: 0.4739, Hit@10 0.7351
+2024-06-15 01:18:07,219 - Run: 01, Key: Hits@1, Epoch: 50, Loss: 1.1254, Train: 58.93, Valid: 0.00, Test: 36.45%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 50, Loss: 1.1254, Train: 58.93, Valid: 0.00, Test: 36.45%
+2024-06-15 01:18:07,219 - Run: 01, Key: Hits@3, Epoch: 50, Loss: 1.1254, Train: 64.00, Valid: 0.00, Test: 58.61%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 50, Loss: 1.1254, Train: 64.00, Valid: 0.00, Test: 58.61%
+2024-06-15 01:18:07,219 - Run: 01, Key: Hits@10, Epoch: 50, Loss: 1.1254, Train: 93.92, Valid: 34.59, Test: 73.51%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 50, Loss: 1.1254, Train: 93.92, Valid: 34.59, Test: 73.51%
+2024-06-15 01:18:07,219 - Run: 01, Key: Hits@20, Epoch: 50, Loss: 1.1254, Train: 95.58, Valid: 50.25, Test: 82.51%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 50, Loss: 1.1254, Train: 95.58, Valid: 50.25, Test: 82.51%
+2024-06-15 01:18:07,219 - Run: 01, Key: Hits@50, Epoch: 50, Loss: 1.1254, Train: 97.90, Valid: 74.86, Test: 94.20%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 50, Loss: 1.1254, Train: 97.90, Valid: 74.86, Test: 94.20%
+2024-06-15 01:18:07,219 - Run: 01, Key: Hits@100, Epoch: 50, Loss: 1.1254, Train: 99.15, Valid: 88.77, Test: 98.35%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 50, Loss: 1.1254, Train: 99.15, Valid: 88.77, Test: 98.35%
+2024-06-15 01:18:07,219 - Run: 01, Key: MRR, Epoch: 50, Loss: 1.1254, Train: 67.53, Valid: 8.49, Test: 47.39%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 50, Loss: 1.1254, Train: 67.53, Valid: 8.49, Test: 47.39%
+2024-06-15 01:18:07,219 - Run: 01, Key: mrr_hit1, Epoch: 50, Loss: 1.1254, Train: 58.93, Valid: 0.00, Test: 36.45%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 50, Loss: 1.1254, Train: 58.93, Valid: 0.00, Test: 36.45%
+2024-06-15 01:18:07,219 - Run: 01, Key: mrr_hit3, Epoch: 50, Loss: 1.1254, Train: 64.00, Valid: 0.00, Test: 58.61%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 50, Loss: 1.1254, Train: 64.00, Valid: 0.00, Test: 58.61%
+2024-06-15 01:18:07,219 - Run: 01, Key: mrr_hit10, Epoch: 50, Loss: 1.1254, Train: 93.92, Valid: 34.59, Test: 73.51%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 50, Loss: 1.1254, Train: 93.92, Valid: 34.59, Test: 73.51%
+2024-06-15 01:18:07,219 - Run: 01, Key: mrr_hit20, Epoch: 50, Loss: 1.1254, Train: 95.58, Valid: 50.25, Test: 82.51%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 50, Loss: 1.1254, Train: 95.58, Valid: 50.25, Test: 82.51%
+2024-06-15 01:18:07,220 - Run: 01, Key: mrr_hit50, Epoch: 50, Loss: 1.1254, Train: 97.90, Valid: 74.86, Test: 94.20%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 50, Loss: 1.1254, Train: 97.90, Valid: 74.86, Test: 94.20%
+2024-06-15 01:18:07,220 - Run: 01, Key: mrr_hit100, Epoch: 50, Loss: 1.1254, Train: 99.15, Valid: 88.77, Test: 98.35%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 50, Loss: 1.1254, Train: 99.15, Valid: 88.77, Test: 98.35%
+2024-06-15 01:18:07,220 - Run: 01, Key: AUC, Epoch: 50, Loss: 1.1254, Train: 99.39, Valid: 90.88, Test: 94.95%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 50, Loss: 1.1254, Train: 99.39, Valid: 90.88, Test: 94.95%
+2024-06-15 01:18:07,220 - Run: 01, Key: AP, Epoch: 50, Loss: 1.1254, Train: 99.97, Valid: 97.95, Test: 98.96%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 50, Loss: 1.1254, Train: 99.97, Valid: 97.95, Test: 98.96%
+2024-06-15 01:18:07,220 - Run: 01, Key: ACC, Epoch: 50, Loss: 1.1254, Train: 98.71, Valid: 91.16, Test: 91.44%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 50, Loss: 1.1254, Train: 98.71, Valid: 91.16, Test: 91.44%
+2024-06-15 01:18:07,220 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 01:28:50,104 - Epoch: 055, Loss_train: 0.3902, AUC: 0.9947, AP: 0.9998, MRR: 0.7216, Hit@10 0.9280
+INFO:graphgps.utility.utils:Epoch: 055, Loss_train: 0.3902, AUC: 0.9947, AP: 0.9998, MRR: 0.7216, Hit@10 0.9280
+2024-06-15 01:28:50,104 - Epoch: 055, Loss_valid: 0.3902, AUC: 0.9359, AP: 0.9841, MRR: 0.0974, Hit@10 0.3690
+INFO:graphgps.utility.utils:Epoch: 055, Loss_valid: 0.3902, AUC: 0.9359, AP: 0.9841, MRR: 0.0974, Hit@10 0.3690
+2024-06-15 01:28:50,104 - Epoch: 055, Loss_test: 0.3902, AUC: 0.9573, AP: 0.9909, MRR: 0.4691, Hit@10 0.7876
+INFO:graphgps.utility.utils:Epoch: 055, Loss_test: 0.3902, AUC: 0.9573, AP: 0.9909, MRR: 0.4691, Hit@10 0.7876
+2024-06-15 01:28:50,104 - Run: 01, Key: Hits@1, Epoch: 55, Loss: 0.3902, Train: 61.88, Valid: 0.00, Test: 32.30%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 55, Loss: 0.3902, Train: 61.88, Valid: 0.00, Test: 32.30%
+2024-06-15 01:28:50,104 - Run: 01, Key: Hits@3, Epoch: 55, Loss: 0.3902, Train: 80.83, Valid: 0.00, Test: 53.93%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 55, Loss: 0.3902, Train: 80.83, Valid: 0.00, Test: 53.93%
+2024-06-15 01:28:50,104 - Run: 01, Key: Hits@10, Epoch: 55, Loss: 0.3902, Train: 92.80, Valid: 36.90, Test: 78.76%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 55, Loss: 0.3902, Train: 92.80, Valid: 36.90, Test: 78.76%
+2024-06-15 01:28:50,104 - Run: 01, Key: Hits@20, Epoch: 55, Loss: 0.3902, Train: 96.51, Valid: 57.08, Test: 89.14%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 55, Loss: 0.3902, Train: 96.51, Valid: 57.08, Test: 89.14%
+2024-06-15 01:28:50,104 - Run: 01, Key: Hits@50, Epoch: 55, Loss: 0.3902, Train: 98.84, Valid: 81.23, Test: 96.99%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 55, Loss: 0.3902, Train: 98.84, Valid: 81.23, Test: 96.99%
+2024-06-15 01:28:50,104 - Run: 01, Key: Hits@100, Epoch: 55, Loss: 0.3902, Train: 99.50, Valid: 92.30, Test: 99.13%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 55, Loss: 0.3902, Train: 99.50, Valid: 92.30, Test: 99.13%
+2024-06-15 01:28:50,104 - Run: 01, Key: MRR, Epoch: 55, Loss: 0.3902, Train: 72.16, Valid: 9.74, Test: 46.91%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 55, Loss: 0.3902, Train: 72.16, Valid: 9.74, Test: 46.91%
+2024-06-15 01:28:50,104 - Run: 01, Key: mrr_hit1, Epoch: 55, Loss: 0.3902, Train: 61.88, Valid: 0.00, Test: 32.30%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 55, Loss: 0.3902, Train: 61.88, Valid: 0.00, Test: 32.30%
+2024-06-15 01:28:50,104 - Run: 01, Key: mrr_hit3, Epoch: 55, Loss: 0.3902, Train: 80.83, Valid: 0.00, Test: 53.93%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 55, Loss: 0.3902, Train: 80.83, Valid: 0.00, Test: 53.93%
+2024-06-15 01:28:50,104 - Run: 01, Key: mrr_hit10, Epoch: 55, Loss: 0.3902, Train: 92.80, Valid: 36.90, Test: 78.76%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 55, Loss: 0.3902, Train: 92.80, Valid: 36.90, Test: 78.76%
+2024-06-15 01:28:50,105 - Run: 01, Key: mrr_hit20, Epoch: 55, Loss: 0.3902, Train: 96.51, Valid: 57.08, Test: 89.14%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 55, Loss: 0.3902, Train: 96.51, Valid: 57.08, Test: 89.14%
+2024-06-15 01:28:50,105 - Run: 01, Key: mrr_hit50, Epoch: 55, Loss: 0.3902, Train: 98.84, Valid: 81.23, Test: 96.99%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 55, Loss: 0.3902, Train: 98.84, Valid: 81.23, Test: 96.99%
+2024-06-15 01:28:50,105 - Run: 01, Key: mrr_hit100, Epoch: 55, Loss: 0.3902, Train: 99.50, Valid: 92.30, Test: 99.13%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 55, Loss: 0.3902, Train: 99.50, Valid: 92.30, Test: 99.13%
+2024-06-15 01:28:50,105 - Run: 01, Key: AUC, Epoch: 55, Loss: 0.3902, Train: 99.47, Valid: 93.59, Test: 95.73%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 55, Loss: 0.3902, Train: 99.47, Valid: 93.59, Test: 95.73%
+2024-06-15 01:28:50,105 - Run: 01, Key: AP, Epoch: 55, Loss: 0.3902, Train: 99.98, Valid: 98.41, Test: 99.09%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 55, Loss: 0.3902, Train: 99.98, Valid: 98.41, Test: 99.09%
+2024-06-15 01:28:50,105 - Run: 01, Key: ACC, Epoch: 55, Loss: 0.3902, Train: 98.98, Valid: 91.95, Test: 92.00%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 55, Loss: 0.3902, Train: 98.98, Valid: 91.95, Test: 92.00%
+2024-06-15 01:28:50,105 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 01:39:33,873 - Epoch: 060, Loss_train: 0.0638, AUC: 0.9956, AP: 0.9998, MRR: 0.7210, Hit@10 0.9314
+INFO:graphgps.utility.utils:Epoch: 060, Loss_train: 0.0638, AUC: 0.9956, AP: 0.9998, MRR: 0.7210, Hit@10 0.9314
+2024-06-15 01:39:33,875 - Epoch: 060, Loss_valid: 0.0638, AUC: 0.9292, AP: 0.9836, MRR: 0.0789, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 060, Loss_valid: 0.0638, AUC: 0.9292, AP: 0.9836, MRR: 0.0789, Hit@10 0.0000
+2024-06-15 01:39:33,875 - Epoch: 060, Loss_test: 0.0638, AUC: 0.9319, AP: 0.9816, MRR: 0.1943, Hit@10 0.5480
+INFO:graphgps.utility.utils:Epoch: 060, Loss_test: 0.0638, AUC: 0.9319, AP: 0.9816, MRR: 0.1943, Hit@10 0.5480
+2024-06-15 01:39:33,875 - Run: 01, Key: Hits@1, Epoch: 60, Loss: 0.0638, Train: 59.38, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 60, Loss: 0.0638, Train: 59.38, Valid: 0.00, Test: 0.00%
+2024-06-15 01:39:33,875 - Run: 01, Key: Hits@3, Epoch: 60, Loss: 0.0638, Train: 81.04, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 60, Loss: 0.0638, Train: 81.04, Valid: 0.00, Test: 0.00%
+2024-06-15 01:39:33,875 - Run: 01, Key: Hits@10, Epoch: 60, Loss: 0.0638, Train: 93.14, Valid: 0.00, Test: 54.80%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 60, Loss: 0.0638, Train: 93.14, Valid: 0.00, Test: 54.80%
+2024-06-15 01:39:33,875 - Run: 01, Key: Hits@20, Epoch: 60, Loss: 0.0638, Train: 96.21, Valid: 53.37, Test: 76.76%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 60, Loss: 0.0638, Train: 96.21, Valid: 53.37, Test: 76.76%
+2024-06-15 01:39:33,875 - Run: 01, Key: Hits@50, Epoch: 60, Loss: 0.0638, Train: 99.06, Valid: 80.73, Test: 94.69%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 60, Loss: 0.0638, Train: 99.06, Valid: 80.73, Test: 94.69%
+2024-06-15 01:39:33,875 - Run: 01, Key: Hits@100, Epoch: 60, Loss: 0.0638, Train: 99.57, Valid: 93.95, Test: 98.35%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 60, Loss: 0.0638, Train: 99.57, Valid: 93.95, Test: 98.35%
+2024-06-15 01:39:33,875 - Run: 01, Key: MRR, Epoch: 60, Loss: 0.0638, Train: 72.10, Valid: 7.89, Test: 19.43%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 60, Loss: 0.0638, Train: 72.10, Valid: 7.89, Test: 19.43%
+2024-06-15 01:39:33,875 - Run: 01, Key: mrr_hit1, Epoch: 60, Loss: 0.0638, Train: 59.38, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 60, Loss: 0.0638, Train: 59.38, Valid: 0.00, Test: 0.00%
+2024-06-15 01:39:33,875 - Run: 01, Key: mrr_hit3, Epoch: 60, Loss: 0.0638, Train: 81.04, Valid: 0.00, Test: 36.51%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 60, Loss: 0.0638, Train: 81.04, Valid: 0.00, Test: 36.51%
+2024-06-15 01:39:33,875 - Run: 01, Key: mrr_hit10, Epoch: 60, Loss: 0.0638, Train: 93.14, Valid: 36.48, Test: 54.80%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 60, Loss: 0.0638, Train: 93.14, Valid: 36.48, Test: 54.80%
+2024-06-15 01:39:33,875 - Run: 01, Key: mrr_hit20, Epoch: 60, Loss: 0.0638, Train: 96.21, Valid: 53.37, Test: 76.76%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 60, Loss: 0.0638, Train: 96.21, Valid: 53.37, Test: 76.76%
+2024-06-15 01:39:33,875 - Run: 01, Key: mrr_hit50, Epoch: 60, Loss: 0.0638, Train: 99.06, Valid: 80.73, Test: 94.69%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 60, Loss: 0.0638, Train: 99.06, Valid: 80.73, Test: 94.69%
+2024-06-15 01:39:33,875 - Run: 01, Key: mrr_hit100, Epoch: 60, Loss: 0.0638, Train: 99.57, Valid: 93.95, Test: 98.35%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 60, Loss: 0.0638, Train: 99.57, Valid: 93.95, Test: 98.35%
+2024-06-15 01:39:33,875 - Run: 01, Key: AUC, Epoch: 60, Loss: 0.0638, Train: 99.56, Valid: 92.92, Test: 93.19%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 60, Loss: 0.0638, Train: 99.56, Valid: 92.92, Test: 93.19%
+2024-06-15 01:39:33,875 - Run: 01, Key: AP, Epoch: 60, Loss: 0.0638, Train: 99.98, Valid: 98.36, Test: 98.16%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 60, Loss: 0.0638, Train: 99.98, Valid: 98.36, Test: 98.16%
+2024-06-15 01:39:33,875 - Run: 01, Key: ACC, Epoch: 60, Loss: 0.0638, Train: 99.10, Valid: 92.74, Test: 91.66%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 60, Loss: 0.0638, Train: 99.10, Valid: 92.74, Test: 91.66%
+2024-06-15 01:39:33,875 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 01:50:18,074 - Epoch: 065, Loss_train: 0.2476, AUC: 0.9958, AP: 0.9997, MRR: 0.4399, Hit@10 0.9278
+INFO:graphgps.utility.utils:Epoch: 065, Loss_train: 0.2476, AUC: 0.9958, AP: 0.9997, MRR: 0.4399, Hit@10 0.9278
+2024-06-15 01:50:18,074 - Epoch: 065, Loss_valid: 0.2476, AUC: 0.9220, AP: 0.9812, MRR: 0.0690, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 065, Loss_valid: 0.2476, AUC: 0.9220, AP: 0.9812, MRR: 0.0690, Hit@10 0.0000
+2024-06-15 01:50:18,074 - Epoch: 065, Loss_test: 0.2476, AUC: 0.9490, AP: 0.9858, MRR: 0.1736, Hit@10 0.7067
+INFO:graphgps.utility.utils:Epoch: 065, Loss_test: 0.2476, AUC: 0.9490, AP: 0.9858, MRR: 0.1736, Hit@10 0.7067
+2024-06-15 01:50:18,074 - Run: 01, Key: Hits@1, Epoch: 65, Loss: 0.2476, Train: 0.00, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 65, Loss: 0.2476, Train: 0.00, Valid: 0.00, Test: 0.00%
+2024-06-15 01:50:18,074 - Run: 01, Key: Hits@3, Epoch: 65, Loss: 0.2476, Train: 69.36, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 65, Loss: 0.2476, Train: 69.36, Valid: 0.00, Test: 0.00%
+2024-06-15 01:50:18,074 - Run: 01, Key: Hits@10, Epoch: 65, Loss: 0.2476, Train: 92.78, Valid: 0.00, Test: 70.67%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 65, Loss: 0.2476, Train: 92.78, Valid: 0.00, Test: 70.67%
+2024-06-15 01:50:18,075 - Run: 01, Key: Hits@20, Epoch: 65, Loss: 0.2476, Train: 97.33, Valid: 51.13, Test: 86.84%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 65, Loss: 0.2476, Train: 97.33, Valid: 51.13, Test: 86.84%
+2024-06-15 01:50:18,075 - Run: 01, Key: Hits@50, Epoch: 65, Loss: 0.2476, Train: 98.97, Valid: 73.29, Test: 96.51%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 65, Loss: 0.2476, Train: 98.97, Valid: 73.29, Test: 96.51%
+2024-06-15 01:50:18,075 - Run: 01, Key: Hits@100, Epoch: 65, Loss: 0.2476, Train: 99.57, Valid: 86.84, Test: 98.78%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 65, Loss: 0.2476, Train: 99.57, Valid: 86.84, Test: 98.78%
+2024-06-15 01:50:18,076 - Run: 01, Key: MRR, Epoch: 65, Loss: 0.2476, Train: 43.99, Valid: 6.90, Test: 17.36%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 65, Loss: 0.2476, Train: 43.99, Valid: 6.90, Test: 17.36%
+2024-06-15 01:50:18,076 - Run: 01, Key: mrr_hit1, Epoch: 65, Loss: 0.2476, Train: 0.00, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 65, Loss: 0.2476, Train: 0.00, Valid: 0.00, Test: 0.00%
+2024-06-15 01:50:18,076 - Run: 01, Key: mrr_hit3, Epoch: 65, Loss: 0.2476, Train: 69.36, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 65, Loss: 0.2476, Train: 69.36, Valid: 0.00, Test: 0.00%
+2024-06-15 01:50:18,076 - Run: 01, Key: mrr_hit10, Epoch: 65, Loss: 0.2476, Train: 92.78, Valid: 43.84, Test: 70.67%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 65, Loss: 0.2476, Train: 92.78, Valid: 43.84, Test: 70.67%
+2024-06-15 01:50:18,076 - Run: 01, Key: mrr_hit20, Epoch: 65, Loss: 0.2476, Train: 97.33, Valid: 51.79, Test: 86.84%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 65, Loss: 0.2476, Train: 97.33, Valid: 51.79, Test: 86.84%
+2024-06-15 01:50:18,076 - Run: 01, Key: mrr_hit50, Epoch: 65, Loss: 0.2476, Train: 98.97, Valid: 73.29, Test: 96.51%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 65, Loss: 0.2476, Train: 98.97, Valid: 73.29, Test: 96.51%
+2024-06-15 01:50:18,076 - Run: 01, Key: mrr_hit100, Epoch: 65, Loss: 0.2476, Train: 99.57, Valid: 86.84, Test: 98.78%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 65, Loss: 0.2476, Train: 99.57, Valid: 86.84, Test: 98.78%
+2024-06-15 01:50:18,076 - Run: 01, Key: AUC, Epoch: 65, Loss: 0.2476, Train: 99.58, Valid: 92.20, Test: 94.90%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 65, Loss: 0.2476, Train: 99.58, Valid: 92.20, Test: 94.90%
+2024-06-15 01:50:18,076 - Run: 01, Key: AP, Epoch: 65, Loss: 0.2476, Train: 99.97, Valid: 98.12, Test: 98.58%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 65, Loss: 0.2476, Train: 99.97, Valid: 98.12, Test: 98.58%
+2024-06-15 01:50:18,076 - Run: 01, Key: ACC, Epoch: 65, Loss: 0.2476, Train: 99.12, Valid: 91.76, Test: 93.07%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 65, Loss: 0.2476, Train: 99.12, Valid: 91.76, Test: 93.07%
+2024-06-15 01:50:18,076 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 02:01:02,141 - Epoch: 070, Loss_train: 0.1428, AUC: 0.9952, AP: 0.9998, MRR: 0.5153, Hit@10 0.9398
+INFO:graphgps.utility.utils:Epoch: 070, Loss_train: 0.1428, AUC: 0.9952, AP: 0.9998, MRR: 0.5153, Hit@10 0.9398
+2024-06-15 02:01:02,141 - Epoch: 070, Loss_valid: 0.1428, AUC: 0.9195, AP: 0.9815, MRR: 0.0708, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 070, Loss_valid: 0.1428, AUC: 0.9195, AP: 0.9815, MRR: 0.0708, Hit@10 0.0000
+2024-06-15 02:01:02,141 - Epoch: 070, Loss_test: 0.1428, AUC: 0.9445, AP: 0.9880, MRR: 0.2185, Hit@10 0.7409
+INFO:graphgps.utility.utils:Epoch: 070, Loss_test: 0.1428, AUC: 0.9445, AP: 0.9880, MRR: 0.2185, Hit@10 0.7409
+2024-06-15 02:01:02,141 - Run: 01, Key: Hits@1, Epoch: 70, Loss: 0.1428, Train: 0.00, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 70, Loss: 0.1428, Train: 0.00, Valid: 0.00, Test: 0.00%
+2024-06-15 02:01:02,141 - Run: 01, Key: Hits@3, Epoch: 70, Loss: 0.1428, Train: 86.84, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 70, Loss: 0.1428, Train: 86.84, Valid: 0.00, Test: 0.00%
+2024-06-15 02:01:02,141 - Run: 01, Key: Hits@10, Epoch: 70, Loss: 0.1428, Train: 93.98, Valid: 0.00, Test: 74.09%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 70, Loss: 0.1428, Train: 93.98, Valid: 0.00, Test: 74.09%
+2024-06-15 02:01:02,141 - Run: 01, Key: Hits@20, Epoch: 70, Loss: 0.1428, Train: 97.62, Valid: 49.87, Test: 84.52%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 70, Loss: 0.1428, Train: 97.62, Valid: 49.87, Test: 84.52%
+2024-06-15 02:01:02,141 - Run: 01, Key: Hits@50, Epoch: 70, Loss: 0.1428, Train: 99.31, Valid: 78.04, Test: 96.13%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 70, Loss: 0.1428, Train: 99.31, Valid: 78.04, Test: 96.13%
+2024-06-15 02:01:02,141 - Run: 01, Key: Hits@100, Epoch: 70, Loss: 0.1428, Train: 99.72, Valid: 90.50, Test: 99.37%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 70, Loss: 0.1428, Train: 99.72, Valid: 90.50, Test: 99.37%
+2024-06-15 02:01:02,141 - Run: 01, Key: MRR, Epoch: 70, Loss: 0.1428, Train: 51.53, Valid: 7.08, Test: 21.85%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 70, Loss: 0.1428, Train: 51.53, Valid: 7.08, Test: 21.85%
+2024-06-15 02:01:02,141 - Run: 01, Key: mrr_hit1, Epoch: 70, Loss: 0.1428, Train: 0.00, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 70, Loss: 0.1428, Train: 0.00, Valid: 0.00, Test: 0.00%
+2024-06-15 02:01:02,141 - Run: 01, Key: mrr_hit3, Epoch: 70, Loss: 0.1428, Train: 86.84, Valid: 0.00, Test: 35.47%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 70, Loss: 0.1428, Train: 86.84, Valid: 0.00, Test: 35.47%
+2024-06-15 02:01:02,141 - Run: 01, Key: mrr_hit10, Epoch: 70, Loss: 0.1428, Train: 93.98, Valid: 43.89, Test: 74.09%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 70, Loss: 0.1428, Train: 93.98, Valid: 43.89, Test: 74.09%
+2024-06-15 02:01:02,142 - Run: 01, Key: mrr_hit20, Epoch: 70, Loss: 0.1428, Train: 97.62, Valid: 49.87, Test: 84.52%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 70, Loss: 0.1428, Train: 97.62, Valid: 49.87, Test: 84.52%
+2024-06-15 02:01:02,142 - Run: 01, Key: mrr_hit50, Epoch: 70, Loss: 0.1428, Train: 99.31, Valid: 78.04, Test: 96.13%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 70, Loss: 0.1428, Train: 99.31, Valid: 78.04, Test: 96.13%
+2024-06-15 02:01:02,142 - Run: 01, Key: mrr_hit100, Epoch: 70, Loss: 0.1428, Train: 99.72, Valid: 90.50, Test: 99.37%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 70, Loss: 0.1428, Train: 99.72, Valid: 90.50, Test: 99.37%
+2024-06-15 02:01:02,142 - Run: 01, Key: AUC, Epoch: 70, Loss: 0.1428, Train: 99.52, Valid: 91.95, Test: 94.45%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 70, Loss: 0.1428, Train: 99.52, Valid: 91.95, Test: 94.45%
+2024-06-15 02:01:02,142 - Run: 01, Key: AP, Epoch: 70, Loss: 0.1428, Train: 99.98, Valid: 98.15, Test: 98.80%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 70, Loss: 0.1428, Train: 99.98, Valid: 98.15, Test: 98.80%
+2024-06-15 02:01:02,142 - Run: 01, Key: ACC, Epoch: 70, Loss: 0.1428, Train: 99.14, Valid: 91.84, Test: 93.49%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 70, Loss: 0.1428, Train: 99.14, Valid: 91.84, Test: 93.49%
+2024-06-15 02:01:02,142 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 02:11:45,871 - Epoch: 075, Loss_train: 0.2181, AUC: 0.9942, AP: 0.9997, MRR: 0.6400, Hit@10 0.8993
+INFO:graphgps.utility.utils:Epoch: 075, Loss_train: 0.2181, AUC: 0.9942, AP: 0.9997, MRR: 0.6400, Hit@10 0.8993
+2024-06-15 02:11:45,871 - Epoch: 075, Loss_valid: 0.2181, AUC: 0.9240, AP: 0.9806, MRR: 0.0565, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 075, Loss_valid: 0.2181, AUC: 0.9240, AP: 0.9806, MRR: 0.0565, Hit@10 0.0000
+2024-06-15 02:11:45,871 - Epoch: 075, Loss_test: 0.2181, AUC: 0.9476, AP: 0.9877, MRR: 0.2251, Hit@10 0.6859
+INFO:graphgps.utility.utils:Epoch: 075, Loss_test: 0.2181, AUC: 0.9476, AP: 0.9877, MRR: 0.2251, Hit@10 0.6859
+2024-06-15 02:11:45,871 - Run: 01, Key: Hits@1, Epoch: 75, Loss: 0.2181, Train: 55.20, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 75, Loss: 0.2181, Train: 55.20, Valid: 0.00, Test: 0.00%
+2024-06-15 02:11:45,872 - Run: 01, Key: Hits@3, Epoch: 75, Loss: 0.2181, Train: 63.79, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 75, Loss: 0.2181, Train: 63.79, Valid: 0.00, Test: 0.00%
+2024-06-15 02:11:45,872 - Run: 01, Key: Hits@10, Epoch: 75, Loss: 0.2181, Train: 89.93, Valid: 0.00, Test: 68.59%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 75, Loss: 0.2181, Train: 89.93, Valid: 0.00, Test: 68.59%
+2024-06-15 02:11:45,872 - Run: 01, Key: Hits@20, Epoch: 75, Loss: 0.2181, Train: 94.70, Valid: 46.22, Test: 85.63%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 75, Loss: 0.2181, Train: 94.70, Valid: 46.22, Test: 85.63%
+2024-06-15 02:11:45,872 - Run: 01, Key: Hits@50, Epoch: 75, Loss: 0.2181, Train: 98.66, Valid: 74.23, Test: 97.16%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 75, Loss: 0.2181, Train: 98.66, Valid: 74.23, Test: 97.16%
+2024-06-15 02:11:45,872 - Run: 01, Key: Hits@100, Epoch: 75, Loss: 0.2181, Train: 99.51, Valid: 93.04, Test: 99.25%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 75, Loss: 0.2181, Train: 99.51, Valid: 93.04, Test: 99.25%
+2024-06-15 02:11:45,872 - Run: 01, Key: MRR, Epoch: 75, Loss: 0.2181, Train: 64.00, Valid: 5.65, Test: 22.51%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 75, Loss: 0.2181, Train: 64.00, Valid: 5.65, Test: 22.51%
+2024-06-15 02:11:45,872 - Run: 01, Key: mrr_hit1, Epoch: 75, Loss: 0.2181, Train: 55.20, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 75, Loss: 0.2181, Train: 55.20, Valid: 0.00, Test: 0.00%
+2024-06-15 02:11:45,872 - Run: 01, Key: mrr_hit3, Epoch: 75, Loss: 0.2181, Train: 63.79, Valid: 0.00, Test: 40.43%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 75, Loss: 0.2181, Train: 63.79, Valid: 0.00, Test: 40.43%
+2024-06-15 02:11:45,872 - Run: 01, Key: mrr_hit10, Epoch: 75, Loss: 0.2181, Train: 89.93, Valid: 0.00, Test: 68.59%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 75, Loss: 0.2181, Train: 89.93, Valid: 0.00, Test: 68.59%
+2024-06-15 02:11:45,872 - Run: 01, Key: mrr_hit20, Epoch: 75, Loss: 0.2181, Train: 94.70, Valid: 46.22, Test: 85.63%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 75, Loss: 0.2181, Train: 94.70, Valid: 46.22, Test: 85.63%
+2024-06-15 02:11:45,872 - Run: 01, Key: mrr_hit50, Epoch: 75, Loss: 0.2181, Train: 98.66, Valid: 74.23, Test: 97.16%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 75, Loss: 0.2181, Train: 98.66, Valid: 74.23, Test: 97.16%
+2024-06-15 02:11:45,872 - Run: 01, Key: mrr_hit100, Epoch: 75, Loss: 0.2181, Train: 99.51, Valid: 93.04, Test: 99.25%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 75, Loss: 0.2181, Train: 99.51, Valid: 93.04, Test: 99.25%
+2024-06-15 02:11:45,872 - Run: 01, Key: AUC, Epoch: 75, Loss: 0.2181, Train: 99.42, Valid: 92.40, Test: 94.76%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 75, Loss: 0.2181, Train: 99.42, Valid: 92.40, Test: 94.76%
+2024-06-15 02:11:45,872 - Run: 01, Key: AP, Epoch: 75, Loss: 0.2181, Train: 99.97, Valid: 98.06, Test: 98.77%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 75, Loss: 0.2181, Train: 99.97, Valid: 98.06, Test: 98.77%
+2024-06-15 02:11:45,872 - Run: 01, Key: ACC, Epoch: 75, Loss: 0.2181, Train: 99.01, Valid: 92.37, Test: 93.05%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 75, Loss: 0.2181, Train: 99.01, Valid: 92.37, Test: 93.05%
+2024-06-15 02:11:45,872 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 02:22:29,679 - Epoch: 080, Loss_train: 0.5689, AUC: 0.9971, AP: 0.9999, MRR: 0.8484, Hit@10 0.9563
+INFO:graphgps.utility.utils:Epoch: 080, Loss_train: 0.5689, AUC: 0.9971, AP: 0.9999, MRR: 0.8484, Hit@10 0.9563
+2024-06-15 02:22:29,679 - Epoch: 080, Loss_valid: 0.5689, AUC: 0.9198, AP: 0.9802, MRR: 0.0526, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 080, Loss_valid: 0.5689, AUC: 0.9198, AP: 0.9802, MRR: 0.0526, Hit@10 0.0000
+2024-06-15 02:22:29,679 - Epoch: 080, Loss_test: 0.5689, AUC: 0.9515, AP: 0.9882, MRR: 0.2314, Hit@10 0.6621
+INFO:graphgps.utility.utils:Epoch: 080, Loss_test: 0.5689, AUC: 0.9515, AP: 0.9882, MRR: 0.2314, Hit@10 0.6621
+2024-06-15 02:22:29,679 - Run: 01, Key: Hits@1, Epoch: 80, Loss: 0.5689, Train: 78.34, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 80, Loss: 0.5689, Train: 78.34, Valid: 0.00, Test: 0.00%
+2024-06-15 02:22:29,680 - Run: 01, Key: Hits@3, Epoch: 80, Loss: 0.5689, Train: 88.73, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 80, Loss: 0.5689, Train: 88.73, Valid: 0.00, Test: 0.00%
+2024-06-15 02:22:29,680 - Run: 01, Key: Hits@10, Epoch: 80, Loss: 0.5689, Train: 95.63, Valid: 0.00, Test: 66.21%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 80, Loss: 0.5689, Train: 95.63, Valid: 0.00, Test: 66.21%
+2024-06-15 02:22:29,680 - Run: 01, Key: Hits@20, Epoch: 80, Loss: 0.5689, Train: 97.78, Valid: 0.00, Test: 84.82%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 80, Loss: 0.5689, Train: 97.78, Valid: 0.00, Test: 84.82%
+2024-06-15 02:22:29,680 - Run: 01, Key: Hits@50, Epoch: 80, Loss: 0.5689, Train: 99.21, Valid: 73.28, Test: 94.58%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 80, Loss: 0.5689, Train: 99.21, Valid: 73.28, Test: 94.58%
+2024-06-15 02:22:29,680 - Run: 01, Key: Hits@100, Epoch: 80, Loss: 0.5689, Train: 99.62, Valid: 90.13, Test: 98.78%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 80, Loss: 0.5689, Train: 99.62, Valid: 90.13, Test: 98.78%
+2024-06-15 02:22:29,680 - Run: 01, Key: MRR, Epoch: 80, Loss: 0.5689, Train: 84.84, Valid: 5.26, Test: 23.14%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 80, Loss: 0.5689, Train: 84.84, Valid: 5.26, Test: 23.14%
+2024-06-15 02:22:29,680 - Run: 01, Key: mrr_hit1, Epoch: 80, Loss: 0.5689, Train: 78.34, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 80, Loss: 0.5689, Train: 78.34, Valid: 0.00, Test: 0.00%
+2024-06-15 02:22:29,680 - Run: 01, Key: mrr_hit3, Epoch: 80, Loss: 0.5689, Train: 88.73, Valid: 0.00, Test: 43.25%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 80, Loss: 0.5689, Train: 88.73, Valid: 0.00, Test: 43.25%
+2024-06-15 02:22:29,680 - Run: 01, Key: mrr_hit10, Epoch: 80, Loss: 0.5689, Train: 95.63, Valid: 0.00, Test: 66.21%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 80, Loss: 0.5689, Train: 95.63, Valid: 0.00, Test: 66.21%
+2024-06-15 02:22:29,680 - Run: 01, Key: mrr_hit20, Epoch: 80, Loss: 0.5689, Train: 97.78, Valid: 43.91, Test: 84.82%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 80, Loss: 0.5689, Train: 97.78, Valid: 43.91, Test: 84.82%
+2024-06-15 02:22:29,680 - Run: 01, Key: mrr_hit50, Epoch: 80, Loss: 0.5689, Train: 99.21, Valid: 73.28, Test: 94.58%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 80, Loss: 0.5689, Train: 99.21, Valid: 73.28, Test: 94.58%
+2024-06-15 02:22:29,680 - Run: 01, Key: mrr_hit100, Epoch: 80, Loss: 0.5689, Train: 99.62, Valid: 90.13, Test: 98.78%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 80, Loss: 0.5689, Train: 99.62, Valid: 90.13, Test: 98.78%
+2024-06-15 02:22:29,680 - Run: 01, Key: AUC, Epoch: 80, Loss: 0.5689, Train: 99.71, Valid: 91.98, Test: 95.15%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 80, Loss: 0.5689, Train: 99.71, Valid: 91.98, Test: 95.15%
+2024-06-15 02:22:29,680 - Run: 01, Key: AP, Epoch: 80, Loss: 0.5689, Train: 99.99, Valid: 98.02, Test: 98.82%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 80, Loss: 0.5689, Train: 99.99, Valid: 98.02, Test: 98.82%
+2024-06-15 02:22:29,680 - Run: 01, Key: ACC, Epoch: 80, Loss: 0.5689, Train: 99.11, Valid: 92.32, Test: 92.90%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 80, Loss: 0.5689, Train: 99.11, Valid: 92.32, Test: 92.90%
+2024-06-15 02:22:29,680 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 02:33:13,764 - Epoch: 085, Loss_train: 0.2850, AUC: 0.9974, AP: 0.9999, MRR: 0.8549, Hit@10 0.9834
+INFO:graphgps.utility.utils:Epoch: 085, Loss_train: 0.2850, AUC: 0.9974, AP: 0.9999, MRR: 0.8549, Hit@10 0.9834
+2024-06-15 02:33:13,765 - Epoch: 085, Loss_valid: 0.2850, AUC: 0.9196, AP: 0.9813, MRR: 0.0540, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 085, Loss_valid: 0.2850, AUC: 0.9196, AP: 0.9813, MRR: 0.0540, Hit@10 0.0000
+2024-06-15 02:33:13,765 - Epoch: 085, Loss_test: 0.2850, AUC: 0.9255, AP: 0.9779, MRR: 0.1003, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 085, Loss_test: 0.2850, AUC: 0.9255, AP: 0.9779, MRR: 0.1003, Hit@10 0.0000
+2024-06-15 02:33:13,765 - Run: 01, Key: Hits@1, Epoch: 85, Loss: 0.2850, Train: 78.63, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 85, Loss: 0.2850, Train: 78.63, Valid: 0.00, Test: 0.00%
+2024-06-15 02:33:13,765 - Run: 01, Key: Hits@3, Epoch: 85, Loss: 0.2850, Train: 89.87, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 85, Loss: 0.2850, Train: 89.87, Valid: 0.00, Test: 0.00%
+2024-06-15 02:33:13,765 - Run: 01, Key: Hits@10, Epoch: 85, Loss: 0.2850, Train: 98.34, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 85, Loss: 0.2850, Train: 98.34, Valid: 0.00, Test: 0.00%
+2024-06-15 02:33:13,765 - Run: 01, Key: Hits@20, Epoch: 85, Loss: 0.2850, Train: 99.29, Valid: 0.00, Test: 77.64%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 85, Loss: 0.2850, Train: 99.29, Valid: 0.00, Test: 77.64%
+2024-06-15 02:33:13,766 - Run: 01, Key: Hits@50, Epoch: 85, Loss: 0.2850, Train: 99.76, Valid: 72.85, Test: 94.41%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 85, Loss: 0.2850, Train: 99.76, Valid: 72.85, Test: 94.41%
+2024-06-15 02:33:13,766 - Run: 01, Key: Hits@100, Epoch: 85, Loss: 0.2850, Train: 99.91, Valid: 88.31, Test: 98.80%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 85, Loss: 0.2850, Train: 99.91, Valid: 88.31, Test: 98.80%
+2024-06-15 02:33:13,766 - Run: 01, Key: MRR, Epoch: 85, Loss: 0.2850, Train: 85.49, Valid: 5.40, Test: 10.03%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 85, Loss: 0.2850, Train: 85.49, Valid: 5.40, Test: 10.03%
+2024-06-15 02:33:13,766 - Run: 01, Key: mrr_hit1, Epoch: 85, Loss: 0.2850, Train: 78.63, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 85, Loss: 0.2850, Train: 78.63, Valid: 0.00, Test: 0.00%
+2024-06-15 02:33:13,766 - Run: 01, Key: mrr_hit3, Epoch: 85, Loss: 0.2850, Train: 89.87, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 85, Loss: 0.2850, Train: 89.87, Valid: 0.00, Test: 0.00%
+2024-06-15 02:33:13,766 - Run: 01, Key: mrr_hit10, Epoch: 85, Loss: 0.2850, Train: 98.34, Valid: 0.00, Test: 48.88%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 85, Loss: 0.2850, Train: 98.34, Valid: 0.00, Test: 48.88%
+2024-06-15 02:33:13,766 - Run: 01, Key: mrr_hit20, Epoch: 85, Loss: 0.2850, Train: 99.29, Valid: 50.79, Test: 77.64%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 85, Loss: 0.2850, Train: 99.29, Valid: 50.79, Test: 77.64%
+2024-06-15 02:33:13,766 - Run: 01, Key: mrr_hit50, Epoch: 85, Loss: 0.2850, Train: 99.76, Valid: 72.85, Test: 94.41%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 85, Loss: 0.2850, Train: 99.76, Valid: 72.85, Test: 94.41%
+2024-06-15 02:33:13,766 - Run: 01, Key: mrr_hit100, Epoch: 85, Loss: 0.2850, Train: 99.91, Valid: 88.31, Test: 98.80%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 85, Loss: 0.2850, Train: 99.91, Valid: 88.31, Test: 98.80%
+2024-06-15 02:33:13,766 - Run: 01, Key: AUC, Epoch: 85, Loss: 0.2850, Train: 99.74, Valid: 91.96, Test: 92.55%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 85, Loss: 0.2850, Train: 99.74, Valid: 91.96, Test: 92.55%
+2024-06-15 02:33:13,766 - Run: 01, Key: AP, Epoch: 85, Loss: 0.2850, Train: 99.99, Valid: 98.13, Test: 97.79%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 85, Loss: 0.2850, Train: 99.99, Valid: 98.13, Test: 97.79%
+2024-06-15 02:33:13,766 - Run: 01, Key: ACC, Epoch: 85, Loss: 0.2850, Train: 99.48, Valid: 92.17, Test: 92.43%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 85, Loss: 0.2850, Train: 99.48, Valid: 92.17, Test: 92.43%
+2024-06-15 02:33:13,766 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 02:43:58,916 - Epoch: 090, Loss_train: 0.4136, AUC: 0.9970, AP: 0.9999, MRR: 0.8133, Hit@10 0.9540
+INFO:graphgps.utility.utils:Epoch: 090, Loss_train: 0.4136, AUC: 0.9970, AP: 0.9999, MRR: 0.8133, Hit@10 0.9540
+2024-06-15 02:43:58,916 - Epoch: 090, Loss_valid: 0.4136, AUC: 0.9222, AP: 0.9823, MRR: 0.0765, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 090, Loss_valid: 0.4136, AUC: 0.9222, AP: 0.9823, MRR: 0.0765, Hit@10 0.0000
+2024-06-15 02:43:58,916 - Epoch: 090, Loss_test: 0.4136, AUC: 0.9349, AP: 0.9805, MRR: 0.1427, Hit@10 0.5175
+INFO:graphgps.utility.utils:Epoch: 090, Loss_test: 0.4136, AUC: 0.9349, AP: 0.9805, MRR: 0.1427, Hit@10 0.5175
+2024-06-15 02:43:58,916 - Run: 01, Key: Hits@1, Epoch: 90, Loss: 0.4136, Train: 73.52, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 90, Loss: 0.4136, Train: 73.52, Valid: 0.00, Test: 0.00%
+2024-06-15 02:43:58,916 - Run: 01, Key: Hits@3, Epoch: 90, Loss: 0.4136, Train: 84.70, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 90, Loss: 0.4136, Train: 84.70, Valid: 0.00, Test: 0.00%
+2024-06-15 02:43:58,916 - Run: 01, Key: Hits@10, Epoch: 90, Loss: 0.4136, Train: 95.40, Valid: 0.00, Test: 51.75%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 90, Loss: 0.4136, Train: 95.40, Valid: 0.00, Test: 51.75%
+2024-06-15 02:43:58,916 - Run: 01, Key: Hits@20, Epoch: 90, Loss: 0.4136, Train: 97.70, Valid: 58.25, Test: 81.08%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 90, Loss: 0.4136, Train: 97.70, Valid: 58.25, Test: 81.08%
+2024-06-15 02:43:58,916 - Run: 01, Key: Hits@50, Epoch: 90, Loss: 0.4136, Train: 99.39, Valid: 77.86, Test: 95.25%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 90, Loss: 0.4136, Train: 99.39, Valid: 77.86, Test: 95.25%
+2024-06-15 02:43:58,917 - Run: 01, Key: Hits@100, Epoch: 90, Loss: 0.4136, Train: 99.70, Valid: 90.19, Test: 98.92%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 90, Loss: 0.4136, Train: 99.70, Valid: 90.19, Test: 98.92%
+2024-06-15 02:43:58,917 - Run: 01, Key: MRR, Epoch: 90, Loss: 0.4136, Train: 81.33, Valid: 7.65, Test: 14.27%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 90, Loss: 0.4136, Train: 81.33, Valid: 7.65, Test: 14.27%
+2024-06-15 02:43:58,917 - Run: 01, Key: mrr_hit1, Epoch: 90, Loss: 0.4136, Train: 73.52, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 90, Loss: 0.4136, Train: 73.52, Valid: 0.00, Test: 0.00%
+2024-06-15 02:43:58,917 - Run: 01, Key: mrr_hit3, Epoch: 90, Loss: 0.4136, Train: 84.70, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 90, Loss: 0.4136, Train: 84.70, Valid: 0.00, Test: 0.00%
+2024-06-15 02:43:58,917 - Run: 01, Key: mrr_hit10, Epoch: 90, Loss: 0.4136, Train: 95.40, Valid: 39.62, Test: 51.75%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 90, Loss: 0.4136, Train: 95.40, Valid: 39.62, Test: 51.75%
+2024-06-15 02:43:58,917 - Run: 01, Key: mrr_hit20, Epoch: 90, Loss: 0.4136, Train: 97.70, Valid: 58.25, Test: 81.08%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 90, Loss: 0.4136, Train: 97.70, Valid: 58.25, Test: 81.08%
+2024-06-15 02:43:58,917 - Run: 01, Key: mrr_hit50, Epoch: 90, Loss: 0.4136, Train: 99.39, Valid: 77.86, Test: 95.25%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 90, Loss: 0.4136, Train: 99.39, Valid: 77.86, Test: 95.25%
+2024-06-15 02:43:58,917 - Run: 01, Key: mrr_hit100, Epoch: 90, Loss: 0.4136, Train: 99.70, Valid: 90.19, Test: 98.92%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 90, Loss: 0.4136, Train: 99.70, Valid: 90.19, Test: 98.92%
+2024-06-15 02:43:58,917 - Run: 01, Key: AUC, Epoch: 90, Loss: 0.4136, Train: 99.70, Valid: 92.22, Test: 93.49%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 90, Loss: 0.4136, Train: 99.70, Valid: 92.22, Test: 93.49%
+2024-06-15 02:43:58,917 - Run: 01, Key: AP, Epoch: 90, Loss: 0.4136, Train: 99.99, Valid: 98.23, Test: 98.05%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 90, Loss: 0.4136, Train: 99.99, Valid: 98.23, Test: 98.05%
+2024-06-15 02:43:58,917 - Run: 01, Key: ACC, Epoch: 90, Loss: 0.4136, Train: 99.21, Valid: 92.53, Test: 91.45%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 90, Loss: 0.4136, Train: 99.21, Valid: 92.53, Test: 91.45%
+2024-06-15 02:43:58,917 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 02:54:43,681 - Epoch: 095, Loss_train: 0.5794, AUC: 0.9960, AP: 0.9998, MRR: 0.5256, Hit@10 0.9585
+INFO:graphgps.utility.utils:Epoch: 095, Loss_train: 0.5794, AUC: 0.9960, AP: 0.9998, MRR: 0.5256, Hit@10 0.9585
+2024-06-15 02:54:43,681 - Epoch: 095, Loss_valid: 0.5794, AUC: 0.9226, AP: 0.9814, MRR: 0.0620, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 095, Loss_valid: 0.5794, AUC: 0.9226, AP: 0.9814, MRR: 0.0620, Hit@10 0.0000
+2024-06-15 02:54:43,681 - Epoch: 095, Loss_test: 0.5794, AUC: 0.9450, AP: 0.9840, MRR: 0.1471, Hit@10 0.6259
+INFO:graphgps.utility.utils:Epoch: 095, Loss_test: 0.5794, AUC: 0.9450, AP: 0.9840, MRR: 0.1471, Hit@10 0.6259
+2024-06-15 02:54:43,681 - Run: 01, Key: Hits@1, Epoch: 95, Loss: 0.5794, Train: 0.00, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 95, Loss: 0.5794, Train: 0.00, Valid: 0.00, Test: 0.00%
+2024-06-15 02:54:43,681 - Run: 01, Key: Hits@3, Epoch: 95, Loss: 0.5794, Train: 81.90, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 95, Loss: 0.5794, Train: 81.90, Valid: 0.00, Test: 0.00%
+2024-06-15 02:54:43,681 - Run: 01, Key: Hits@10, Epoch: 95, Loss: 0.5794, Train: 95.85, Valid: 0.00, Test: 62.59%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 95, Loss: 0.5794, Train: 95.85, Valid: 0.00, Test: 62.59%
+2024-06-15 02:54:43,681 - Run: 01, Key: Hits@20, Epoch: 95, Loss: 0.5794, Train: 97.74, Valid: 52.86, Test: 88.28%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 95, Loss: 0.5794, Train: 97.74, Valid: 52.86, Test: 88.28%
+2024-06-15 02:54:43,681 - Run: 01, Key: Hits@50, Epoch: 95, Loss: 0.5794, Train: 99.08, Valid: 78.56, Test: 96.81%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 95, Loss: 0.5794, Train: 99.08, Valid: 78.56, Test: 96.81%
+2024-06-15 02:54:43,682 - Run: 01, Key: Hits@100, Epoch: 95, Loss: 0.5794, Train: 99.61, Valid: 92.59, Test: 98.62%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 95, Loss: 0.5794, Train: 99.61, Valid: 92.59, Test: 98.62%
+2024-06-15 02:54:43,682 - Run: 01, Key: MRR, Epoch: 95, Loss: 0.5794, Train: 52.56, Valid: 6.20, Test: 14.71%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 95, Loss: 0.5794, Train: 52.56, Valid: 6.20, Test: 14.71%
+2024-06-15 02:54:43,682 - Run: 01, Key: mrr_hit1, Epoch: 95, Loss: 0.5794, Train: 0.00, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 95, Loss: 0.5794, Train: 0.00, Valid: 0.00, Test: 0.00%
+2024-06-15 02:54:43,682 - Run: 01, Key: mrr_hit3, Epoch: 95, Loss: 0.5794, Train: 81.90, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 95, Loss: 0.5794, Train: 81.90, Valid: 0.00, Test: 0.00%
+2024-06-15 02:54:43,682 - Run: 01, Key: mrr_hit10, Epoch: 95, Loss: 0.5794, Train: 95.85, Valid: 0.00, Test: 62.59%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 95, Loss: 0.5794, Train: 95.85, Valid: 0.00, Test: 62.59%
+2024-06-15 02:54:43,682 - Run: 01, Key: mrr_hit20, Epoch: 95, Loss: 0.5794, Train: 97.74, Valid: 52.86, Test: 88.28%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 95, Loss: 0.5794, Train: 97.74, Valid: 52.86, Test: 88.28%
+2024-06-15 02:54:43,682 - Run: 01, Key: mrr_hit50, Epoch: 95, Loss: 0.5794, Train: 99.08, Valid: 78.56, Test: 96.81%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 95, Loss: 0.5794, Train: 99.08, Valid: 78.56, Test: 96.81%
+2024-06-15 02:54:43,682 - Run: 01, Key: mrr_hit100, Epoch: 95, Loss: 0.5794, Train: 99.61, Valid: 92.59, Test: 98.62%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 95, Loss: 0.5794, Train: 99.61, Valid: 92.59, Test: 98.62%
+2024-06-15 02:54:43,682 - Run: 01, Key: AUC, Epoch: 95, Loss: 0.5794, Train: 99.60, Valid: 92.26, Test: 94.50%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 95, Loss: 0.5794, Train: 99.60, Valid: 92.26, Test: 94.50%
+2024-06-15 02:54:43,682 - Run: 01, Key: AP, Epoch: 95, Loss: 0.5794, Train: 99.98, Valid: 98.14, Test: 98.40%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 95, Loss: 0.5794, Train: 99.98, Valid: 98.14, Test: 98.40%
+2024-06-15 02:54:43,682 - Run: 01, Key: ACC, Epoch: 95, Loss: 0.5794, Train: 98.95, Valid: 91.73, Test: 92.50%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 95, Loss: 0.5794, Train: 98.95, Valid: 91.73, Test: 92.50%
+2024-06-15 02:54:43,682 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 03:05:28,558 - Epoch: 100, Loss_train: 0.2757, AUC: 0.9983, AP: 0.9999, MRR: 0.8546, Hit@10 0.9800
+INFO:graphgps.utility.utils:Epoch: 100, Loss_train: 0.2757, AUC: 0.9983, AP: 0.9999, MRR: 0.8546, Hit@10 0.9800
+2024-06-15 03:05:28,558 - Epoch: 100, Loss_valid: 0.2757, AUC: 0.9371, AP: 0.9839, MRR: 0.0625, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 100, Loss_valid: 0.2757, AUC: 0.9371, AP: 0.9839, MRR: 0.0625, Hit@10 0.0000
+2024-06-15 03:05:28,558 - Epoch: 100, Loss_test: 0.2757, AUC: 0.9413, AP: 0.9834, MRR: 0.1785, Hit@10 0.6705
+INFO:graphgps.utility.utils:Epoch: 100, Loss_test: 0.2757, AUC: 0.9413, AP: 0.9834, MRR: 0.1785, Hit@10 0.6705
+2024-06-15 03:05:28,558 - Run: 01, Key: Hits@1, Epoch: 100, Loss: 0.2757, Train: 75.93, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 100, Loss: 0.2757, Train: 75.93, Valid: 0.00, Test: 0.00%
+2024-06-15 03:05:28,558 - Run: 01, Key: Hits@3, Epoch: 100, Loss: 0.2757, Train: 92.92, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 100, Loss: 0.2757, Train: 92.92, Valid: 0.00, Test: 0.00%
+2024-06-15 03:05:28,558 - Run: 01, Key: Hits@10, Epoch: 100, Loss: 0.2757, Train: 98.00, Valid: 0.00, Test: 67.05%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 100, Loss: 0.2757, Train: 98.00, Valid: 0.00, Test: 67.05%
+2024-06-15 03:05:28,558 - Run: 01, Key: Hits@20, Epoch: 100, Loss: 0.2757, Train: 99.02, Valid: 0.00, Test: 78.90%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 100, Loss: 0.2757, Train: 99.02, Valid: 0.00, Test: 78.90%
+2024-06-15 03:05:28,558 - Run: 01, Key: Hits@50, Epoch: 100, Loss: 0.2757, Train: 99.63, Valid: 83.53, Test: 94.48%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 100, Loss: 0.2757, Train: 99.63, Valid: 83.53, Test: 94.48%
+2024-06-15 03:05:28,558 - Run: 01, Key: Hits@100, Epoch: 100, Loss: 0.2757, Train: 99.78, Valid: 94.07, Test: 98.93%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 100, Loss: 0.2757, Train: 99.78, Valid: 94.07, Test: 98.93%
+2024-06-15 03:05:28,558 - Run: 01, Key: MRR, Epoch: 100, Loss: 0.2757, Train: 85.46, Valid: 6.25, Test: 17.85%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 100, Loss: 0.2757, Train: 85.46, Valid: 6.25, Test: 17.85%
+2024-06-15 03:05:28,558 - Run: 01, Key: mrr_hit1, Epoch: 100, Loss: 0.2757, Train: 75.93, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 100, Loss: 0.2757, Train: 75.93, Valid: 0.00, Test: 0.00%
+2024-06-15 03:05:28,558 - Run: 01, Key: mrr_hit3, Epoch: 100, Loss: 0.2757, Train: 92.92, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 100, Loss: 0.2757, Train: 92.92, Valid: 0.00, Test: 0.00%
+2024-06-15 03:05:28,558 - Run: 01, Key: mrr_hit10, Epoch: 100, Loss: 0.2757, Train: 98.00, Valid: 0.00, Test: 67.05%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 100, Loss: 0.2757, Train: 98.00, Valid: 0.00, Test: 67.05%
+2024-06-15 03:05:28,558 - Run: 01, Key: mrr_hit20, Epoch: 100, Loss: 0.2757, Train: 99.02, Valid: 55.84, Test: 78.90%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 100, Loss: 0.2757, Train: 99.02, Valid: 55.84, Test: 78.90%
+2024-06-15 03:05:28,558 - Run: 01, Key: mrr_hit50, Epoch: 100, Loss: 0.2757, Train: 99.63, Valid: 83.53, Test: 94.48%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 100, Loss: 0.2757, Train: 99.63, Valid: 83.53, Test: 94.48%
+2024-06-15 03:05:28,558 - Run: 01, Key: mrr_hit100, Epoch: 100, Loss: 0.2757, Train: 99.78, Valid: 94.07, Test: 98.93%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 100, Loss: 0.2757, Train: 99.78, Valid: 94.07, Test: 98.93%
+2024-06-15 03:05:28,559 - Run: 01, Key: AUC, Epoch: 100, Loss: 0.2757, Train: 99.83, Valid: 93.71, Test: 94.13%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 100, Loss: 0.2757, Train: 99.83, Valid: 93.71, Test: 94.13%
+2024-06-15 03:05:28,559 - Run: 01, Key: AP, Epoch: 100, Loss: 0.2757, Train: 99.99, Valid: 98.39, Test: 98.34%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 100, Loss: 0.2757, Train: 99.99, Valid: 98.39, Test: 98.34%
+2024-06-15 03:05:28,559 - Run: 01, Key: ACC, Epoch: 100, Loss: 0.2757, Train: 99.41, Valid: 92.74, Test: 92.29%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 100, Loss: 0.2757, Train: 99.41, Valid: 92.74, Test: 92.29%
+2024-06-15 03:05:28,559 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 03:28:41,318 - {'Hits@1': 0.0, 'Hits@3': 21.33, 'Hits@10': 66.19, 'Hits@20': 78.09, 'Hits@50': 94.48, 'Hits@100': 98.93, 'MRR': 18.87, 'mrr_hit1': 0.0, 'mrr_hit3': 31.56, 'mrr_hit10': 74.09, 'mrr_hit20': 78.09, 'mrr_hit50': 94.48, 'mrr_hit100': 98.93, 'AUC': 94.13, 'AP': 98.33, 'ACC': 92.29, 'out_channels': 128, 'hidden_channels': 128, 'batch_size': 256, 'epochs': 100, 'train_time': 128.8758261203766, 'test_time': 128.92009925842285, 'params': 97152}
+INFO:graphgps.utility.utils:{'Hits@1': 0.0, 'Hits@3': 21.33, 'Hits@10': 66.19, 'Hits@20': 78.09, 'Hits@50': 94.48, 'Hits@100': 98.93, 'MRR': 18.87, 'mrr_hit1': 0.0, 'mrr_hit3': 31.56, 'mrr_hit10': 74.09, 'mrr_hit20': 78.09, 'mrr_hit50': 94.48, 'mrr_hit100': 98.93, 'AUC': 94.13, 'AP': 98.33, 'ACC': 92.29, 'out_channels': 128, 'hidden_channels': 128, 'batch_size': 256, 'epochs': 100, 'train_time': 128.8758261203766, 'test_time': 128.92009925842285, 'params': 97152}
+2024-06-15 03:28:41,318 - save to /hkfs/work/workspace_haic/scratch/cc7738-TAGBench/TAPE_gerrman/TAPE/results/pubmed_GAEheart_tune_time_.csv
+INFO:graphgps.utility.utils:save to /hkfs/work/workspace_haic/scratch/cc7738-TAGBench/TAPE_gerrman/TAPE/results/pubmed_GAEheart_tune_time_.csv
+/hkfs/work/workspace_haic/scratch/cc7738-TAGBench/TAPE_gerrman/TAPE/core/embedding/tune_utils.py:167: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  new_Data = pd.concat([Data, new_df])
+2024-06-15 03:28:41,330 - train time per epoch 128.8758261203766
+INFO:graphgps.utility.utils:train time per epoch 128.8758261203766
+2024-06-15 03:28:41,330 - test time per epoch 128.92009925842285
+INFO:graphgps.utility.utils:test time per epoch 128.92009925842285
+2024-06-15 03:28:41,330 - train time per epoch 128.8758261203766
+INFO:graphgps.utility.utils:train time per epoch 128.8758261203766
+2024-06-15 03:28:41,330 - test time per epoch 128.92009925842285
+INFO:graphgps.utility.utils:test time per epoch 128.92009925842285
+1it [3:58:41, 14321.37s/it]2024-06-15 03:28:41,330 - Object cfg_model has attribute 'out_channels' with value: 128
+INFO:graphgps.utility.utils:Object cfg_model has attribute 'out_channels' with value: 128
+2024-06-15 03:28:41,330 - Object cfg_model.out_channels updated to 128 
+
+INFO:graphgps.utility.utils:Object cfg_model.out_channels updated to 128 
+
+2024-06-15 03:28:41,330 - Object cfg_model has attribute 'hidden_channels' with value: 128
+INFO:graphgps.utility.utils:Object cfg_model has attribute 'hidden_channels' with value: 128
+2024-06-15 03:28:41,330 - Object cfg_model.hidden_channels updated to 128 
+
+INFO:graphgps.utility.utils:Object cfg_model.hidden_channels updated to 128 
+
+2024-06-15 03:28:41,330 - Object cfg.train has attribute 'batch_size' with values 256
+INFO:graphgps.utility.utils:Object cfg.train has attribute 'batch_size' with values 256
+2024-06-15 03:28:41,330 - Object cfg.train.batch_size updated to 256 
+
+INFO:graphgps.utility.utils:Object cfg.train.batch_size updated to 256 
+
+2024-06-15 03:28:41,330 - Object cfg.train has attribute 'lr' with values 0.015
+INFO:graphgps.utility.utils:Object cfg.train has attribute 'lr' with values 0.015
+2024-06-15 03:28:41,330 - Object cfg.train.lr updated to 0.015 
+
+INFO:graphgps.utility.utils:Object cfg.train.lr updated to 0.015 
+
+2024-06-15 03:28:41,330 - Object cfg_model has attribute 'batch_size_sampler' with value: 32
+INFO:graphgps.utility.utils:Object cfg_model has attribute 'batch_size_sampler' with value: 32
+2024-06-15 03:28:41,330 - Object cfg_model.batch_size_sampler updated to 32 
+
+INFO:graphgps.utility.utils:Object cfg_model.batch_size_sampler updated to 32 
+
+2024-06-15 03:28:41,330 - Object cfg_model has attribute 'num_neighbors' with value: 5
+INFO:graphgps.utility.utils:Object cfg_model has attribute 'num_neighbors' with value: 5
+2024-06-15 03:28:41,331 - Object cfg_model.num_neighbors updated to 5 
+
+INFO:graphgps.utility.utils:Object cfg_model.num_neighbors updated to 5 
+
+2024-06-15 03:28:41,331 - Object cfg_model has attribute 'num_hops' with value: 5
+INFO:graphgps.utility.utils:Object cfg_model has attribute 'num_hops' with value: 5
+2024-06-15 03:28:41,331 - Object cfg_model.num_hops updated to 6 
+
+INFO:graphgps.utility.utils:Object cfg_model.num_hops updated to 6 
+
+2024-06-15 03:28:41,332 - out : 128, hidden: 128
+INFO:graphgps.utility.utils:out : 128, hidden: 128
+2024-06-15 03:28:41,332 - bs : 256, lr: 0.001
+INFO:graphgps.utility.utils:bs : 256, lr: 0.001
+2024-06-15 03:28:41,332 - The model GAE is initialized.
+INFO:graphgps.utility.utils:The model GAE is initialized.
+2024-06-15 03:28:41,348 - GAE_forall(
+  (encoder): GCNEncoder(
+    (conv_first): GCNConv(500, 128)
+    (conv_middle): GCNConv(128, 128)
+    (conv_last): GCNConv(128, 128)
+  )
+  (decoder): InnerProduct()
+) on cuda:0
+INFO:graphgps.utility.utils:GAE_forall(
+  (encoder): GCNEncoder(
+    (conv_first): GCNConv(500, 128)
+    (conv_middle): GCNConv(128, 128)
+    (conv_last): GCNConv(128, 128)
+  )
+  (decoder): InnerProduct()
+) on cuda:0
+2024-06-15 03:28:41,348 - Num parameters: 97152
+INFO:graphgps.utility.utils:Num parameters: 97152
+2024-06-15 03:28:41,355 - config saved into results/ns_gnn_models-Tune/Tune
+INFO:graphgps.utility.utils:config saved into results/ns_gnn_models-Tune/Tune
+2024-06-15 03:28:41,355 - Run 0 with seed 0 and split 0 on device cuda:0
+INFO:graphgps.utility.utils:Run 0 with seed 0 and split 0 on device cuda:0
+/hkfs/work/workspace_haic/scratch/cc7738-TAGBench/TAPE_gerrman/TAPE/core/graphgps/splits/neighbor_sampler.py:55: UserWarning: The usage of the 'directed' argument in 'NeighborSampler' is deprecated. Use `subgraph_type='induced'` instead.
+  warnings.warn(f"The usage of the 'directed' argument in "
+2024-06-15 03:45:45,586 - Epoch: 005, Loss_train: 0.8581, AUC: 0.9805, AP: 0.9974, MRR: 0.2420, Hit@10 0.4367
+INFO:graphgps.utility.utils:Epoch: 005, Loss_train: 0.8581, AUC: 0.9805, AP: 0.9974, MRR: 0.2420, Hit@10 0.4367
+2024-06-15 03:45:45,586 - Epoch: 005, Loss_valid: 0.8581, AUC: 0.9441, AP: 0.9836, MRR: 0.2012, Hit@10 0.3175
+INFO:graphgps.utility.utils:Epoch: 005, Loss_valid: 0.8581, AUC: 0.9441, AP: 0.9836, MRR: 0.2012, Hit@10 0.3175
+2024-06-15 03:45:45,586 - Epoch: 005, Loss_test: 0.8581, AUC: 0.9575, AP: 0.9862, MRR: 0.2210, Hit@10 0.6405
+INFO:graphgps.utility.utils:Epoch: 005, Loss_test: 0.8581, AUC: 0.9575, AP: 0.9862, MRR: 0.2210, Hit@10 0.6405
+2024-06-15 03:45:45,587 - Run: 01, Key: Hits@1, Epoch: 05, Loss: 0.8581, Train: 9.38, Valid: 14.36, Test: 6.13%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 05, Loss: 0.8581, Train: 9.38, Valid: 14.36, Test: 6.13%
+2024-06-15 03:45:45,587 - Run: 01, Key: Hits@3, Epoch: 05, Loss: 0.8581, Train: 31.35, Valid: 18.22, Test: 28.36%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 05, Loss: 0.8581, Train: 31.35, Valid: 18.22, Test: 28.36%
+2024-06-15 03:45:45,587 - Run: 01, Key: Hits@10, Epoch: 05, Loss: 0.8581, Train: 43.67, Valid: 31.75, Test: 64.05%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 05, Loss: 0.8581, Train: 43.67, Valid: 31.75, Test: 64.05%
+2024-06-15 03:45:45,587 - Run: 01, Key: Hits@20, Epoch: 05, Loss: 0.8581, Train: 56.83, Valid: 42.92, Test: 73.96%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 05, Loss: 0.8581, Train: 56.83, Valid: 42.92, Test: 73.96%
+2024-06-15 03:45:45,587 - Run: 01, Key: Hits@50, Epoch: 05, Loss: 0.8581, Train: 71.97, Valid: 65.32, Test: 89.49%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 05, Loss: 0.8581, Train: 71.97, Valid: 65.32, Test: 89.49%
+2024-06-15 03:45:45,587 - Run: 01, Key: Hits@100, Epoch: 05, Loss: 0.8581, Train: 81.64, Valid: 80.16, Test: 94.52%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 05, Loss: 0.8581, Train: 81.64, Valid: 80.16, Test: 94.52%
+2024-06-15 03:45:45,587 - Run: 01, Key: MRR, Epoch: 05, Loss: 0.8581, Train: 24.20, Valid: 20.12, Test: 22.10%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 05, Loss: 0.8581, Train: 24.20, Valid: 20.12, Test: 22.10%
+2024-06-15 03:45:45,588 - Run: 01, Key: mrr_hit1, Epoch: 05, Loss: 0.8581, Train: 9.38, Valid: 14.36, Test: 6.13%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 05, Loss: 0.8581, Train: 9.38, Valid: 14.36, Test: 6.13%
+2024-06-15 03:45:45,588 - Run: 01, Key: mrr_hit3, Epoch: 05, Loss: 0.8581, Train: 31.35, Valid: 18.22, Test: 28.36%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 05, Loss: 0.8581, Train: 31.35, Valid: 18.22, Test: 28.36%
+2024-06-15 03:45:45,588 - Run: 01, Key: mrr_hit10, Epoch: 05, Loss: 0.8581, Train: 43.67, Valid: 31.75, Test: 64.05%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 05, Loss: 0.8581, Train: 43.67, Valid: 31.75, Test: 64.05%
+2024-06-15 03:45:45,588 - Run: 01, Key: mrr_hit20, Epoch: 05, Loss: 0.8581, Train: 56.83, Valid: 42.92, Test: 73.96%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 05, Loss: 0.8581, Train: 56.83, Valid: 42.92, Test: 73.96%
+2024-06-15 03:45:45,588 - Run: 01, Key: mrr_hit50, Epoch: 05, Loss: 0.8581, Train: 71.97, Valid: 65.32, Test: 89.49%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 05, Loss: 0.8581, Train: 71.97, Valid: 65.32, Test: 89.49%
+2024-06-15 03:45:45,588 - Run: 01, Key: mrr_hit100, Epoch: 05, Loss: 0.8581, Train: 81.64, Valid: 80.16, Test: 94.52%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 05, Loss: 0.8581, Train: 81.64, Valid: 80.16, Test: 94.52%
+2024-06-15 03:45:45,588 - Run: 01, Key: AUC, Epoch: 05, Loss: 0.8581, Train: 98.05, Valid: 94.41, Test: 95.75%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 05, Loss: 0.8581, Train: 98.05, Valid: 94.41, Test: 95.75%
+2024-06-15 03:45:45,588 - Run: 01, Key: AP, Epoch: 05, Loss: 0.8581, Train: 99.74, Valid: 98.36, Test: 98.62%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 05, Loss: 0.8581, Train: 99.74, Valid: 98.36, Test: 98.62%
+2024-06-15 03:45:45,588 - Run: 01, Key: ACC, Epoch: 05, Loss: 0.8581, Train: 95.67, Valid: 89.92, Test: 89.92%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 05, Loss: 0.8581, Train: 95.67, Valid: 89.92, Test: 89.92%
+2024-06-15 03:45:45,588 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 04:02:49,301 - Epoch: 010, Loss_train: 0.6568, AUC: 0.9895, AP: 0.9989, MRR: 0.4123, Hit@10 0.7018
+INFO:graphgps.utility.utils:Epoch: 010, Loss_train: 0.6568, AUC: 0.9895, AP: 0.9989, MRR: 0.4123, Hit@10 0.7018
+2024-06-15 04:02:49,301 - Epoch: 010, Loss_valid: 0.6568, AUC: 0.9383, AP: 0.9799, MRR: 0.0872, Hit@10 0.2591
+INFO:graphgps.utility.utils:Epoch: 010, Loss_valid: 0.6568, AUC: 0.9383, AP: 0.9799, MRR: 0.0872, Hit@10 0.2591
+2024-06-15 04:02:49,301 - Epoch: 010, Loss_test: 0.6568, AUC: 0.9601, AP: 0.9857, MRR: 0.2122, Hit@10 0.6107
+INFO:graphgps.utility.utils:Epoch: 010, Loss_test: 0.6568, AUC: 0.9601, AP: 0.9857, MRR: 0.2122, Hit@10 0.6107
+2024-06-15 04:02:49,302 - Run: 01, Key: Hits@1, Epoch: 10, Loss: 0.6568, Train: 27.97, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 10, Loss: 0.6568, Train: 27.97, Valid: 0.00, Test: 0.00%
+2024-06-15 04:02:49,302 - Run: 01, Key: Hits@3, Epoch: 10, Loss: 0.6568, Train: 43.49, Valid: 7.31, Test: 33.32%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 10, Loss: 0.6568, Train: 43.49, Valid: 7.31, Test: 33.32%
+2024-06-15 04:02:49,302 - Run: 01, Key: Hits@10, Epoch: 10, Loss: 0.6568, Train: 70.18, Valid: 25.91, Test: 61.07%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 10, Loss: 0.6568, Train: 70.18, Valid: 25.91, Test: 61.07%
+2024-06-15 04:02:49,302 - Run: 01, Key: Hits@20, Epoch: 10, Loss: 0.6568, Train: 76.52, Valid: 37.30, Test: 73.97%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 10, Loss: 0.6568, Train: 76.52, Valid: 37.30, Test: 73.97%
+2024-06-15 04:02:49,302 - Run: 01, Key: Hits@50, Epoch: 10, Loss: 0.6568, Train: 87.68, Valid: 62.72, Test: 90.06%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 10, Loss: 0.6568, Train: 87.68, Valid: 62.72, Test: 90.06%
+2024-06-15 04:02:49,302 - Run: 01, Key: Hits@100, Epoch: 10, Loss: 0.6568, Train: 92.07, Valid: 77.19, Test: 96.06%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 10, Loss: 0.6568, Train: 92.07, Valid: 77.19, Test: 96.06%
+2024-06-15 04:02:49,302 - Run: 01, Key: MRR, Epoch: 10, Loss: 0.6568, Train: 41.23, Valid: 8.72, Test: 21.22%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 10, Loss: 0.6568, Train: 41.23, Valid: 8.72, Test: 21.22%
+2024-06-15 04:02:49,302 - Run: 01, Key: mrr_hit1, Epoch: 10, Loss: 0.6568, Train: 27.97, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 10, Loss: 0.6568, Train: 27.97, Valid: 0.00, Test: 0.00%
+2024-06-15 04:02:49,302 - Run: 01, Key: mrr_hit3, Epoch: 10, Loss: 0.6568, Train: 43.49, Valid: 7.31, Test: 33.32%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 10, Loss: 0.6568, Train: 43.49, Valid: 7.31, Test: 33.32%
+2024-06-15 04:02:49,302 - Run: 01, Key: mrr_hit10, Epoch: 10, Loss: 0.6568, Train: 70.18, Valid: 25.91, Test: 61.07%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 10, Loss: 0.6568, Train: 70.18, Valid: 25.91, Test: 61.07%
+2024-06-15 04:02:49,302 - Run: 01, Key: mrr_hit20, Epoch: 10, Loss: 0.6568, Train: 76.52, Valid: 37.30, Test: 73.97%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 10, Loss: 0.6568, Train: 76.52, Valid: 37.30, Test: 73.97%
+2024-06-15 04:02:49,302 - Run: 01, Key: mrr_hit50, Epoch: 10, Loss: 0.6568, Train: 87.68, Valid: 62.72, Test: 90.06%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 10, Loss: 0.6568, Train: 87.68, Valid: 62.72, Test: 90.06%
+2024-06-15 04:02:49,302 - Run: 01, Key: mrr_hit100, Epoch: 10, Loss: 0.6568, Train: 92.07, Valid: 77.19, Test: 96.06%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 10, Loss: 0.6568, Train: 92.07, Valid: 77.19, Test: 96.06%
+2024-06-15 04:02:49,302 - Run: 01, Key: AUC, Epoch: 10, Loss: 0.6568, Train: 98.95, Valid: 93.83, Test: 96.01%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 10, Loss: 0.6568, Train: 98.95, Valid: 93.83, Test: 96.01%
+2024-06-15 04:02:49,302 - Run: 01, Key: AP, Epoch: 10, Loss: 0.6568, Train: 99.89, Valid: 97.99, Test: 98.57%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 10, Loss: 0.6568, Train: 99.89, Valid: 97.99, Test: 98.57%
+2024-06-15 04:02:49,302 - Run: 01, Key: ACC, Epoch: 10, Loss: 0.6568, Train: 97.03, Valid: 88.98, Test: 90.23%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 10, Loss: 0.6568, Train: 97.03, Valid: 88.98, Test: 90.23%
+2024-06-15 04:02:49,302 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 04:19:52,886 - Epoch: 015, Loss_train: 0.5940, AUC: 0.9892, AP: 0.9987, MRR: 0.3765, Hit@10 0.5716
+INFO:graphgps.utility.utils:Epoch: 015, Loss_train: 0.5940, AUC: 0.9892, AP: 0.9987, MRR: 0.3765, Hit@10 0.5716
+2024-06-15 04:19:52,886 - Epoch: 015, Loss_valid: 0.5940, AUC: 0.9268, AP: 0.9771, MRR: 0.1068, Hit@10 0.2267
+INFO:graphgps.utility.utils:Epoch: 015, Loss_valid: 0.5940, AUC: 0.9268, AP: 0.9771, MRR: 0.1068, Hit@10 0.2267
+2024-06-15 04:19:52,886 - Epoch: 015, Loss_test: 0.5940, AUC: 0.9512, AP: 0.9830, MRR: 0.1930, Hit@10 0.5110
+INFO:graphgps.utility.utils:Epoch: 015, Loss_test: 0.5940, AUC: 0.9512, AP: 0.9830, MRR: 0.1930, Hit@10 0.5110
+2024-06-15 04:19:52,886 - Run: 01, Key: Hits@1, Epoch: 15, Loss: 0.5940, Train: 24.87, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 15, Loss: 0.5940, Train: 24.87, Valid: 0.00, Test: 0.00%
+2024-06-15 04:19:52,886 - Run: 01, Key: Hits@3, Epoch: 15, Loss: 0.5940, Train: 42.46, Valid: 12.63, Test: 23.37%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 15, Loss: 0.5940, Train: 42.46, Valid: 12.63, Test: 23.37%
+2024-06-15 04:19:52,886 - Run: 01, Key: Hits@10, Epoch: 15, Loss: 0.5940, Train: 57.16, Valid: 22.67, Test: 51.10%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 15, Loss: 0.5940, Train: 57.16, Valid: 22.67, Test: 51.10%
+2024-06-15 04:19:52,887 - Run: 01, Key: Hits@20, Epoch: 15, Loss: 0.5940, Train: 68.32, Valid: 36.43, Test: 66.60%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 15, Loss: 0.5940, Train: 68.32, Valid: 36.43, Test: 66.60%
+2024-06-15 04:19:52,887 - Run: 01, Key: Hits@50, Epoch: 15, Loss: 0.5940, Train: 85.78, Valid: 50.38, Test: 86.01%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 15, Loss: 0.5940, Train: 85.78, Valid: 50.38, Test: 86.01%
+2024-06-15 04:19:52,888 - Run: 01, Key: Hits@100, Epoch: 15, Loss: 0.5940, Train: 92.38, Valid: 67.26, Test: 94.67%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 15, Loss: 0.5940, Train: 92.38, Valid: 67.26, Test: 94.67%
+2024-06-15 04:19:52,888 - Run: 01, Key: MRR, Epoch: 15, Loss: 0.5940, Train: 37.65, Valid: 10.68, Test: 19.30%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 15, Loss: 0.5940, Train: 37.65, Valid: 10.68, Test: 19.30%
+2024-06-15 04:19:52,888 - Run: 01, Key: mrr_hit1, Epoch: 15, Loss: 0.5940, Train: 24.87, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 15, Loss: 0.5940, Train: 24.87, Valid: 0.00, Test: 0.00%
+2024-06-15 04:19:52,888 - Run: 01, Key: mrr_hit3, Epoch: 15, Loss: 0.5940, Train: 42.46, Valid: 12.63, Test: 23.37%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 15, Loss: 0.5940, Train: 42.46, Valid: 12.63, Test: 23.37%
+2024-06-15 04:19:52,888 - Run: 01, Key: mrr_hit10, Epoch: 15, Loss: 0.5940, Train: 57.16, Valid: 22.67, Test: 51.10%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 15, Loss: 0.5940, Train: 57.16, Valid: 22.67, Test: 51.10%
+2024-06-15 04:19:52,888 - Run: 01, Key: mrr_hit20, Epoch: 15, Loss: 0.5940, Train: 68.32, Valid: 36.43, Test: 66.60%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 15, Loss: 0.5940, Train: 68.32, Valid: 36.43, Test: 66.60%
+2024-06-15 04:19:52,888 - Run: 01, Key: mrr_hit50, Epoch: 15, Loss: 0.5940, Train: 85.78, Valid: 50.38, Test: 86.01%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 15, Loss: 0.5940, Train: 85.78, Valid: 50.38, Test: 86.01%
+2024-06-15 04:19:52,888 - Run: 01, Key: mrr_hit100, Epoch: 15, Loss: 0.5940, Train: 92.38, Valid: 67.26, Test: 94.67%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 15, Loss: 0.5940, Train: 92.38, Valid: 67.26, Test: 94.67%
+2024-06-15 04:19:52,888 - Run: 01, Key: AUC, Epoch: 15, Loss: 0.5940, Train: 98.92, Valid: 92.68, Test: 95.12%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 15, Loss: 0.5940, Train: 98.92, Valid: 92.68, Test: 95.12%
+2024-06-15 04:19:52,888 - Run: 01, Key: AP, Epoch: 15, Loss: 0.5940, Train: 99.87, Valid: 97.71, Test: 98.30%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 15, Loss: 0.5940, Train: 99.87, Valid: 97.71, Test: 98.30%
+2024-06-15 04:19:52,888 - Run: 01, Key: ACC, Epoch: 15, Loss: 0.5940, Train: 97.13, Valid: 89.02, Test: 89.00%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 15, Loss: 0.5940, Train: 97.13, Valid: 89.02, Test: 89.00%
+2024-06-15 04:19:52,888 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 04:36:57,181 - Epoch: 020, Loss_train: 0.7667, AUC: 0.9933, AP: 0.9993, MRR: 0.5041, Hit@10 0.7560
+INFO:graphgps.utility.utils:Epoch: 020, Loss_train: 0.7667, AUC: 0.9933, AP: 0.9993, MRR: 0.5041, Hit@10 0.7560
+2024-06-15 04:36:57,182 - Epoch: 020, Loss_valid: 0.7667, AUC: 0.9224, AP: 0.9748, MRR: 0.0572, Hit@10 0.1738
+INFO:graphgps.utility.utils:Epoch: 020, Loss_valid: 0.7667, AUC: 0.9224, AP: 0.9748, MRR: 0.0572, Hit@10 0.1738
+2024-06-15 04:36:57,182 - Epoch: 020, Loss_test: 0.7667, AUC: 0.9403, AP: 0.9781, MRR: 0.1290, Hit@10 0.3886
+INFO:graphgps.utility.utils:Epoch: 020, Loss_test: 0.7667, AUC: 0.9403, AP: 0.9781, MRR: 0.1290, Hit@10 0.3886
+2024-06-15 04:36:57,182 - Run: 01, Key: Hits@1, Epoch: 20, Loss: 0.7667, Train: 33.66, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 20, Loss: 0.7667, Train: 33.66, Valid: 0.00, Test: 0.00%
+2024-06-15 04:36:57,182 - Run: 01, Key: Hits@3, Epoch: 20, Loss: 0.7667, Train: 61.02, Valid: 0.00, Test: 15.39%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 20, Loss: 0.7667, Train: 61.02, Valid: 0.00, Test: 15.39%
+2024-06-15 04:36:57,182 - Run: 01, Key: Hits@10, Epoch: 20, Loss: 0.7667, Train: 75.60, Valid: 17.38, Test: 38.86%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 20, Loss: 0.7667, Train: 75.60, Valid: 17.38, Test: 38.86%
+2024-06-15 04:36:57,182 - Run: 01, Key: Hits@20, Epoch: 20, Loss: 0.7667, Train: 85.56, Valid: 27.94, Test: 54.39%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 20, Loss: 0.7667, Train: 85.56, Valid: 27.94, Test: 54.39%
+2024-06-15 04:36:57,182 - Run: 01, Key: Hits@50, Epoch: 20, Loss: 0.7667, Train: 91.44, Valid: 52.92, Test: 79.95%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 20, Loss: 0.7667, Train: 91.44, Valid: 52.92, Test: 79.95%
+2024-06-15 04:36:57,182 - Run: 01, Key: Hits@100, Epoch: 20, Loss: 0.7667, Train: 94.97, Valid: 68.18, Test: 93.68%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 20, Loss: 0.7667, Train: 94.97, Valid: 68.18, Test: 93.68%
+2024-06-15 04:36:57,182 - Run: 01, Key: MRR, Epoch: 20, Loss: 0.7667, Train: 50.41, Valid: 5.72, Test: 12.90%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 20, Loss: 0.7667, Train: 50.41, Valid: 5.72, Test: 12.90%
+2024-06-15 04:36:57,182 - Run: 01, Key: mrr_hit1, Epoch: 20, Loss: 0.7667, Train: 33.66, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 20, Loss: 0.7667, Train: 33.66, Valid: 0.00, Test: 0.00%
+2024-06-15 04:36:57,182 - Run: 01, Key: mrr_hit3, Epoch: 20, Loss: 0.7667, Train: 61.02, Valid: 0.00, Test: 15.39%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 20, Loss: 0.7667, Train: 61.02, Valid: 0.00, Test: 15.39%
+2024-06-15 04:36:57,182 - Run: 01, Key: mrr_hit10, Epoch: 20, Loss: 0.7667, Train: 75.60, Valid: 17.38, Test: 38.86%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 20, Loss: 0.7667, Train: 75.60, Valid: 17.38, Test: 38.86%
+2024-06-15 04:36:57,182 - Run: 01, Key: mrr_hit20, Epoch: 20, Loss: 0.7667, Train: 85.56, Valid: 27.94, Test: 54.39%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 20, Loss: 0.7667, Train: 85.56, Valid: 27.94, Test: 54.39%
+2024-06-15 04:36:57,182 - Run: 01, Key: mrr_hit50, Epoch: 20, Loss: 0.7667, Train: 91.44, Valid: 52.92, Test: 79.95%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 20, Loss: 0.7667, Train: 91.44, Valid: 52.92, Test: 79.95%
+2024-06-15 04:36:57,182 - Run: 01, Key: mrr_hit100, Epoch: 20, Loss: 0.7667, Train: 94.97, Valid: 68.18, Test: 93.68%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 20, Loss: 0.7667, Train: 94.97, Valid: 68.18, Test: 93.68%
+2024-06-15 04:36:57,182 - Run: 01, Key: AUC, Epoch: 20, Loss: 0.7667, Train: 99.33, Valid: 92.24, Test: 94.03%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 20, Loss: 0.7667, Train: 99.33, Valid: 92.24, Test: 94.03%
+2024-06-15 04:36:57,182 - Run: 01, Key: AP, Epoch: 20, Loss: 0.7667, Train: 99.93, Valid: 97.48, Test: 97.81%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 20, Loss: 0.7667, Train: 99.93, Valid: 97.48, Test: 97.81%
+2024-06-15 04:36:57,182 - Run: 01, Key: ACC, Epoch: 20, Loss: 0.7667, Train: 97.83, Valid: 89.27, Test: 89.13%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 20, Loss: 0.7667, Train: 97.83, Valid: 89.27, Test: 89.13%
+2024-06-15 04:36:57,182 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 04:54:03,183 - Epoch: 025, Loss_train: 0.6786, AUC: 0.9937, AP: 0.9993, MRR: 0.5406, Hit@10 0.7696
+INFO:graphgps.utility.utils:Epoch: 025, Loss_train: 0.6786, AUC: 0.9937, AP: 0.9993, MRR: 0.5406, Hit@10 0.7696
+2024-06-15 04:54:03,184 - Epoch: 025, Loss_valid: 0.6786, AUC: 0.9317, AP: 0.9780, MRR: 0.0755, Hit@10 0.1923
+INFO:graphgps.utility.utils:Epoch: 025, Loss_valid: 0.6786, AUC: 0.9317, AP: 0.9780, MRR: 0.0755, Hit@10 0.1923
+2024-06-15 04:54:03,184 - Epoch: 025, Loss_test: 0.6786, AUC: 0.9448, AP: 0.9799, MRR: 0.2319, Hit@10 0.3536
+INFO:graphgps.utility.utils:Epoch: 025, Loss_test: 0.6786, AUC: 0.9448, AP: 0.9799, MRR: 0.2319, Hit@10 0.3536
+2024-06-15 04:54:03,184 - Run: 01, Key: Hits@1, Epoch: 25, Loss: 0.6786, Train: 47.11, Valid: 0.00, Test: 17.33%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 25, Loss: 0.6786, Train: 47.11, Valid: 0.00, Test: 17.33%
+2024-06-15 04:54:03,184 - Run: 01, Key: Hits@3, Epoch: 25, Loss: 0.6786, Train: 52.30, Valid: 0.00, Test: 18.92%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 25, Loss: 0.6786, Train: 52.30, Valid: 0.00, Test: 18.92%
+2024-06-15 04:54:03,185 - Run: 01, Key: Hits@10, Epoch: 25, Loss: 0.6786, Train: 76.96, Valid: 19.23, Test: 35.36%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 25, Loss: 0.6786, Train: 76.96, Valid: 19.23, Test: 35.36%
+2024-06-15 04:54:03,185 - Run: 01, Key: Hits@20, Epoch: 25, Loss: 0.6786, Train: 81.36, Valid: 27.36, Test: 58.72%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 25, Loss: 0.6786, Train: 81.36, Valid: 27.36, Test: 58.72%
+2024-06-15 04:54:03,185 - Run: 01, Key: Hits@50, Epoch: 25, Loss: 0.6786, Train: 92.18, Valid: 54.25, Test: 84.51%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 25, Loss: 0.6786, Train: 92.18, Valid: 54.25, Test: 84.51%
+2024-06-15 04:54:03,185 - Run: 01, Key: Hits@100, Epoch: 25, Loss: 0.6786, Train: 95.91, Valid: 76.52, Test: 93.63%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 25, Loss: 0.6786, Train: 95.91, Valid: 76.52, Test: 93.63%
+2024-06-15 04:54:03,185 - Run: 01, Key: MRR, Epoch: 25, Loss: 0.6786, Train: 54.06, Valid: 7.55, Test: 23.19%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 25, Loss: 0.6786, Train: 54.06, Valid: 7.55, Test: 23.19%
+2024-06-15 04:54:03,185 - Run: 01, Key: mrr_hit1, Epoch: 25, Loss: 0.6786, Train: 47.11, Valid: 0.00, Test: 17.33%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 25, Loss: 0.6786, Train: 47.11, Valid: 0.00, Test: 17.33%
+2024-06-15 04:54:03,185 - Run: 01, Key: mrr_hit3, Epoch: 25, Loss: 0.6786, Train: 52.30, Valid: 15.08, Test: 18.92%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 25, Loss: 0.6786, Train: 52.30, Valid: 15.08, Test: 18.92%
+2024-06-15 04:54:03,185 - Run: 01, Key: mrr_hit10, Epoch: 25, Loss: 0.6786, Train: 76.96, Valid: 19.23, Test: 35.36%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 25, Loss: 0.6786, Train: 76.96, Valid: 19.23, Test: 35.36%
+2024-06-15 04:54:03,185 - Run: 01, Key: mrr_hit20, Epoch: 25, Loss: 0.6786, Train: 81.36, Valid: 27.36, Test: 58.72%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 25, Loss: 0.6786, Train: 81.36, Valid: 27.36, Test: 58.72%
+2024-06-15 04:54:03,185 - Run: 01, Key: mrr_hit50, Epoch: 25, Loss: 0.6786, Train: 92.18, Valid: 54.25, Test: 84.51%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 25, Loss: 0.6786, Train: 92.18, Valid: 54.25, Test: 84.51%
+2024-06-15 04:54:03,185 - Run: 01, Key: mrr_hit100, Epoch: 25, Loss: 0.6786, Train: 95.91, Valid: 76.52, Test: 93.63%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 25, Loss: 0.6786, Train: 95.91, Valid: 76.52, Test: 93.63%
+2024-06-15 04:54:03,185 - Run: 01, Key: AUC, Epoch: 25, Loss: 0.6786, Train: 99.37, Valid: 93.17, Test: 94.48%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 25, Loss: 0.6786, Train: 99.37, Valid: 93.17, Test: 94.48%
+2024-06-15 04:54:03,185 - Run: 01, Key: AP, Epoch: 25, Loss: 0.6786, Train: 99.93, Valid: 97.80, Test: 97.99%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 25, Loss: 0.6786, Train: 99.93, Valid: 97.80, Test: 97.99%
+2024-06-15 04:54:03,185 - Run: 01, Key: ACC, Epoch: 25, Loss: 0.6786, Train: 97.88, Valid: 89.31, Test: 88.81%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 25, Loss: 0.6786, Train: 97.88, Valid: 89.31, Test: 88.81%
+2024-06-15 04:54:03,185 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 05:11:09,451 - Epoch: 030, Loss_train: 0.4499, AUC: 0.9939, AP: 0.9993, MRR: 0.4712, Hit@10 0.7183
+INFO:graphgps.utility.utils:Epoch: 030, Loss_train: 0.4499, AUC: 0.9939, AP: 0.9993, MRR: 0.4712, Hit@10 0.7183
+2024-06-15 05:11:09,452 - Epoch: 030, Loss_valid: 0.4499, AUC: 0.9167, AP: 0.9711, MRR: 0.0364, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 030, Loss_valid: 0.4499, AUC: 0.9167, AP: 0.9711, MRR: 0.0364, Hit@10 0.0000
+2024-06-15 05:11:09,452 - Epoch: 030, Loss_test: 0.4499, AUC: 0.9416, AP: 0.9788, MRR: 0.1178, Hit@10 0.4311
+INFO:graphgps.utility.utils:Epoch: 030, Loss_test: 0.4499, AUC: 0.9416, AP: 0.9788, MRR: 0.1178, Hit@10 0.4311
+2024-06-15 05:11:09,452 - Run: 01, Key: Hits@1, Epoch: 30, Loss: 0.4499, Train: 30.94, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 30, Loss: 0.4499, Train: 30.94, Valid: 0.00, Test: 0.00%
+2024-06-15 05:11:09,452 - Run: 01, Key: Hits@3, Epoch: 30, Loss: 0.4499, Train: 58.69, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 30, Loss: 0.4499, Train: 58.69, Valid: 0.00, Test: 0.00%
+2024-06-15 05:11:09,452 - Run: 01, Key: Hits@10, Epoch: 30, Loss: 0.4499, Train: 71.83, Valid: 0.00, Test: 43.11%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 30, Loss: 0.4499, Train: 71.83, Valid: 0.00, Test: 43.11%
+2024-06-15 05:11:09,452 - Run: 01, Key: Hits@20, Epoch: 30, Loss: 0.4499, Train: 79.94, Valid: 24.53, Test: 59.30%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 30, Loss: 0.4499, Train: 79.94, Valid: 24.53, Test: 59.30%
+2024-06-15 05:11:09,452 - Run: 01, Key: Hits@50, Epoch: 30, Loss: 0.4499, Train: 91.98, Valid: 42.61, Test: 81.31%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 30, Loss: 0.4499, Train: 91.98, Valid: 42.61, Test: 81.31%
+2024-06-15 05:11:09,452 - Run: 01, Key: Hits@100, Epoch: 30, Loss: 0.4499, Train: 96.02, Valid: 62.60, Test: 92.68%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 30, Loss: 0.4499, Train: 96.02, Valid: 62.60, Test: 92.68%
+2024-06-15 05:11:09,452 - Run: 01, Key: MRR, Epoch: 30, Loss: 0.4499, Train: 47.12, Valid: 3.64, Test: 11.78%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 30, Loss: 0.4499, Train: 47.12, Valid: 3.64, Test: 11.78%
+2024-06-15 05:11:09,452 - Run: 01, Key: mrr_hit1, Epoch: 30, Loss: 0.4499, Train: 30.94, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 30, Loss: 0.4499, Train: 30.94, Valid: 0.00, Test: 0.00%
+2024-06-15 05:11:09,452 - Run: 01, Key: mrr_hit3, Epoch: 30, Loss: 0.4499, Train: 58.69, Valid: 0.00, Test: 20.66%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 30, Loss: 0.4499, Train: 58.69, Valid: 0.00, Test: 20.66%
+2024-06-15 05:11:09,452 - Run: 01, Key: mrr_hit10, Epoch: 30, Loss: 0.4499, Train: 71.83, Valid: 21.21, Test: 43.11%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 30, Loss: 0.4499, Train: 71.83, Valid: 21.21, Test: 43.11%
+2024-06-15 05:11:09,452 - Run: 01, Key: mrr_hit20, Epoch: 30, Loss: 0.4499, Train: 79.94, Valid: 24.53, Test: 59.30%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 30, Loss: 0.4499, Train: 79.94, Valid: 24.53, Test: 59.30%
+2024-06-15 05:11:09,452 - Run: 01, Key: mrr_hit50, Epoch: 30, Loss: 0.4499, Train: 91.98, Valid: 42.61, Test: 81.31%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 30, Loss: 0.4499, Train: 91.98, Valid: 42.61, Test: 81.31%
+2024-06-15 05:11:09,452 - Run: 01, Key: mrr_hit100, Epoch: 30, Loss: 0.4499, Train: 96.02, Valid: 62.60, Test: 92.68%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 30, Loss: 0.4499, Train: 96.02, Valid: 62.60, Test: 92.68%
+2024-06-15 05:11:09,452 - Run: 01, Key: AUC, Epoch: 30, Loss: 0.4499, Train: 99.39, Valid: 91.67, Test: 94.16%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 30, Loss: 0.4499, Train: 99.39, Valid: 91.67, Test: 94.16%
+2024-06-15 05:11:09,452 - Run: 01, Key: AP, Epoch: 30, Loss: 0.4499, Train: 99.93, Valid: 97.11, Test: 97.88%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 30, Loss: 0.4499, Train: 99.93, Valid: 97.11, Test: 97.88%
+2024-06-15 05:11:09,452 - Run: 01, Key: ACC, Epoch: 30, Loss: 0.4499, Train: 98.07, Valid: 89.13, Test: 89.49%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 30, Loss: 0.4499, Train: 98.07, Valid: 89.13, Test: 89.49%
+2024-06-15 05:11:09,452 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 05:28:16,636 - Epoch: 035, Loss_train: 0.5324, AUC: 0.9952, AP: 0.9995, MRR: 0.5937, Hit@10 0.8066
+INFO:graphgps.utility.utils:Epoch: 035, Loss_train: 0.5324, AUC: 0.9952, AP: 0.9995, MRR: 0.5937, Hit@10 0.8066
+2024-06-15 05:28:16,636 - Epoch: 035, Loss_valid: 0.5324, AUC: 0.9186, AP: 0.9730, MRR: 0.0390, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 035, Loss_valid: 0.5324, AUC: 0.9186, AP: 0.9730, MRR: 0.0390, Hit@10 0.0000
+2024-06-15 05:28:16,636 - Epoch: 035, Loss_test: 0.5324, AUC: 0.9289, AP: 0.9739, MRR: 0.0968, Hit@10 0.3523
+INFO:graphgps.utility.utils:Epoch: 035, Loss_test: 0.5324, AUC: 0.9289, AP: 0.9739, MRR: 0.0968, Hit@10 0.3523
+2024-06-15 05:28:16,637 - Run: 01, Key: Hits@1, Epoch: 35, Loss: 0.5324, Train: 50.30, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 35, Loss: 0.5324, Train: 50.30, Valid: 0.00, Test: 0.00%
+2024-06-15 05:28:16,637 - Run: 01, Key: Hits@3, Epoch: 35, Loss: 0.5324, Train: 66.98, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 35, Loss: 0.5324, Train: 66.98, Valid: 0.00, Test: 0.00%
+2024-06-15 05:28:16,637 - Run: 01, Key: Hits@10, Epoch: 35, Loss: 0.5324, Train: 80.66, Valid: 0.00, Test: 35.23%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 35, Loss: 0.5324, Train: 80.66, Valid: 0.00, Test: 35.23%
+2024-06-15 05:28:16,637 - Run: 01, Key: Hits@20, Epoch: 35, Loss: 0.5324, Train: 85.63, Valid: 26.85, Test: 43.82%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 35, Loss: 0.5324, Train: 85.63, Valid: 26.85, Test: 43.82%
+2024-06-15 05:28:16,637 - Run: 01, Key: Hits@50, Epoch: 35, Loss: 0.5324, Train: 93.27, Valid: 50.94, Test: 74.68%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 35, Loss: 0.5324, Train: 93.27, Valid: 50.94, Test: 74.68%
+2024-06-15 05:28:16,637 - Run: 01, Key: Hits@100, Epoch: 35, Loss: 0.5324, Train: 96.30, Valid: 69.23, Test: 90.50%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 35, Loss: 0.5324, Train: 96.30, Valid: 69.23, Test: 90.50%
+2024-06-15 05:28:16,637 - Run: 01, Key: MRR, Epoch: 35, Loss: 0.5324, Train: 59.37, Valid: 3.90, Test: 9.68%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 35, Loss: 0.5324, Train: 59.37, Valid: 3.90, Test: 9.68%
+2024-06-15 05:28:16,637 - Run: 01, Key: mrr_hit1, Epoch: 35, Loss: 0.5324, Train: 50.30, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 35, Loss: 0.5324, Train: 50.30, Valid: 0.00, Test: 0.00%
+2024-06-15 05:28:16,637 - Run: 01, Key: mrr_hit3, Epoch: 35, Loss: 0.5324, Train: 66.98, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 35, Loss: 0.5324, Train: 66.98, Valid: 0.00, Test: 0.00%
+2024-06-15 05:28:16,637 - Run: 01, Key: mrr_hit10, Epoch: 35, Loss: 0.5324, Train: 80.66, Valid: 26.85, Test: 35.23%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 35, Loss: 0.5324, Train: 80.66, Valid: 26.85, Test: 35.23%
+2024-06-15 05:28:16,637 - Run: 01, Key: mrr_hit20, Epoch: 35, Loss: 0.5324, Train: 85.63, Valid: 26.85, Test: 43.82%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 35, Loss: 0.5324, Train: 85.63, Valid: 26.85, Test: 43.82%
+2024-06-15 05:28:16,637 - Run: 01, Key: mrr_hit50, Epoch: 35, Loss: 0.5324, Train: 93.27, Valid: 50.94, Test: 74.68%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 35, Loss: 0.5324, Train: 93.27, Valid: 50.94, Test: 74.68%
+2024-06-15 05:28:16,638 - Run: 01, Key: mrr_hit100, Epoch: 35, Loss: 0.5324, Train: 96.30, Valid: 69.23, Test: 90.50%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 35, Loss: 0.5324, Train: 96.30, Valid: 69.23, Test: 90.50%
+2024-06-15 05:28:16,638 - Run: 01, Key: AUC, Epoch: 35, Loss: 0.5324, Train: 99.52, Valid: 91.86, Test: 92.89%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 35, Loss: 0.5324, Train: 99.52, Valid: 91.86, Test: 92.89%
+2024-06-15 05:28:16,638 - Run: 01, Key: AP, Epoch: 35, Loss: 0.5324, Train: 99.95, Valid: 97.30, Test: 97.39%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 35, Loss: 0.5324, Train: 99.95, Valid: 97.30, Test: 97.39%
+2024-06-15 05:28:16,638 - Run: 01, Key: ACC, Epoch: 35, Loss: 0.5324, Train: 98.16, Valid: 89.24, Test: 89.00%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 35, Loss: 0.5324, Train: 98.16, Valid: 89.24, Test: 89.00%
+2024-06-15 05:28:16,638 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 05:45:24,493 - Epoch: 040, Loss_train: 0.5571, AUC: 0.9963, AP: 0.9996, MRR: 0.6975, Hit@10 0.8684
+INFO:graphgps.utility.utils:Epoch: 040, Loss_train: 0.5571, AUC: 0.9963, AP: 0.9996, MRR: 0.6975, Hit@10 0.8684
+2024-06-15 05:45:24,493 - Epoch: 040, Loss_valid: 0.5571, AUC: 0.9132, AP: 0.9693, MRR: 0.0319, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 040, Loss_valid: 0.5571, AUC: 0.9132, AP: 0.9693, MRR: 0.0319, Hit@10 0.0000
+2024-06-15 05:45:24,493 - Epoch: 040, Loss_test: 0.5571, AUC: 0.9303, AP: 0.9766, MRR: 0.1547, Hit@10 0.4306
+INFO:graphgps.utility.utils:Epoch: 040, Loss_test: 0.5571, AUC: 0.9303, AP: 0.9766, MRR: 0.1547, Hit@10 0.4306
+2024-06-15 05:45:24,493 - Run: 01, Key: Hits@1, Epoch: 40, Loss: 0.5571, Train: 59.38, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 40, Loss: 0.5571, Train: 59.38, Valid: 0.00, Test: 0.00%
+2024-06-15 05:45:24,493 - Run: 01, Key: Hits@3, Epoch: 40, Loss: 0.5571, Train: 76.77, Valid: 0.00, Test: 21.36%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 40, Loss: 0.5571, Train: 76.77, Valid: 0.00, Test: 21.36%
+2024-06-15 05:45:24,493 - Run: 01, Key: Hits@10, Epoch: 40, Loss: 0.5571, Train: 86.84, Valid: 0.00, Test: 43.06%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 40, Loss: 0.5571, Train: 86.84, Valid: 0.00, Test: 43.06%
+2024-06-15 05:45:24,493 - Run: 01, Key: Hits@20, Epoch: 40, Loss: 0.5571, Train: 90.60, Valid: 0.00, Test: 54.91%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 40, Loss: 0.5571, Train: 90.60, Valid: 0.00, Test: 54.91%
+2024-06-15 05:45:24,493 - Run: 01, Key: Hits@50, Epoch: 40, Loss: 0.5571, Train: 95.30, Valid: 45.21, Test: 79.12%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 40, Loss: 0.5571, Train: 95.30, Valid: 45.21, Test: 79.12%
+2024-06-15 05:45:24,493 - Run: 01, Key: Hits@100, Epoch: 40, Loss: 0.5571, Train: 97.21, Valid: 63.21, Test: 90.58%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 40, Loss: 0.5571, Train: 97.21, Valid: 63.21, Test: 90.58%
+2024-06-15 05:45:24,493 - Run: 01, Key: MRR, Epoch: 40, Loss: 0.5571, Train: 69.75, Valid: 3.19, Test: 15.47%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 40, Loss: 0.5571, Train: 69.75, Valid: 3.19, Test: 15.47%
+2024-06-15 05:45:24,493 - Run: 01, Key: mrr_hit1, Epoch: 40, Loss: 0.5571, Train: 59.38, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 40, Loss: 0.5571, Train: 59.38, Valid: 0.00, Test: 0.00%
+2024-06-15 05:45:24,493 - Run: 01, Key: mrr_hit3, Epoch: 40, Loss: 0.5571, Train: 76.77, Valid: 0.00, Test: 21.36%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 40, Loss: 0.5571, Train: 76.77, Valid: 0.00, Test: 21.36%
+2024-06-15 05:45:24,493 - Run: 01, Key: mrr_hit10, Epoch: 40, Loss: 0.5571, Train: 86.84, Valid: 0.00, Test: 43.06%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 40, Loss: 0.5571, Train: 86.84, Valid: 0.00, Test: 43.06%
+2024-06-15 05:45:24,493 - Run: 01, Key: mrr_hit20, Epoch: 40, Loss: 0.5571, Train: 90.60, Valid: 26.83, Test: 54.91%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 40, Loss: 0.5571, Train: 90.60, Valid: 26.83, Test: 54.91%
+2024-06-15 05:45:24,493 - Run: 01, Key: mrr_hit50, Epoch: 40, Loss: 0.5571, Train: 95.30, Valid: 45.21, Test: 79.12%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 40, Loss: 0.5571, Train: 95.30, Valid: 45.21, Test: 79.12%
+2024-06-15 05:45:24,494 - Run: 01, Key: mrr_hit100, Epoch: 40, Loss: 0.5571, Train: 97.21, Valid: 63.21, Test: 90.58%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 40, Loss: 0.5571, Train: 97.21, Valid: 63.21, Test: 90.58%
+2024-06-15 05:45:24,494 - Run: 01, Key: AUC, Epoch: 40, Loss: 0.5571, Train: 99.63, Valid: 91.32, Test: 93.03%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 40, Loss: 0.5571, Train: 99.63, Valid: 91.32, Test: 93.03%
+2024-06-15 05:45:24,494 - Run: 01, Key: AP, Epoch: 40, Loss: 0.5571, Train: 99.96, Valid: 96.93, Test: 97.66%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 40, Loss: 0.5571, Train: 99.96, Valid: 96.93, Test: 97.66%
+2024-06-15 05:45:24,494 - Run: 01, Key: ACC, Epoch: 40, Loss: 0.5571, Train: 98.32, Valid: 89.08, Test: 88.48%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 40, Loss: 0.5571, Train: 98.32, Valid: 89.08, Test: 88.48%
+2024-06-15 05:45:24,494 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 06:02:33,631 - Epoch: 045, Loss_train: 0.5420, AUC: 0.9953, AP: 0.9995, MRR: 0.3829, Hit@10 0.7729
+INFO:graphgps.utility.utils:Epoch: 045, Loss_train: 0.5420, AUC: 0.9953, AP: 0.9995, MRR: 0.3829, Hit@10 0.7729
+2024-06-15 06:02:33,708 - Epoch: 045, Loss_valid: 0.5420, AUC: 0.9158, AP: 0.9712, MRR: 0.0312, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 045, Loss_valid: 0.5420, AUC: 0.9158, AP: 0.9712, MRR: 0.0312, Hit@10 0.0000
+2024-06-15 06:02:33,708 - Epoch: 045, Loss_test: 0.5420, AUC: 0.9383, AP: 0.9793, MRR: 0.1396, Hit@10 0.4250
+INFO:graphgps.utility.utils:Epoch: 045, Loss_test: 0.5420, AUC: 0.9383, AP: 0.9793, MRR: 0.1396, Hit@10 0.4250
+2024-06-15 06:02:33,708 - Run: 01, Key: Hits@1, Epoch: 45, Loss: 0.5420, Train: 0.00, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 45, Loss: 0.5420, Train: 0.00, Valid: 0.00, Test: 0.00%
+2024-06-15 06:02:33,708 - Run: 01, Key: Hits@3, Epoch: 45, Loss: 0.5420, Train: 62.39, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 45, Loss: 0.5420, Train: 62.39, Valid: 0.00, Test: 0.00%
+2024-06-15 06:02:33,708 - Run: 01, Key: Hits@10, Epoch: 45, Loss: 0.5420, Train: 77.29, Valid: 0.00, Test: 42.50%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 45, Loss: 0.5420, Train: 77.29, Valid: 0.00, Test: 42.50%
+2024-06-15 06:02:33,708 - Run: 01, Key: Hits@20, Epoch: 45, Loss: 0.5420, Train: 85.56, Valid: 0.00, Test: 59.24%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 45, Loss: 0.5420, Train: 85.56, Valid: 0.00, Test: 59.24%
+2024-06-15 06:02:33,708 - Run: 01, Key: Hits@50, Epoch: 45, Loss: 0.5420, Train: 94.22, Valid: 45.30, Test: 82.01%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 45, Loss: 0.5420, Train: 94.22, Valid: 45.30, Test: 82.01%
+2024-06-15 06:02:33,708 - Run: 01, Key: Hits@100, Epoch: 45, Loss: 0.5420, Train: 97.36, Valid: 63.90, Test: 92.84%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 45, Loss: 0.5420, Train: 97.36, Valid: 63.90, Test: 92.84%
+2024-06-15 06:02:33,708 - Run: 01, Key: MRR, Epoch: 45, Loss: 0.5420, Train: 38.29, Valid: 3.12, Test: 13.96%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 45, Loss: 0.5420, Train: 38.29, Valid: 3.12, Test: 13.96%
+2024-06-15 06:02:33,709 - Run: 01, Key: mrr_hit1, Epoch: 45, Loss: 0.5420, Train: 0.00, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 45, Loss: 0.5420, Train: 0.00, Valid: 0.00, Test: 0.00%
+2024-06-15 06:02:33,709 - Run: 01, Key: mrr_hit3, Epoch: 45, Loss: 0.5420, Train: 62.39, Valid: 0.00, Test: 30.77%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 45, Loss: 0.5420, Train: 62.39, Valid: 0.00, Test: 30.77%
+2024-06-15 06:02:33,709 - Run: 01, Key: mrr_hit10, Epoch: 45, Loss: 0.5420, Train: 77.29, Valid: 0.00, Test: 42.50%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 45, Loss: 0.5420, Train: 77.29, Valid: 0.00, Test: 42.50%
+2024-06-15 06:02:33,709 - Run: 01, Key: mrr_hit20, Epoch: 45, Loss: 0.5420, Train: 85.56, Valid: 36.00, Test: 59.24%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 45, Loss: 0.5420, Train: 85.56, Valid: 36.00, Test: 59.24%
+2024-06-15 06:02:33,709 - Run: 01, Key: mrr_hit50, Epoch: 45, Loss: 0.5420, Train: 94.22, Valid: 45.30, Test: 82.01%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 45, Loss: 0.5420, Train: 94.22, Valid: 45.30, Test: 82.01%
+2024-06-15 06:02:33,709 - Run: 01, Key: mrr_hit100, Epoch: 45, Loss: 0.5420, Train: 97.36, Valid: 63.90, Test: 92.84%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 45, Loss: 0.5420, Train: 97.36, Valid: 63.90, Test: 92.84%
+2024-06-15 06:02:33,709 - Run: 01, Key: AUC, Epoch: 45, Loss: 0.5420, Train: 99.53, Valid: 91.58, Test: 93.83%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 45, Loss: 0.5420, Train: 99.53, Valid: 91.58, Test: 93.83%
+2024-06-15 06:02:33,709 - Run: 01, Key: AP, Epoch: 45, Loss: 0.5420, Train: 99.95, Valid: 97.12, Test: 97.93%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 45, Loss: 0.5420, Train: 99.95, Valid: 97.12, Test: 97.93%
+2024-06-15 06:02:33,709 - Run: 01, Key: ACC, Epoch: 45, Loss: 0.5420, Train: 98.56, Valid: 89.12, Test: 89.48%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 45, Loss: 0.5420, Train: 98.56, Valid: 89.12, Test: 89.48%
+2024-06-15 06:02:33,709 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 06:19:42,629 - Epoch: 050, Loss_train: 0.3656, AUC: 0.9974, AP: 0.9997, MRR: 0.3415, Hit@10 0.8934
+INFO:graphgps.utility.utils:Epoch: 050, Loss_train: 0.3656, AUC: 0.9974, AP: 0.9997, MRR: 0.3415, Hit@10 0.8934
+2024-06-15 06:19:42,629 - Epoch: 050, Loss_valid: 0.3656, AUC: 0.9113, AP: 0.9677, MRR: 0.0222, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 050, Loss_valid: 0.3656, AUC: 0.9113, AP: 0.9677, MRR: 0.0222, Hit@10 0.0000
+2024-06-15 06:19:42,629 - Epoch: 050, Loss_test: 0.3656, AUC: 0.9297, AP: 0.9709, MRR: 0.0760, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 050, Loss_test: 0.3656, AUC: 0.9297, AP: 0.9709, MRR: 0.0760, Hit@10 0.0000
+2024-06-15 06:19:42,629 - Run: 01, Key: Hits@1, Epoch: 50, Loss: 0.3656, Train: 0.00, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 50, Loss: 0.3656, Train: 0.00, Valid: 0.00, Test: 0.00%
+2024-06-15 06:19:42,630 - Run: 01, Key: Hits@3, Epoch: 50, Loss: 0.3656, Train: 55.27, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 50, Loss: 0.3656, Train: 55.27, Valid: 0.00, Test: 0.00%
+2024-06-15 06:19:42,630 - Run: 01, Key: Hits@10, Epoch: 50, Loss: 0.3656, Train: 89.34, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 50, Loss: 0.3656, Train: 89.34, Valid: 0.00, Test: 0.00%
+2024-06-15 06:19:42,630 - Run: 01, Key: Hits@20, Epoch: 50, Loss: 0.3656, Train: 93.32, Valid: 0.00, Test: 50.08%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 50, Loss: 0.3656, Train: 93.32, Valid: 0.00, Test: 50.08%
+2024-06-15 06:19:42,630 - Run: 01, Key: Hits@50, Epoch: 50, Loss: 0.3656, Train: 96.79, Valid: 42.92, Test: 73.33%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 50, Loss: 0.3656, Train: 96.79, Valid: 42.92, Test: 73.33%
+2024-06-15 06:19:42,630 - Run: 01, Key: Hits@100, Epoch: 50, Loss: 0.3656, Train: 98.76, Valid: 62.98, Test: 91.23%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 50, Loss: 0.3656, Train: 98.76, Valid: 62.98, Test: 91.23%
+2024-06-15 06:19:42,630 - Run: 01, Key: MRR, Epoch: 50, Loss: 0.3656, Train: 34.15, Valid: 2.22, Test: 7.60%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 50, Loss: 0.3656, Train: 34.15, Valid: 2.22, Test: 7.60%
+2024-06-15 06:19:42,630 - Run: 01, Key: mrr_hit1, Epoch: 50, Loss: 0.3656, Train: 0.00, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 50, Loss: 0.3656, Train: 0.00, Valid: 0.00, Test: 0.00%
+2024-06-15 06:19:42,630 - Run: 01, Key: mrr_hit3, Epoch: 50, Loss: 0.3656, Train: 55.27, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 50, Loss: 0.3656, Train: 55.27, Valid: 0.00, Test: 0.00%
+2024-06-15 06:19:42,630 - Run: 01, Key: mrr_hit10, Epoch: 50, Loss: 0.3656, Train: 89.34, Valid: 0.00, Test: 37.36%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 50, Loss: 0.3656, Train: 89.34, Valid: 0.00, Test: 37.36%
+2024-06-15 06:19:42,630 - Run: 01, Key: mrr_hit20, Epoch: 50, Loss: 0.3656, Train: 93.32, Valid: 0.00, Test: 50.08%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 50, Loss: 0.3656, Train: 93.32, Valid: 0.00, Test: 50.08%
+2024-06-15 06:19:42,630 - Run: 01, Key: mrr_hit50, Epoch: 50, Loss: 0.3656, Train: 96.79, Valid: 46.21, Test: 73.33%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 50, Loss: 0.3656, Train: 96.79, Valid: 46.21, Test: 73.33%
+2024-06-15 06:19:42,630 - Run: 01, Key: mrr_hit100, Epoch: 50, Loss: 0.3656, Train: 98.76, Valid: 62.98, Test: 91.23%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 50, Loss: 0.3656, Train: 98.76, Valid: 62.98, Test: 91.23%
+2024-06-15 06:19:42,630 - Run: 01, Key: AUC, Epoch: 50, Loss: 0.3656, Train: 99.74, Valid: 91.13, Test: 92.97%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 50, Loss: 0.3656, Train: 99.74, Valid: 91.13, Test: 92.97%
+2024-06-15 06:19:42,631 - Run: 01, Key: AP, Epoch: 50, Loss: 0.3656, Train: 99.97, Valid: 96.77, Test: 97.09%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 50, Loss: 0.3656, Train: 99.97, Valid: 96.77, Test: 97.09%
+2024-06-15 06:19:42,631 - Run: 01, Key: ACC, Epoch: 50, Loss: 0.3656, Train: 98.83, Valid: 89.21, Test: 88.82%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 50, Loss: 0.3656, Train: 98.83, Valid: 89.21, Test: 88.82%
+2024-06-15 06:19:42,631 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 06:36:52,338 - Epoch: 055, Loss_train: 0.7402, AUC: 0.9978, AP: 0.9997, MRR: 0.6999, Hit@10 0.8671
+INFO:graphgps.utility.utils:Epoch: 055, Loss_train: 0.7402, AUC: 0.9978, AP: 0.9997, MRR: 0.6999, Hit@10 0.8671
+2024-06-15 06:36:52,339 - Epoch: 055, Loss_valid: 0.7402, AUC: 0.9142, AP: 0.9684, MRR: 0.0204, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 055, Loss_valid: 0.7402, AUC: 0.9142, AP: 0.9684, MRR: 0.0204, Hit@10 0.0000
+2024-06-15 06:36:52,339 - Epoch: 055, Loss_test: 0.7402, AUC: 0.9235, AP: 0.9692, MRR: 0.0578, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 055, Loss_test: 0.7402, AUC: 0.9235, AP: 0.9692, MRR: 0.0578, Hit@10 0.0000
+2024-06-15 06:36:52,339 - Run: 01, Key: Hits@1, Epoch: 55, Loss: 0.7402, Train: 64.79, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 55, Loss: 0.7402, Train: 64.79, Valid: 0.00, Test: 0.00%
+2024-06-15 06:36:52,339 - Run: 01, Key: Hits@3, Epoch: 55, Loss: 0.7402, Train: 67.60, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 55, Loss: 0.7402, Train: 67.60, Valid: 0.00, Test: 0.00%
+2024-06-15 06:36:52,339 - Run: 01, Key: Hits@10, Epoch: 55, Loss: 0.7402, Train: 86.71, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 55, Loss: 0.7402, Train: 86.71, Valid: 0.00, Test: 0.00%
+2024-06-15 06:36:52,339 - Run: 01, Key: Hits@20, Epoch: 55, Loss: 0.7402, Train: 91.54, Valid: 0.00, Test: 42.98%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 55, Loss: 0.7402, Train: 91.54, Valid: 0.00, Test: 42.98%
+2024-06-15 06:36:52,339 - Run: 01, Key: Hits@50, Epoch: 55, Loss: 0.7402, Train: 96.89, Valid: 0.00, Test: 75.01%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 55, Loss: 0.7402, Train: 96.89, Valid: 0.00, Test: 75.01%
+2024-06-15 06:36:52,339 - Run: 01, Key: Hits@100, Epoch: 55, Loss: 0.7402, Train: 98.36, Valid: 63.62, Test: 89.11%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 55, Loss: 0.7402, Train: 98.36, Valid: 63.62, Test: 89.11%
+2024-06-15 06:36:52,339 - Run: 01, Key: MRR, Epoch: 55, Loss: 0.7402, Train: 69.99, Valid: 2.04, Test: 5.78%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 55, Loss: 0.7402, Train: 69.99, Valid: 2.04, Test: 5.78%
+2024-06-15 06:36:52,339 - Run: 01, Key: mrr_hit1, Epoch: 55, Loss: 0.7402, Train: 64.79, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 55, Loss: 0.7402, Train: 64.79, Valid: 0.00, Test: 0.00%
+2024-06-15 06:36:52,339 - Run: 01, Key: mrr_hit3, Epoch: 55, Loss: 0.7402, Train: 67.60, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 55, Loss: 0.7402, Train: 67.60, Valid: 0.00, Test: 0.00%
+2024-06-15 06:36:52,339 - Run: 01, Key: mrr_hit10, Epoch: 55, Loss: 0.7402, Train: 86.71, Valid: 0.00, Test: 40.50%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 55, Loss: 0.7402, Train: 86.71, Valid: 0.00, Test: 40.50%
+2024-06-15 06:36:52,339 - Run: 01, Key: mrr_hit20, Epoch: 55, Loss: 0.7402, Train: 91.54, Valid: 0.00, Test: 44.77%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 55, Loss: 0.7402, Train: 91.54, Valid: 0.00, Test: 44.77%
+2024-06-15 06:36:52,339 - Run: 01, Key: mrr_hit50, Epoch: 55, Loss: 0.7402, Train: 96.89, Valid: 44.59, Test: 75.01%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 55, Loss: 0.7402, Train: 96.89, Valid: 44.59, Test: 75.01%
+2024-06-15 06:36:52,339 - Run: 01, Key: mrr_hit100, Epoch: 55, Loss: 0.7402, Train: 98.36, Valid: 63.62, Test: 89.11%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 55, Loss: 0.7402, Train: 98.36, Valid: 63.62, Test: 89.11%
+2024-06-15 06:36:52,339 - Run: 01, Key: AUC, Epoch: 55, Loss: 0.7402, Train: 99.78, Valid: 91.42, Test: 92.35%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 55, Loss: 0.7402, Train: 99.78, Valid: 91.42, Test: 92.35%
+2024-06-15 06:36:52,339 - Run: 01, Key: AP, Epoch: 55, Loss: 0.7402, Train: 99.97, Valid: 96.84, Test: 96.92%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 55, Loss: 0.7402, Train: 99.97, Valid: 96.84, Test: 96.92%
+2024-06-15 06:36:52,339 - Run: 01, Key: ACC, Epoch: 55, Loss: 0.7402, Train: 98.78, Valid: 89.98, Test: 89.44%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 55, Loss: 0.7402, Train: 98.78, Valid: 89.98, Test: 89.44%
+2024-06-15 06:36:52,339 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 06:54:02,166 - Epoch: 060, Loss_train: 0.5695, AUC: 0.9978, AP: 0.9996, MRR: 0.2459, Hit@10 0.8914
+INFO:graphgps.utility.utils:Epoch: 060, Loss_train: 0.5695, AUC: 0.9978, AP: 0.9996, MRR: 0.2459, Hit@10 0.8914
+2024-06-15 06:54:02,167 - Epoch: 060, Loss_valid: 0.5695, AUC: 0.9194, AP: 0.9680, MRR: 0.0199, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 060, Loss_valid: 0.5695, AUC: 0.9194, AP: 0.9680, MRR: 0.0199, Hit@10 0.0000
+2024-06-15 06:54:02,167 - Epoch: 060, Loss_test: 0.5695, AUC: 0.9332, AP: 0.9697, MRR: 0.0553, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 060, Loss_test: 0.5695, AUC: 0.9332, AP: 0.9697, MRR: 0.0553, Hit@10 0.0000
+2024-06-15 06:54:02,167 - Run: 01, Key: Hits@1, Epoch: 60, Loss: 0.5695, Train: 0.00, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 60, Loss: 0.5695, Train: 0.00, Valid: 0.00, Test: 0.00%
+2024-06-15 06:54:02,167 - Run: 01, Key: Hits@3, Epoch: 60, Loss: 0.5695, Train: 0.00, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 60, Loss: 0.5695, Train: 0.00, Valid: 0.00, Test: 0.00%
+2024-06-15 06:54:02,167 - Run: 01, Key: Hits@10, Epoch: 60, Loss: 0.5695, Train: 89.14, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 60, Loss: 0.5695, Train: 89.14, Valid: 0.00, Test: 0.00%
+2024-06-15 06:54:02,167 - Run: 01, Key: Hits@20, Epoch: 60, Loss: 0.5695, Train: 94.30, Valid: 0.00, Test: 45.21%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 60, Loss: 0.5695, Train: 94.30, Valid: 0.00, Test: 45.21%
+2024-06-15 06:54:02,167 - Run: 01, Key: Hits@50, Epoch: 60, Loss: 0.5695, Train: 98.33, Valid: 0.00, Test: 77.77%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 60, Loss: 0.5695, Train: 98.33, Valid: 0.00, Test: 77.77%
+2024-06-15 06:54:02,167 - Run: 01, Key: Hits@100, Epoch: 60, Loss: 0.5695, Train: 99.21, Valid: 64.75, Test: 91.38%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 60, Loss: 0.5695, Train: 99.21, Valid: 64.75, Test: 91.38%
+2024-06-15 06:54:02,167 - Run: 01, Key: MRR, Epoch: 60, Loss: 0.5695, Train: 24.59, Valid: 1.99, Test: 5.53%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 60, Loss: 0.5695, Train: 24.59, Valid: 1.99, Test: 5.53%
+2024-06-15 06:54:02,167 - Run: 01, Key: mrr_hit1, Epoch: 60, Loss: 0.5695, Train: 0.00, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 60, Loss: 0.5695, Train: 0.00, Valid: 0.00, Test: 0.00%
+2024-06-15 06:54:02,167 - Run: 01, Key: mrr_hit3, Epoch: 60, Loss: 0.5695, Train: 55.93, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 60, Loss: 0.5695, Train: 55.93, Valid: 0.00, Test: 0.00%
+2024-06-15 06:54:02,167 - Run: 01, Key: mrr_hit10, Epoch: 60, Loss: 0.5695, Train: 89.14, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 60, Loss: 0.5695, Train: 89.14, Valid: 0.00, Test: 0.00%
+2024-06-15 06:54:02,167 - Run: 01, Key: mrr_hit20, Epoch: 60, Loss: 0.5695, Train: 94.30, Valid: 0.00, Test: 45.21%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 60, Loss: 0.5695, Train: 94.30, Valid: 0.00, Test: 45.21%
+2024-06-15 06:54:02,167 - Run: 01, Key: mrr_hit50, Epoch: 60, Loss: 0.5695, Train: 98.33, Valid: 51.80, Test: 77.77%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 60, Loss: 0.5695, Train: 98.33, Valid: 51.80, Test: 77.77%
+2024-06-15 06:54:02,168 - Run: 01, Key: mrr_hit100, Epoch: 60, Loss: 0.5695, Train: 99.21, Valid: 64.75, Test: 91.38%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 60, Loss: 0.5695, Train: 99.21, Valid: 64.75, Test: 91.38%
+2024-06-15 06:54:02,168 - Run: 01, Key: AUC, Epoch: 60, Loss: 0.5695, Train: 99.78, Valid: 91.94, Test: 93.32%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 60, Loss: 0.5695, Train: 99.78, Valid: 91.94, Test: 93.32%
+2024-06-15 06:54:02,168 - Run: 01, Key: AP, Epoch: 60, Loss: 0.5695, Train: 99.96, Valid: 96.80, Test: 96.97%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 60, Loss: 0.5695, Train: 99.96, Valid: 96.80, Test: 96.97%
+2024-06-15 06:54:02,168 - Run: 01, Key: ACC, Epoch: 60, Loss: 0.5695, Train: 99.03, Valid: 90.09, Test: 90.39%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 60, Loss: 0.5695, Train: 99.03, Valid: 90.09, Test: 90.39%
+2024-06-15 06:54:02,168 - ---
+INFO:graphgps.utility.utils:---
+2024-06-15 07:11:11,038 - Epoch: 065, Loss_train: 0.7234, AUC: 0.9977, AP: 0.9997, MRR: 0.7028, Hit@10 0.8882
+INFO:graphgps.utility.utils:Epoch: 065, Loss_train: 0.7234, AUC: 0.9977, AP: 0.9997, MRR: 0.7028, Hit@10 0.8882
+2024-06-15 07:11:11,039 - Epoch: 065, Loss_valid: 0.7234, AUC: 0.9086, AP: 0.9635, MRR: 0.0163, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 065, Loss_valid: 0.7234, AUC: 0.9086, AP: 0.9635, MRR: 0.0163, Hit@10 0.0000
+2024-06-15 07:11:11,039 - Epoch: 065, Loss_test: 0.7234, AUC: 0.9280, AP: 0.9709, MRR: 0.0636, Hit@10 0.0000
+INFO:graphgps.utility.utils:Epoch: 065, Loss_test: 0.7234, AUC: 0.9280, AP: 0.9709, MRR: 0.0636, Hit@10 0.0000
+2024-06-15 07:11:11,039 - Run: 01, Key: Hits@1, Epoch: 65, Loss: 0.7234, Train: 61.71, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@1, Epoch: 65, Loss: 0.7234, Train: 61.71, Valid: 0.00, Test: 0.00%
+2024-06-15 07:11:11,039 - Run: 01, Key: Hits@3, Epoch: 65, Loss: 0.7234, Train: 71.99, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@3, Epoch: 65, Loss: 0.7234, Train: 71.99, Valid: 0.00, Test: 0.00%
+2024-06-15 07:11:11,039 - Run: 01, Key: Hits@10, Epoch: 65, Loss: 0.7234, Train: 88.82, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@10, Epoch: 65, Loss: 0.7234, Train: 88.82, Valid: 0.00, Test: 0.00%
+2024-06-15 07:11:11,039 - Run: 01, Key: Hits@20, Epoch: 65, Loss: 0.7234, Train: 93.51, Valid: 0.00, Test: 53.71%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@20, Epoch: 65, Loss: 0.7234, Train: 93.51, Valid: 0.00, Test: 53.71%
+2024-06-15 07:11:11,039 - Run: 01, Key: Hits@50, Epoch: 65, Loss: 0.7234, Train: 97.48, Valid: 0.00, Test: 74.87%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@50, Epoch: 65, Loss: 0.7234, Train: 97.48, Valid: 0.00, Test: 74.87%
+2024-06-15 07:11:11,039 - Run: 01, Key: Hits@100, Epoch: 65, Loss: 0.7234, Train: 98.91, Valid: 61.04, Test: 91.90%
+INFO:graphgps.utility.utils:Run: 01, Key: Hits@100, Epoch: 65, Loss: 0.7234, Train: 98.91, Valid: 61.04, Test: 91.90%
+2024-06-15 07:11:11,039 - Run: 01, Key: MRR, Epoch: 65, Loss: 0.7234, Train: 70.28, Valid: 1.63, Test: 6.36%
+INFO:graphgps.utility.utils:Run: 01, Key: MRR, Epoch: 65, Loss: 0.7234, Train: 70.28, Valid: 1.63, Test: 6.36%
+2024-06-15 07:11:11,039 - Run: 01, Key: mrr_hit1, Epoch: 65, Loss: 0.7234, Train: 61.71, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit1, Epoch: 65, Loss: 0.7234, Train: 61.71, Valid: 0.00, Test: 0.00%
+2024-06-15 07:11:11,039 - Run: 01, Key: mrr_hit3, Epoch: 65, Loss: 0.7234, Train: 71.99, Valid: 0.00, Test: 0.00%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit3, Epoch: 65, Loss: 0.7234, Train: 71.99, Valid: 0.00, Test: 0.00%
+2024-06-15 07:11:11,039 - Run: 01, Key: mrr_hit10, Epoch: 65, Loss: 0.7234, Train: 88.82, Valid: 0.00, Test: 48.90%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit10, Epoch: 65, Loss: 0.7234, Train: 88.82, Valid: 0.00, Test: 48.90%
+2024-06-15 07:11:11,039 - Run: 01, Key: mrr_hit20, Epoch: 65, Loss: 0.7234, Train: 93.51, Valid: 0.00, Test: 53.71%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit20, Epoch: 65, Loss: 0.7234, Train: 93.51, Valid: 0.00, Test: 53.71%
+2024-06-15 07:11:11,039 - Run: 01, Key: mrr_hit50, Epoch: 65, Loss: 0.7234, Train: 97.48, Valid: 51.78, Test: 74.87%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit50, Epoch: 65, Loss: 0.7234, Train: 97.48, Valid: 51.78, Test: 74.87%
+2024-06-15 07:11:11,039 - Run: 01, Key: mrr_hit100, Epoch: 65, Loss: 0.7234, Train: 98.91, Valid: 61.04, Test: 91.90%
+INFO:graphgps.utility.utils:Run: 01, Key: mrr_hit100, Epoch: 65, Loss: 0.7234, Train: 98.91, Valid: 61.04, Test: 91.90%
+2024-06-15 07:11:11,039 - Run: 01, Key: AUC, Epoch: 65, Loss: 0.7234, Train: 99.77, Valid: 90.86, Test: 92.80%
+INFO:graphgps.utility.utils:Run: 01, Key: AUC, Epoch: 65, Loss: 0.7234, Train: 99.77, Valid: 90.86, Test: 92.80%
+2024-06-15 07:11:11,039 - Run: 01, Key: AP, Epoch: 65, Loss: 0.7234, Train: 99.97, Valid: 96.35, Test: 97.09%
+INFO:graphgps.utility.utils:Run: 01, Key: AP, Epoch: 65, Loss: 0.7234, Train: 99.97, Valid: 96.35, Test: 97.09%
+2024-06-15 07:11:11,039 - Run: 01, Key: ACC, Epoch: 65, Loss: 0.7234, Train: 98.83, Valid: 89.51, Test: 89.38%
+INFO:graphgps.utility.utils:Run: 01, Key: ACC, Epoch: 65, Loss: 0.7234, Train: 98.83, Valid: 89.51, Test: 89.38%
+2024-06-15 07:11:11,039 - ---
+INFO:graphgps.utility.utils:---
+slurmstepd: error: *** JOB 1441181 ON haicn1711 CANCELLED AT 2024-06-15T07:13:23 ***

@@ -161,8 +161,8 @@ class Trainer_NS(Trainer):
             batch_edge_index = subgraph.edge_index.to(self.device)
             x = x.to(self.device) 
             
-            pos_edges = self.global_to_local(subgraph.pos_edge_label_index.to('cpu'), subgraph.n_id)
-            neg_edges = self.global_to_local(subgraph.neg_edge_label_index.to('cpu'), subgraph.n_id)
+            pos_edges = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
+            neg_edges = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
             
             pos_edges = pos_edges.to(self.device)
             neg_edges = neg_edges.to(self.device)
@@ -178,7 +178,7 @@ class Trainer_NS(Trainer):
             loss.backward()
             
             if emb_update == 1: torch.nn.utils.clip_grad_norm_(x, 1.0)
-            torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+            # torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
 
             self.optimizer.step()           
         
@@ -208,8 +208,8 @@ class Trainer_NS(Trainer):
                    transform = VirtualNode()
                    subgraph = transform(subgraph)
    
-            pos_edge_label_index = self.global_to_local(subgraph.pos_edge_label_index.to('cpu'), subgraph.n_id)
-            neg_edge_label_index = self.global_to_local(subgraph.neg_edge_label_index.to('cpu'), subgraph.n_id)
+            pos_edge_label_index = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
+            neg_edge_label_index = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
 
             batch_edge_index = subgraph.edge_index.to(self.device)
             x = subgraph.x.to(self.device) 

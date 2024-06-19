@@ -208,18 +208,7 @@ def project_main():
         logging.info(f'Num parameters: {cfg.params}')
         
         optimizer = create_optimizer(model, cfg)
-        
-        # if model_type == 'GraphSage' and (cfg.model.out_channels == 256 and cfg.model.hidden_channels == 256 and cfg.train.lr == 0.1):
-        #     continue
 
-#            if model_type == 'GAT' and (cfg.train.batch_size == 32 and cfg.train.lr == 0.1 and cfg.model.num_hops in [5] and cfg.model.num_neighbors in [5, 10]):
-#                continue
-
-        # if model_type == 'VGAE' and cfg.model.out_channels == 32 and cfg.model.hidden_channels == 32 and cfg.train.batch_size == 32 and cfg.train.lr == 0.1 and (cfg.model.batch_size_sampler == 32 or (cfg.model.batch_size_sampler == 64 and cfg.model.num_neighbors == 5 and cfg.model.num_hops == 6)):
-        #         continue
-        # if model_type == 'GAE' and cfg.model.out_channels == 32 and cfg.model.hidden_channels == 32 and cfg.train.batch_size == 32 and cfg.train.lr == 0.1 and cfg.model.batch_size_sampler == 32:
-        #     if (cfg.model.num_neighbors in [5, 10] and cfg.model.num_hops in [6, 7, 8]) or (cfg.model.num_neighbors == 20 and cfg.model.num_hops in [6]):
-        #         continue
         # LLM: finetuning
         if cfg.train.finetune: 
             model = init_model_from_pretrained(model, cfg.train.finetune,

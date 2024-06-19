@@ -1,0 +1,485 @@
+Namespace(cfg_file='core/yamls/pubmed/gcns/ns_gnn_models.yaml', sweep_file='core/yamls/cora/gcns/gae_sp1.yaml', data='pubmed', bs=32768, device='cuda:0', epochs=100, model='VGAE', score='mlp_score', wandb=None, repeat=3, mark_done=False, opts=[])
+DDEVICE:  cuda:0 cuda:0
+cuda
+Number of available CUDA devices: 4
+Number of available CUDA devices: 4
+dropout: 0
+hidden_channels: 256
+in_channels: None
+negative_slope: 0.2
+num_layers: 3
+out_channels: 128
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+Epoch: 1, Loss: 1.281588077545166
+Epoch: 2, Loss: 1.2571672201156616
+Epoch: 3, Loss: 1.5623887777328491
+Epoch: 4, Loss: 1.1150333881378174
+Epoch: 5, Loss: 1.3156276941299438
+Epoch: 6, Loss: 0.7388797402381897
+Epoch: 7, Loss: 1.101487398147583
+Epoch: 8, Loss: 1.0428301095962524
+Epoch: 9, Loss: 1.1554746627807617
+Epoch: 10, Loss: 0.9605475068092346
+Epoch: 11, Loss: 0.8796361684799194
+Epoch: 12, Loss: 0.9552732706069946
+Epoch: 13, Loss: 0.8479515910148621
+Epoch: 14, Loss: 0.821753203868866
+Epoch: 15, Loss: 0.9571025967597961
+Epoch: 16, Loss: 1.1536914110183716
+Epoch: 17, Loss: 1.0640696287155151
+Epoch: 18, Loss: 0.9984413981437683
+Epoch: 19, Loss: 0.9402009844779968
+Epoch: 20, Loss: 1.1544783115386963
+Epoch: 21, Loss: 0.8268375992774963
+Epoch: 22, Loss: 1.3134599924087524
+Epoch: 23, Loss: 0.8920611143112183
+Epoch: 24, Loss: 0.753730297088623
+Epoch: 25, Loss: 0.8249330520629883
+Epoch: 26, Loss: 0.8984158039093018
+Epoch: 27, Loss: 1.0879653692245483
+Epoch: 28, Loss: 0.9116029143333435
+Epoch: 29, Loss: 0.703364372253418
+Epoch: 30, Loss: 0.5877707600593567
+Epoch: 31, Loss: 0.8357437252998352
+Epoch: 32, Loss: 0.8724124431610107
+Epoch: 33, Loss: 0.9803804159164429
+Epoch: 34, Loss: 0.7678807377815247
+Epoch: 35, Loss: 0.8933098912239075
+Epoch: 36, Loss: 1.0750874280929565
+Epoch: 37, Loss: 1.0163062810897827
+Epoch: 38, Loss: 0.9032233953475952
+Epoch: 39, Loss: 0.9244125485420227
+Epoch: 40, Loss: 0.8235324621200562
+Epoch: 41, Loss: 0.8175759315490723
+Epoch: 42, Loss: 0.8653696179389954
+Epoch: 43, Loss: 0.9242955446243286
+Epoch: 44, Loss: 1.7331533432006836
+Epoch: 45, Loss: 1.1683323383331299
+Epoch: 46, Loss: 0.7556477785110474
+Epoch: 47, Loss: 0.6523041129112244
+Epoch: 48, Loss: 0.8346509337425232
+Epoch: 49, Loss: 0.8984145522117615
+Epoch: 50, Loss: 0.8266807198524475
+Epoch: 51, Loss: 0.7481938600540161
+Epoch: 52, Loss: 0.7289062142372131
+Epoch: 53, Loss: 1.0864046812057495
+Epoch: 54, Loss: 0.9418286681175232
+Epoch: 55, Loss: 1.0334182977676392
+Epoch: 56, Loss: 0.8904314637184143
+Epoch: 57, Loss: 0.7401427030563354
+Epoch: 58, Loss: 0.9258081912994385
+Epoch: 59, Loss: 0.8337720036506653
+Epoch: 60, Loss: 0.9624195098876953
+Epoch: 61, Loss: 1.1627308130264282
+Epoch: 62, Loss: 0.887405276298523
+Epoch: 63, Loss: 0.6533857583999634
+Epoch: 64, Loss: 0.74075847864151
+Epoch: 65, Loss: 1.0212395191192627
+Epoch: 66, Loss: 0.9612923860549927
+Epoch: 67, Loss: 0.7159587144851685
+Epoch: 68, Loss: 0.7276064157485962
+Epoch: 69, Loss: 0.9003382325172424
+Epoch: 70, Loss: 0.9472952485084534
+Epoch: 71, Loss: 0.9562095999717712
+Epoch: 72, Loss: 0.9251330494880676
+Epoch: 73, Loss: 1.0862499475479126
+Epoch: 74, Loss: 0.7900587916374207
+Epoch: 75, Loss: 1.061759352684021
+Epoch: 76, Loss: 0.6799001693725586
+Epoch: 77, Loss: 1.1019076108932495
+Epoch: 78, Loss: 1.1647626161575317
+Epoch: 79, Loss: 0.5645843744277954
+Epoch: 80, Loss: 0.9819772839546204
+Epoch: 81, Loss: 1.1683032512664795
+Epoch: 82, Loss: 0.8204827308654785
+Epoch: 83, Loss: 0.7042970061302185
+Epoch: 84, Loss: 0.8740888833999634
+Epoch: 85, Loss: 1.224755883216858
+Epoch: 86, Loss: 0.9991047382354736
+Epoch: 87, Loss: 0.93951815366745
+Epoch: 88, Loss: 1.289429783821106
+Epoch: 89, Loss: 0.7170407176017761
+Epoch: 90, Loss: 0.9564504623413086
+Epoch: 91, Loss: 0.9445480108261108
+Epoch: 92, Loss: 1.4144662618637085
+Epoch: 93, Loss: 0.9858115315437317
+Epoch: 94, Loss: 0.4048960506916046
+Epoch: 95, Loss: 0.866503119468689
+Epoch: 96, Loss: 0.6697779297828674
+Epoch: 97, Loss: 0.7057825326919556
+Epoch: 98, Loss: 1.0339525938034058
+Epoch: 99, Loss: 1.4461830854415894
+Epoch: 100, Loss: 0.9985031485557556
+Number of available CUDA devices: 4
+Number of available CUDA devices: 4
+batch_size_sampler: 128
+dropout: 0
+hidden_channels: 32
+in_channels: 500
+negative_slope: 0.2
+num_hops: 5
+num_layers: 3
+num_neighbors: 5
+out_channels: 32
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+Epoch: 1, Loss: 1.3492058515548706
+Epoch: 2, Loss: 1.2092112302780151
+Epoch: 3, Loss: 1.2684574127197266
+Epoch: 4, Loss: 1.0503637790679932
+Epoch: 5, Loss: 1.2481062412261963
+Epoch: 6, Loss: 1.1965795755386353
+Epoch: 7, Loss: 1.061751127243042
+Epoch: 8, Loss: 1.413694143295288
+Epoch: 9, Loss: 1.142502784729004
+Epoch: 10, Loss: 1.060117483139038
+Epoch: 11, Loss: 1.0158274173736572
+Epoch: 12, Loss: 1.0227841138839722
+Epoch: 13, Loss: 0.9285628795623779
+Epoch: 14, Loss: 1.052889108657837
+Epoch: 15, Loss: 1.027849555015564
+Epoch: 16, Loss: 1.4184589385986328
+Epoch: 17, Loss: 1.3613449335098267
+Epoch: 18, Loss: 0.873197615146637
+Epoch: 19, Loss: 0.9669700264930725
+Epoch: 20, Loss: 0.8331317901611328
+Epoch: 21, Loss: 1.0662208795547485
+Epoch: 22, Loss: 1.249302864074707
+Epoch: 23, Loss: 0.8731057047843933
+Epoch: 24, Loss: 0.8530768752098083
+Epoch: 25, Loss: 1.2598298788070679
+Epoch: 26, Loss: 0.8898813128471375
+Epoch: 27, Loss: 1.0775964260101318
+Epoch: 28, Loss: 0.9364806413650513
+Epoch: 29, Loss: 0.8748635053634644
+Epoch: 30, Loss: 1.2433840036392212
+Epoch: 31, Loss: 1.1508939266204834
+Epoch: 32, Loss: 0.6670207977294922
+Epoch: 33, Loss: 1.2231333255767822
+Epoch: 34, Loss: 1.0764710903167725
+Epoch: 35, Loss: 0.6360270380973816
+Epoch: 36, Loss: 0.8550314903259277
+Epoch: 37, Loss: 0.5402747988700867
+Epoch: 38, Loss: 0.9768469333648682
+Epoch: 39, Loss: 0.6629120707511902
+Epoch: 40, Loss: 0.7995914220809937
+Epoch: 41, Loss: 0.7464888691902161
+Epoch: 42, Loss: 0.6604469418525696
+Epoch: 43, Loss: 1.4394240379333496
+Epoch: 44, Loss: 1.1653096675872803
+Epoch: 45, Loss: 0.8533732295036316
+Epoch: 46, Loss: 1.2844127416610718
+Epoch: 47, Loss: 0.9640406370162964
+Epoch: 48, Loss: 0.896301805973053
+Epoch: 49, Loss: 0.9597986936569214
+Epoch: 50, Loss: 0.8644730448722839
+Epoch: 51, Loss: 0.914422869682312
+Epoch: 52, Loss: 1.0077143907546997
+Epoch: 53, Loss: 1.449449896812439
+Epoch: 54, Loss: 0.9811020493507385
+Epoch: 55, Loss: 1.086862325668335
+Epoch: 56, Loss: 1.020244836807251
+Epoch: 57, Loss: 1.0394641160964966
+Epoch: 58, Loss: 1.1022893190383911
+Epoch: 59, Loss: 0.7994817495346069
+Epoch: 60, Loss: 0.8949018120765686
+Epoch: 61, Loss: 1.112926721572876
+Epoch: 62, Loss: 0.715644896030426
+Epoch: 63, Loss: 0.8995835185050964
+Epoch: 64, Loss: 0.6176717877388
+Epoch: 65, Loss: 0.8221282362937927
+Epoch: 66, Loss: 0.9033475518226624
+Epoch: 67, Loss: 0.9822220802307129
+Epoch: 68, Loss: 0.6753066778182983
+Epoch: 69, Loss: 1.0028349161148071
+Epoch: 70, Loss: 1.1358739137649536
+Epoch: 71, Loss: 0.6627188920974731
+Epoch: 72, Loss: 0.8442650437355042
+Epoch: 73, Loss: 0.7761136889457703
+Epoch: 74, Loss: 0.9393609166145325
+Epoch: 75, Loss: 0.913000226020813
+Epoch: 76, Loss: 0.7513071298599243
+Epoch: 77, Loss: 1.177201271057129
+Epoch: 78, Loss: 0.8441187143325806
+Epoch: 79, Loss: 0.7647273540496826
+Epoch: 80, Loss: 0.6163491606712341
+Epoch: 81, Loss: 0.6972498297691345
+Epoch: 82, Loss: 0.982215166091919
+Epoch: 83, Loss: 0.5873260498046875
+Epoch: 84, Loss: 1.2506157159805298
+Epoch: 85, Loss: 0.6041035652160645
+Epoch: 86, Loss: 0.8730023503303528
+Epoch: 87, Loss: 0.8668639063835144
+Epoch: 88, Loss: 0.6897921562194824
+Epoch: 89, Loss: 0.7538924217224121
+Epoch: 90, Loss: 1.0726276636123657
+Epoch: 91, Loss: 1.0022159814834595
+Epoch: 92, Loss: 0.6466932892799377
+Epoch: 93, Loss: 0.7586891651153564
+Epoch: 94, Loss: 0.6553871631622314
+Epoch: 95, Loss: 0.5547021627426147
+Epoch: 96, Loss: 1.1137484312057495
+Epoch: 97, Loss: 1.26070237159729
+Epoch: 98, Loss: 1.2013218402862549
+Epoch: 99, Loss: 0.8934349417686462
+Epoch: 100, Loss: 0.9282986521720886
+Number of available CUDA devices: 4
+Number of available CUDA devices: 4
+batch_size_sampler: 128
+dropout: 0
+hidden_channels: 32
+in_channels: 500
+negative_slope: 0.2
+num_hops: 5
+num_layers: 3
+num_neighbors: 5
+out_channels: 32
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+Epoch: 1, Loss: 1.2999534606933594
+Epoch: 2, Loss: 1.2333059310913086
+Epoch: 3, Loss: 1.1331132650375366
+Epoch: 4, Loss: 1.0833975076675415
+Epoch: 5, Loss: 1.106756567955017
+Epoch: 6, Loss: 1.2068567276000977
+Epoch: 7, Loss: 1.115057349205017
+Epoch: 8, Loss: 0.9976852536201477
+Epoch: 9, Loss: 1.0517562627792358
+Epoch: 10, Loss: 0.5933559536933899
+Epoch: 11, Loss: 1.1050317287445068
+Epoch: 12, Loss: 1.0204782485961914
+Epoch: 13, Loss: 1.2413607835769653
+Epoch: 14, Loss: 0.9579635262489319
+Epoch: 15, Loss: 0.8158232569694519
+Epoch: 16, Loss: 1.14388108253479
+Epoch: 17, Loss: 0.7031877636909485
+Epoch: 18, Loss: 0.9347710013389587
+Epoch: 19, Loss: 1.3494676351547241
+Epoch: 20, Loss: 1.0313950777053833
+Epoch: 21, Loss: 0.7551647424697876
+Epoch: 22, Loss: 0.9447916746139526
+Epoch: 23, Loss: 0.9014775156974792
+Epoch: 24, Loss: 0.7658589482307434
+Epoch: 25, Loss: 0.82248854637146
+Epoch: 26, Loss: 0.7181261777877808
+Epoch: 27, Loss: 0.8205376267433167
+Epoch: 28, Loss: 1.2872872352600098
+Epoch: 29, Loss: 0.7924363613128662
+Epoch: 30, Loss: 0.776226282119751
+Epoch: 31, Loss: 0.7886648178100586
+Epoch: 32, Loss: 0.6016578078269958
+Epoch: 33, Loss: 0.8386416435241699
+Epoch: 34, Loss: 0.8691797256469727
+Epoch: 35, Loss: 0.9247975945472717
+Epoch: 36, Loss: 1.216331958770752
+Epoch: 37, Loss: 0.8564649820327759
+Epoch: 38, Loss: 0.7257810235023499
+Epoch: 39, Loss: 0.8517943024635315
+Epoch: 40, Loss: 0.7898960113525391
+Epoch: 41, Loss: 0.7141156196594238
+Epoch: 42, Loss: 0.956234335899353
+Epoch: 43, Loss: 0.6954737305641174
+Epoch: 44, Loss: 1.0687814950942993
+Epoch: 45, Loss: 1.0631929636001587
+Epoch: 46, Loss: 0.8506192564964294
+Epoch: 47, Loss: 1.2038979530334473
+Epoch: 48, Loss: 0.8763235807418823
+Epoch: 49, Loss: 0.6712374091148376
+Epoch: 50, Loss: 0.9461669921875
+Epoch: 51, Loss: 0.7879015803337097
+Epoch: 52, Loss: 0.6137929558753967
+Epoch: 53, Loss: 0.5697904229164124
+Epoch: 54, Loss: 1.1121482849121094
+Epoch: 55, Loss: 0.6531044840812683
+Epoch: 56, Loss: 0.8433933258056641
+Epoch: 57, Loss: 1.005746841430664
+Epoch: 58, Loss: 0.8832290172576904
+Epoch: 59, Loss: 0.7834612727165222
+Epoch: 60, Loss: 0.7204728126525879
+Epoch: 61, Loss: 0.867483377456665
+Epoch: 62, Loss: 0.8012039065361023
+Epoch: 63, Loss: 0.8333519697189331
+Epoch: 64, Loss: 0.6529207229614258
+Epoch: 65, Loss: 0.9889510869979858
+Epoch: 66, Loss: 0.7090229392051697
+Epoch: 67, Loss: 0.9033485651016235
+Epoch: 68, Loss: 0.7039071917533875
+Epoch: 69, Loss: 1.384850263595581
+Epoch: 70, Loss: 0.9094908833503723
+Epoch: 71, Loss: 0.7668288946151733
+Epoch: 72, Loss: 0.868139922618866
+Epoch: 73, Loss: 0.8795328736305237
+Epoch: 74, Loss: 0.8457489013671875
+Epoch: 75, Loss: 0.7712277770042419
+Epoch: 76, Loss: 0.8187365531921387
+Epoch: 77, Loss: 0.4274446368217468
+Epoch: 78, Loss: 1.1850887537002563
+Epoch: 79, Loss: 1.278257966041565
+Epoch: 80, Loss: 0.852396547794342
+Epoch: 81, Loss: 0.9169426560401917
+Epoch: 82, Loss: 0.5415874719619751
+Epoch: 83, Loss: 0.9185676574707031
+Epoch: 84, Loss: 1.0568997859954834
+Epoch: 85, Loss: 0.9420384168624878
+Epoch: 86, Loss: 0.8146902322769165
+Epoch: 87, Loss: 0.7100063562393188
+Epoch: 88, Loss: 0.706834614276886
+Epoch: 89, Loss: 0.6810804009437561
+Epoch: 90, Loss: 0.7570650577545166
+Epoch: 91, Loss: 0.5884900689125061
+Epoch: 92, Loss: 0.8442291617393494
+Epoch: 93, Loss: 0.6367167830467224
+Epoch: 94, Loss: 0.8515185713768005
+Epoch: 95, Loss: 1.0523589849472046
+Epoch: 96, Loss: 0.8372386693954468
+Epoch: 97, Loss: 0.7055299878120422
+Epoch: 98, Loss: 0.6395036578178406
+Epoch: 99, Loss: 0.5088754892349243
+Epoch: 100, Loss: 0.7028042674064636
+Hits@1
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 27.96 ± 10.49
+Highest Valid: 14.85 ± 3.92
+Train with the best valid: 9.35 ± 0.55
+Test with the best valid epoch: 9.35 ± 0.55
+Hits@3
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 37.08 ± 5.53
+Highest Valid: 21.55 ± 4.79
+Train with the best valid: 24.54 ± 6.34
+Test with the best valid epoch: 24.54 ± 6.34
+Hits@10
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 53.54 ± 3.83
+Highest Valid: 37.05 ± 7.26
+Train with the best valid: 28.08 ± 13.61
+Test with the best valid epoch: 28.08 ± 13.61
+Hits@20
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 65.20 ± 4.13
+Highest Valid: 46.92 ± 4.11
+Train with the best valid: 43.04 ± 5.53
+Test with the best valid epoch: 43.04 ± 5.53
+Hits@50
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 77.76 ± 1.78
+Highest Valid: 65.64 ± 2.57
+Train with the best valid: 65.60 ± 7.51
+Test with the best valid epoch: 65.60 ± 7.51
+Hits@100
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 87.20 ± 1.54
+Highest Valid: 80.18 ± 1.42
+Train with the best valid: 74.50 ± 8.15
+Test with the best valid epoch: 74.50 ± 8.15
+MRR
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 35.66 ± 8.17
+Highest Valid: 20.33 ± 4.11
+Train with the best valid: 17.13 ± 0.68
+Test with the best valid epoch: 17.13 ± 0.68
+mrr_hit1
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 27.96 ± 10.49
+Highest Valid: 14.85 ± 3.92
+Train with the best valid: 9.35 ± 0.55
+Test with the best valid epoch: 9.35 ± 0.55
+mrr_hit3
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 37.08 ± 5.53
+Highest Valid: 21.55 ± 4.79
+Train with the best valid: 24.54 ± 6.34
+Test with the best valid epoch: 24.54 ± 6.34
+mrr_hit10
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 53.54 ± 3.83
+Highest Valid: 37.05 ± 7.26
+Train with the best valid: 28.08 ± 13.61
+Test with the best valid epoch: 28.08 ± 13.61
+mrr_hit20
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 65.20 ± 4.13
+Highest Valid: 46.92 ± 4.11
+Train with the best valid: 43.04 ± 5.53
+Test with the best valid epoch: 43.04 ± 5.53
+mrr_hit50
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 77.76 ± 1.78
+Highest Valid: 65.64 ± 2.57
+Train with the best valid: 65.60 ± 7.51
+Test with the best valid epoch: 65.60 ± 7.51
+mrr_hit100
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 87.20 ± 1.54
+Highest Valid: 80.18 ± 1.42
+Train with the best valid: 74.50 ± 8.15
+Test with the best valid epoch: 74.50 ± 8.15
+AUC
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 98.99 ± 0.07
+Highest Valid: 95.79 ± 0.37
+Train with the best valid: 97.93 ± 0.34
+Test with the best valid epoch: 97.93 ± 0.34
+AP
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 99.83 ± 0.02
+Highest Valid: 98.57 ± 0.17
+Train with the best valid: 99.63 ± 0.05
+Test with the best valid epoch: 99.63 ± 0.05
+ACC
+torch.Size([20, 3])
+torch.Size([20, 3])
+torch.Size([20, 3])
+Highest Train: 95.84 ± 0.17
+Highest Valid: 89.60 ± 0.41
+Train with the best valid: 94.39 ± 0.32
+Test with the best valid epoch: 94.39 ± 0.32
+
+============================= JOB FEEDBACK =============================
+
+Job ID: 1441182
+Cluster: haic
+User/Group: cc7738/aifb
+Account: aifb
+State: COMPLETED (exit code 0)
+Partition: normal
+Nodes: 1
+Cores per node: 60
+Nodelist: haicn1710
+CPU Utilized: 05:20:05
+CPU Efficiency: 1.66% of 13-09:10:00 core-walltime
+Job Wall-clock time: 05:21:10
+Starttime: Sat Jun 15 01:33:43 2024
+Endtime: Sat Jun 15 06:54:53 2024
+Memory Utilized: 4.41 GB
+Memory Efficiency: 0.90% of 489.84 GB
+Energy Consumed: 11053355 Joule / 3070.37638888889 Watthours
+Average node power draw: 573.604307213285 Watt

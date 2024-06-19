@@ -97,14 +97,6 @@ model:
     negative_slope: 0.2
     dropout: 0
     num_layers: 3
-    
-sampler:
-  type: gsaint
-  gsaint:
-    num_steps: 30
-    sample_coverage: 100
-    walk_length: 20
-    batch_size: 2048
 
 score:
   type: mlp_score
@@ -141,7 +133,7 @@ optimizer:
 
 sampler:
   gsaint:
-    sampler_batch_size: 1024
+    batch_size_sampler: 1024
     walk_length: 10
     num_steps: 10
     sample_coverage: 100

@@ -89,8 +89,8 @@ def train(model,
         loss.backward()
 
         if emb_update == 1: torch.nn.utils.clip_grad_norm_(x, 1.0)
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        torch.nn.utils.clip_grad_norm_(score_func.parameters(), 1.0)
+        # torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        # torch.nn.utils.clip_grad_norm_(score_func.parameters(), 1.0)
 
         optimizer.step()
 
@@ -278,7 +278,7 @@ class Trainer_Heart(Trainer):
             loss.backward()
 
             if emb_update == 1: torch.nn.utils.clip_grad_norm_(x, 1.0)
-            torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+            # torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
 
             self.optimizer.step()           
 
