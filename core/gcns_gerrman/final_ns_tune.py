@@ -160,6 +160,18 @@ hyperparameter_space = {
             'batch_size': [2**10]
     },
     'VGAE': {'out_channels': [2**5], 'hidden_channels': [2**5], 'batch_size': [2**10]},# 2**5, 2**6
+    'GIN_Variant': {'out_channels': [2**6, 2**7, 2**8], 
+                    'hidden_channels': [2**6, 2**7, 2**8],
+                    'num_layers': [1, 2, 3], 
+                    'base_lr': [0.0089],
+                    'mlp_layer': [1, 2, 3],
+                    'score_num_layers_predictor': [3],
+                    'score_gin_mlp_layer': [2],
+                    'score_hidden_channels': [2**6], 
+                    'score_out_channels': [1], 
+                    'score_num_layers': [3], 
+                    'score_dropout': [0.1], 
+                    'product': [0, 1]},
 }
 
 hyperparameter_ns = {
@@ -279,41 +291,6 @@ def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
 
         cfg.model.params = params_count(model)
         print_logger.info(f'Num parameters: {cfg.model.params}')
-
-        # if cfg.model.type == 'GAE' and cfg_model.out_channels == 16 and cfg_model.hidden_channels == 16 \
-        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and (cfg_model.batch_size_sampler in [32, 64] or \
-        # cfg_model.batch_size_sampler == 128 and cfg_model.num_neighbors in [5, 10] and cfg_model.num_hops in [5, 6]):
-        #     continue
-
-        # if cfg.model.type == 'VGAE' and cfg_model.out_channels == 16 and cfg_model.hidden_channels == 16 \
-        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and (cfg_model.batch_size_sampler in [32, 64] or \
-        # cfg_model.batch_size_sampler == 128 and cfg_model.num_neighbors in [5] and cfg_model.num_hops in [5]):
-        #     continue
-
-        # if cfg.model.type == 'GAT' and cfg_model.out_channels == 16 and cfg_model.hidden_channels == 16 \
-        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and (cfg_model.batch_size_sampler in [32] or \
-        # cfg_model.batch_size_sampler == 64 and cfg_model.num_neighbors in [5, 10, 20, 30] and cfg_model.num_hops in [5, 6]):
-        #     continue
-
-        # if cfg.model.type == 'GAT' and cfg_model.out_channels == 16 and cfg_model.hidden_channels == 16 \
-        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and ( cfg_model.batch_size_sampler == 32 and \
-        # cfg_model.num_neighbors in [5] and cfg_model.num_hops in [5, 6]):
-        #     continue
-
-        # if cfg.model.type == 'GAE' and cfg_model.out_channels == 64 and cfg_model.hidden_channels == 64 \
-        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and (cfg_model.batch_size_sampler in [32] or \
-        # cfg_model.batch_size_sampler == 64 and cfg_model.num_neighbors in [5]):
-        #     continue
-
-        # if (cfg.model.type == 'VGAE' or cfg.model.type == 'GAT') and cfg_model.out_channels == 16 and cfg_model.hidden_channels == 16 \
-        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and (cfg_model.batch_size_sampler in [32, 64] or \
-        # cfg_model.batch_size_sampler == 128 and cfg_model.num_neighbors in [5] and cfg_model.num_hops in [5]):
-        #     continue
-
-        # if cfg.model.type == 'GraphSage' and cfg_model.out_channels == 64 and cfg_model.hidden_channels == 64 \
-        # and cfg.train.batch_size == 32 and cfg.train.lr == 0.015 and (cfg_model.batch_size_sampler in [32] or \
-        # cfg_model.batch_size_sampler == 64 and cfg_model.num_neighbors in [5, 10, 20]):
-        #     continue
 
         optimizer = create_optimizer(model, cfg)
         #scheduler = LinearDecayLR(optimizer, start_lr=0.01, end_lr=0.001, num_epochs=cfg.train.epochs)

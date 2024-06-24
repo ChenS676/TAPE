@@ -25,16 +25,7 @@ from graphgps.splits.neighbor_loader import NeighborLoader
 from graphgps.utility.NS_utils import degree
 from torch_sparse import SparseTensor
 import pandas as pd
-
-
-report_step = {
-    'cora': 2, #100,
-    'pubmed': 5,
-    'arxiv_2023': 5, #100,
-    'ogbn-arxiv': 1,
-    'ogbn-products': 1,
-    'synthetic': 2,
-}
+import matplotlib.pyplot as plt
 
 def data_loader(data, batch_size_sampler, num_neighbors, num_hops):
     return NeighborLoader(
@@ -72,13 +63,16 @@ class Trainer_NS(Trainer):
                  batch_size_sampler: int,
                  num_neighbors: int,
                  num_hops: int,
-                 virtual_node_flag: bool):
+                 virtual_node_flag: bool,
+                 tensorboard_writer: None):
         
         self.device = device
         self.if_wandb = if_wandb
         self.model = model.to(self.device)
         self.run_dir = cfg.run_dir
         self.emb = emb
+        self.seed = cfg.seed
+        self.tensorboard_writer = tensorboard_writer
 
         if if_wandb:
             self.step = 0
@@ -99,6 +93,16 @@ class Trainer_NS(Trainer):
         self.optimizer = optimizer
         self.loggers = loggers
         self.print_logger = print_logger
+        
+        report_step = {
+            'cora': 100,
+            'pubmed': 5,
+            'arxiv_2023': 5, #100,
+            'ogbn-arxiv': 1,
+            'ogbn-products': 1,
+            'synthetic': 2,
+        }
+        self.report_step = report_step[cfg.data.name]
         self.report_step = report_step[cfg.data.name]
         self.model_types = ['VGAE', 'GAE', 'GAT', 'GraphSage']
         
@@ -141,15 +145,8 @@ class Trainer_NS(Trainer):
     def _train_heart(self):
         pos_train_weight = None
 
-        for subgraph in self.train_data:  # Drop the last incomplete batch if dataset size is not divisible by batch size
-            
-            if self.emb is None: 
-                x = subgraph.x
-                emb_update = 0
-            else: 
-                x = self.emb.weight
-                emb_update = 1
-            
+        for subgraph in self.train_data:
+                    
             self.optimizer.zero_grad()
             
             if self.virtual_node_flag:
@@ -157,6 +154,13 @@ class Trainer_NS(Trainer):
                    transform = VirtualNode()
                    subgraph = transform(subgraph)
             
+            if self.emb is None: 
+                x = subgraph.x
+                emb_update = 0
+            else: 
+                x = self.emb.weight
+                emb_update = 1
+                
             num_nodes = x.size(0)    
             batch_edge_index = subgraph.edge_index.to(self.device)
             x = x.to(self.device) 
@@ -178,7 +182,8 @@ class Trainer_NS(Trainer):
             loss.backward()
             
             if emb_update == 1: torch.nn.utils.clip_grad_norm_(x, 1.0)
-            # torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+            if self.data_name == 'cora':
+                torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
 
             self.optimizer.step()           
         
@@ -203,6 +208,7 @@ class Trainer_NS(Trainer):
         self.model.eval()
 
         for subgraph in graph:
+            
             if self.virtual_node_flag:
                 if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
                    transform = VirtualNode()
@@ -249,12 +255,20 @@ class Trainer_NS(Trainer):
         self.model.eval()
 
         for subgraph in graph:
+            
+            if self.virtual_node_flag:
+                if self.is_disjoint(subgraph.edge_index, subgraph.num_nodes):
+                   transform = VirtualNode()
+                   subgraph = transform(subgraph)
+            
+            batch_edge_index = subgraph.edge_index.to(self.device)
+            x = subgraph.x.to(self.device) 
             if self.model_name == 'VGAE':
-                z = self.model(subgraph.x, subgraph.edge_index)
+                z = self.model(x, batch_edge_index)
                 
             elif self.model_name in ['GAE', 'GAT', 'GraphSage', 'GAT_Variant', 
                                     'GCN_Variant', 'SAGE_Variant', 'GIN_Variant']:
-                z = self.model.encoder(subgraph.x, subgraph.edge_index)
+                z = self.model.encoder(x, batch_edge_index)
             
             pos_edge_label_index = self.global_to_local(subgraph.pos_edge_label_index, subgraph.n_id)
             neg_edge_label_index = self.global_to_local(subgraph.neg_edge_label_index, subgraph.n_id)
@@ -300,11 +314,13 @@ class Trainer_NS(Trainer):
     def train(self):  
         for epoch in range(1, self.epochs + 1):
             loss = self.train_func[self.model_name]()
-            print(f"Epoch: {epoch}, Loss: {loss}")
             if self.if_wandb:
                 wandb.log({"Epoch": epoch}, step=self.step)
                 wandb.log({'loss': loss}, step=self.step) 
-                #wandb.log({"lr": self.scheduler.get_lr()}, step=self.step)
+                # wandb.log({"lr": self.scheduler.get_lr()}, step=self.step)
+                
+            self.tensorboard_writer.add_scalar(f"{self.model_name}_Loss/train", loss, epoch)
+            # self.tensorboard_writer.add_scalar("LR/train", self.scheduler.get_lr()[-1], epoch)
             if epoch % int(self.report_step) == 0:
 
                 self.results_rank = self.merge_result_rank()
@@ -315,6 +331,9 @@ class Trainer_NS(Trainer):
                     
                 for key, result in self.results_rank.items():
                     self.loggers[key].add_result(self.run, result)
+                    self.tensorboard_writer.add_scalar(f"{self.model_name}_Metrics/Train/{key}", result[0], epoch)
+                    self.tensorboard_writer.add_scalar(f"{self.model_name}_Metrics/Valid/{key}", result[1], epoch)
+                    self.tensorboard_writer.add_scalar(f"{self.model_name}_Metrics/Test/{key}", result[2], epoch)
                     
                     train_hits, valid_hits, test_hits = result
                     self.print_logger.info(
@@ -330,6 +349,8 @@ class Trainer_NS(Trainer):
                 
             if self.if_wandb:
                 self.step += 1
+            self.tensorboard_writer.flush()
+        self.tensorboard_writer.close()
     
     
     def finalize(self):

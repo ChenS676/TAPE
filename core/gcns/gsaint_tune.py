@@ -22,6 +22,8 @@ from graphgps.utility.utils import set_cfg, parse_args, get_git_repo_root_path, 
 from graphgps.network.heart_gnn import GAT_Variant, GAE_forall, GCN_Variant, \
                                 SAGE_Variant, GIN_Variant, DGCNN, VGAE, GCNEncoder, VariationalGCNEncoder
 from yacs.config import CfgNode as CN
+from torch.utils.tensorboard import SummaryWriter
+writer = SummaryWriter()
 
 def get_loader_RW(data, batch_size, walk_length, num_steps, sample_coverage):
     return GraphSAINTRandomWalkSampler(data, batch_size=batch_size, 
@@ -320,7 +322,8 @@ def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
                 print_logger,
                 cfg.device,
                 bool(args.wandb),
-                sampler)
+                sampler,
+                tensorboard_writer=writer)
 
             assert not args.epochs < trainer.report_step or args.epochs % trainer.report_step, "Epochs should be divisible by report_step"
             
@@ -330,7 +333,7 @@ def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
             run_result = {}
             for key in trainer.loggers.keys():
                 print(key)
-                _, _, _, test_bvalid = trainer.loggers[key].calc_run_stats(0, True)#run_id, True)
+                _, _, _, test_bvalid, _, _ = trainer.loggers[key].calc_all_stats()
                 run_result[key] = test_bvalid
 
             # save params TODO if the updated params is saved.
@@ -352,7 +355,7 @@ def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
             print_logger.info(run_result)
             to_file = f'{args.data}_{cfg.model.type}heart_tune_time_.csv'
             trainer.save_tune(run_result, to_file)
-            
+
             print_logger.info(f"train time per epoch {run_result['train_time']}")
             print_logger.info(f"test time per epoch {run_result['test_time']}")
             print_logger.info(f"train time per epoch {run_result['train_time']}")
@@ -360,6 +363,7 @@ def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
             
             if args.wandb:
                 wandb.finish()
+        
         
 if __name__ == "__main__":
     project_main()

@@ -137,6 +137,10 @@ sampler:
     walk_length: 10
     num_steps: 10
     sample_coverage: 100
+  
+  ns:
+    virtual_node: True
+    batch_size_sampler: 128
 
 save:
   output_dir: './'

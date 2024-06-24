@@ -1,0 +1,112 @@
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:0 --data cora --model GAT --epochs 1000 --wandb True
+round 0
+python3 test_ns.py --cfg core/yamls/cora/gcns/ns_gnn_models.yaml --device cuda:1 --data cora --model GraphSage --epochs 1000 --wandb True
+Namespace(cfg_file='core/yamls/cora/gcns/ns_gnn_models.yaml', sweep_file='core/yamls/cora/gcns/gae_sp1.yaml', data='cora', bs=32768, device='cuda:1', epochs=1000, model='GraphSage', score='mlp_score', wandb='True', repeat=3, mark_done=False, opts=[])
+DDEVICE:  cuda:1 cuda:1
+cuda
+Number of available CUDA devices: 4
+not loaded 0 papers.
+Number of available CUDA devices: 4
+dropout: 0.1
+emb: False
+hidden_channels: 256
+in_channels: None
+num_layers: 3
+out_channels: 128
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+Namespace(cfg_file='core/yamls/cora/gcns/ns_gnn_models.yaml', sweep_file='core/yamls/cora/gcns/gae_sp1.yaml', data='cora', bs=32768, device='cuda:0', epochs=1000, model='GAT', score='mlp_score', wandb='True', repeat=3, mark_done=False, opts=[])
+DDEVICE:  cuda:0 cuda:0
+cuda
+Number of available CUDA devices: 4
+not loaded 0 papers.
+Number of available CUDA devices: 4
+dropout: 0
+emb: False
+heads: 1
+hidden_channels: 256
+in_channels: None
+negative_slope: 0.2
+num_layers: 3
+out_channels: 128
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+layers in sage:  3
+Number of available CUDA devices: 4
+not loaded 0 papers.
+Number of available CUDA devices: 4
+batch_size_sampler: 128
+dropout: 0.1
+emb: False
+hidden_channels: 16
+in_channels: 1433
+num_hops: 6
+num_layers: 3
+num_neighbors: 5
+out_channels: 16
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+layers in gat:  3
+Number of available CUDA devices: 4
+not loaded 0 papers.
+Number of available CUDA devices: 4
+batch_size_sampler: 128
+dropout: 0
+emb: False
+heads: 4
+hidden_channels: 128
+in_channels: 1433
+negative_slope: 0.1
+num_hops: 5
+num_layers: 3
+num_neighbors: 10
+out_channels: 128
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+layers in sage:  3
+Number of available CUDA devices: 4
+not loaded 0 papers.
+Number of available CUDA devices: 4
+batch_size_sampler: 128
+dropout: 0.1
+emb: False
+hidden_channels: 16
+in_channels: 1433
+num_hops: 6
+num_layers: 3
+num_neighbors: 5
+out_channels: 16
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+layers in gat:  3
+Number of available CUDA devices: 4
+not loaded 0 papers.
+Number of available CUDA devices: 4
+batch_size_sampler: 128
+dropout: 0
+emb: False
+heads: 4
+hidden_channels: 128
+in_channels: 1433
+negative_slope: 0.1
+num_hops: 5
+num_layers: 3
+num_neighbors: 10
+out_channels: 128
+original config file saved to results/ns_gnn_models-Tune/ns_gnn_models.yaml
+
+============================= JOB FEEDBACK =============================
+
+Job ID: 1442818
+Cluster: haic
+User/Group: cc7738/aifb
+Account: aifb
+State: TIMEOUT (exit code 0)
+Partition: normal
+Nodes: 1
+Cores per node: 2
+Nodelist: haicn1711
+CPU Utilized: 00:02:02
+CPU Efficiency: 0.21% of 16:00:24 core-walltime
+Job Wall-clock time: 08:00:12
+Starttime: Sun Jun 23 19:39:21 2024
+Endtime: Mon Jun 24 03:39:33 2024
+Memory Utilized: 3.24 GB
+Memory Efficiency: 0.66% of 489.84 GB
+Energy Consumed: 16804436 Joule / 4667.89888888889 Watthours
+Average node power draw: 583.244342635013 Watt

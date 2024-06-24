@@ -21,6 +21,8 @@ from graphgps.utility.utils import set_cfg, parse_args, get_git_repo_root_path, 
 from graphgps.network.heart_gnn import GAT_Variant, GAE_forall, GCN_Variant, \
                                 SAGE_Variant, GIN_Variant, DGCNN, VGAE, GCNEncoder, VariationalGCNEncoder
 from yacs.config import CfgNode as CN
+from torch.utils.tensorboard import SummaryWriter
+writer = SummaryWriter()
 
 def create_GCN_model(cfg_model: CN, 
                        cfg_score: CN,
@@ -324,7 +326,8 @@ def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
                 cfg_model.batch_size_sampler,
                 cfg_model.num_neighbors,
                 cfg_model.num_hops,
-                False)
+                cfg.sampler.ns.virtual_node,
+                tensorboard_writer=writer)
 
             assert not args.epochs < trainer.report_step or args.epochs % trainer.report_step, "Epochs should be divisible by report_step"
             
@@ -354,7 +357,7 @@ def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
     run_result['params'] = cfg.model.params
 
     print_logger.info(run_result)
-    to_file = f'{args.data}_{cfg.model.type}heart_tune_time_.csv'
+    to_file = f'{args.data}_{cfg.model.type}heart_tune_Neighbor_Sampling_.csv'
     trainer.save_tune(run_result, to_file)
 
     print_logger.info(f"train time per epoch {run_result['train_time']}")
