@@ -1,0 +1,49 @@
+cfg_dest: gae.yaml
+data:
+  device: 0
+  include_negatives: true
+  name: cora
+  num_features: 1433
+  split_index:
+  - 0.8
+  - 0.15
+  - 0.05
+  split_labels: true
+  test_pct: 0.05
+  undirected: true
+  val_pct: 0.15
+llm:
+  batch_size: 4
+  llm_embedding: true
+  model_name: TAPE/core/embeddings/models
+  model_type: fine_tuned_embedding
+metric_best: acc
+model:
+  in_channels: 1433
+  out_channels: 32
+  type: GAE
+num_threads: 11
+optimizer:
+  base_lr: 0.01
+  type: adam
+  weight_decay: 0.0005
+out_dir: results/gae-gae-cora-origin
+print: file
+run:
+  multiple_splits: None
+  num_threads: 11
+  seed: 0
+seed: 0
+train:
+  auto_resume: false
+  batch_size: 1024
+  device: 0
+  epochs: 200
+  eval_period: 1
+  final_eval: false
+  finetune: false
+  mode: custom
+wandb:
+  name_tag: gae-cora-origin
+  project: gtblueprint
+  use: true

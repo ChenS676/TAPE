@@ -18,6 +18,9 @@ conda install -c dglteam/label/cu113 dgl
 pip install yacs
 pip install transformers
 pip install --upgrade accelerate
+pip install gitpython
+pip install ipython
+pip install wandb
 ```
 
 ## 0.1 Here is my install examples in horeka server
@@ -34,13 +37,36 @@ conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit
 conda install -c pyg pytorch-sparse
 conda install -c pyg pytorch-scatter
 conda install -c pyg pytorch-cluster
-conda install -c pyg pyg
 pip install ogb
 conda install -c dglteam/label/cu113 dgl
 pip install yacs
 pip install transformers
 pip install --upgrade accelerate
 
+```
+
+## 0.2 Horka Server installation 2.0
+```
+module purge
+module load compiler/intel/2023.1.0
+module load devel/cuda/11.8
+
+conda create --name TAPE python=3.9
+conda activate TAPE
+
+conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit=11.3 -c pytorch
+pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.3.0+cu118.html
+conda install scikit-learn
+conda install -c pyg pyg
+pip install ogb
+pip install transformers
+pip install gitpython
+pip install ipython
+pip install yacs
+pip install sentence-transformers
+pip install wandb
+pip install python-dotenv
+pip install sentencepiece
 ```
 
 ## 1. Download/Test TAG datasets 

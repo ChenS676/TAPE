@@ -20,7 +20,7 @@ train:
   mode: custom
   batch_size: 1024 
   eval_period: 1
-  epochs: 200
+  epochs: 10000
   device: 0
   auto_resume: False
   final_eval: False
@@ -48,3 +48,12 @@ optimizer:
   type: adam
   base_lr: 0.01
   weight_decay: 0.0005
+  
+llm:
+  llm_embedding: True
+  batch_size: 4
+  model_type: shallow_embedding
+  model_name: tfidf
+  
+embedding_fine_tuning:
+    model_name: sentence-transformers/all-mpnet-base-v2 

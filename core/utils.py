@@ -24,6 +24,19 @@ from torch_geometric.graphgym.config import (cfg, dump_cfg,
 from torch_geometric.utils import remove_self_loops
 from typing import Tuple, List, Dict
 
+from sklearn.feature_extraction.text import TfidfVectorizer
+from transformers import AutoTokenizer, AutoModel
+from sentence_transformers import SentenceTransformer
+import torch.nn.functional as F
+from tqdm import tqdm
+from torch.utils.data import DataLoader, TensorDataset
+from openai import OpenAI
+from dotenv import load_dotenv
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+load_dotenv()
+
 set_float = lambda result: float(result.split(' ± ')[0])
 
 
@@ -733,6 +746,108 @@ def create_scheduler(optimizer, scheduler_config):
     return scheduler
 
 
+def use_pretrained_llm_embeddings(model_type: str, model_name: str, data: List[str], batch_size: int=4):
+    
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    if model_type == "sentence_embedding":
+        embeddings = sentence_transformer_embedding_generation(model_name, data)
+
+    elif model_type == "open_source":
+        embeddings = open_source_embedding_generation(model_name, device, data, batch_size)
+
+    elif model_type == "closed_source":
+        embeddings = close_source_embedding_generation(model_name, data)
+        
+    elif model_type == "shallow_embedding":
+        embeddings = shallow_embedding_generation(model_name, data)
+        
+    elif model_type == "fine_tuned_embedding":
+        embeddings = custom_model_embedding_generation(model_name, data)
+        
+    return embeddings
+            
+def sentence_transformer_embedding_generation(model_name: str, data: List[str]) -> torch.Tensor:
+    embedding_model = SentenceTransformer(model_name)
+    print("Start sentence embedding generation")
+    embeddings = torch.tensor(embedding_model.encode(data))
+    print("Embedding sentence generation completed")
+    return embeddings
+    
+
+def open_source_embedding_generation(model_name: str, device: str, data: List[str], batch_size: int) -> torch.Tensor:
+    hf_token = os.getenv('HF_TOKEN')
+    tokenizer = AutoTokenizer.from_pretrained(model_name, token=hf_token)
+
+    device_ids = [i for i in range(torch.cuda.device_count())]
+    model = AutoModel.from_pretrained(model_name, token=hf_token)
+    if torch.cuda.device_count() > 1:
+        print(f"{torch.cuda.device_count()} GPUs in use!")
+        model = torch.nn.DataParallel(model)
+
+    if tokenizer.pad_token is None:
+        if tokenizer.eos_token is not None:
+            tokenizer.pad_token = tokenizer.eos_token
+        else:
+            tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+            model.resize_token_embeddings(len(tokenizer))        
+
+    model = model.to(device)
+    encoded_input = tokenizer(data, padding=True, truncation=True, return_tensors='pt').to(device)
+    input_ids = encoded_input['input_ids']
+    attention_mask = encoded_input['attention_mask']
+
+    # Create a TensorDataset and DataLoader for batching
+    dataset = TensorDataset(input_ids, attention_mask)
+    dataloader = DataLoader(dataset, batch_size=batch_size)
+
+    all_embeddings = []
+
+    model.eval() 
+    with torch.no_grad():
+        for batch in tqdm(dataloader):
+            batch_input_ids, batch_attention_mask = [b.to(device) for b in batch]
+            model_output = model(input_ids=batch_input_ids, attention_mask=batch_attention_mask)
+            sentence_embeddings = mean_pooling(model_output, batch_attention_mask)
+            normalized_embeddings = F.normalize(sentence_embeddings, p=2, dim=1)
+            all_embeddings.append(normalized_embeddings)
+
+    embeddings = torch.cat(all_embeddings, dim=0)
+    return embeddings
+
+def close_source_embedding_generation(model_name: str, data: List[str]):
+    openai_api_key = os.getenv('OPENAI_API_KEY')
+    open_ai_client = OpenAI(api_key=openai_api_key)
+    embeddings = [] 
+    print("Start OpenAI embedding generation")
+    for text in tqdm(data):
+        response = open_ai_client.embeddings.create(
+            input=text,
+            model="text-embedding-3-small"
+        )
+        embeddings.append(response.data[0].embedding)
+    embeddings = torch.tensor(embeddings)
+    print("Embedding generation completed")
+    return embeddings
+
+def shallow_embedding_generation(model_name: str, data: List[str]) -> torch.Tensor:
+    if model_name == "tfidf":
+        vectorizer = TfidfVectorizer()
+        embeddings = torch.tensor(vectorizer.fit_transform(data).toarray(), dtype=torch.float32)
+    return embeddings
+
+def custom_model_embedding_generation(model_path: str, data: List[str]) -> torch.Tensor:
+    embedding_model = SentenceTransformer(model_path)
+    print("Start sentence embedding generation")
+    embeddings = torch.tensor(embedding_model.encode(data))
+    print("Embedding sentence generation completed")
+    return embeddings
+
+def mean_pooling(model_output, attention_mask):
+    token_embeddings = model_output[0] #First element of model_output contains all token embeddings
+    input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+    return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
+        
+
 def init_model_from_pretrained(model, pretrained_dir, freeze_pretrained=False):
     """ Copy model parameters from pretrained model except the prediction head.
 
@@ -765,4 +880,3 @@ def init_model_from_pretrained(model, pretrained_dir, freeze_pretrained=False):
             if not key.startswith('post_mp'):
                 param.requires_grad = False
     return model
-

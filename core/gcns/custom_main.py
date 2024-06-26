@@ -23,8 +23,9 @@ from graphgps.network.custom_gnn import create_model
 from data_utils.load import load_data_nc, load_data_lp
 from utils import set_cfg, parse_args, get_git_repo_root_path, Logger, custom_set_out_dir \
     , custom_set_run_dir, set_printing, run_loop_settings, create_optimizer, config_device, \
-        init_model_from_pretrained, create_logger
+        init_model_from_pretrained, create_logger, use_pretrained_llm_embeddings
 
+print("modules loaded")
 
 if __name__ == "__main__":
 
@@ -42,6 +43,18 @@ if __name__ == "__main__":
     torch.set_num_threads(cfg.run.num_threads)
 
     loggers = create_logger(args.repeat)
+    
+    splits, text = load_data_lp[cfg.data.name](cfg.data)
+    
+    # LLM: embeddings
+    if cfg.llm.llm_embedding == True:
+        print("Using LLM Embeddings")
+        model_type = cfg.llm.model_type
+        model_name = cfg.llm.model_name
+        batch_size = cfg.llm.batch_size
+        embeddings = use_pretrained_llm_embeddings(model_type, model_name, text, batch_size)
+        for split in splits:
+            splits[split].x = embeddings
 
     for run_id, seed, split_index in zip(*run_loop_settings(cfg, args)):
         # Set configurations for each run
@@ -52,8 +65,9 @@ if __name__ == "__main__":
         cfg.run_id = run_id
         seed_everything(cfg.seed)
         auto_select_device()
-
-        splits, text = load_data_lp[cfg.data.name](cfg.data)
+        
+        print(splits)
+        print(splits['train'].x.shape[1])
         cfg.model.in_channels = splits['train'].x.shape[1]
         model = create_model(cfg)
 
@@ -64,10 +78,6 @@ if __name__ == "__main__":
 
         optimizer = create_optimizer(model, cfg)
 
-        # LLM: finetuning
-        if cfg.train.finetune: 
-            model = init_model_from_pretrained(model, cfg.train.finetune,
-                                               cfg.train.freeze_pretrained)
 
         trainer = Trainer(FILE_PATH,
                     cfg,

@@ -84,3 +84,7 @@ generated_dataset/
 dataset.tar.gz
 ../results
 /results
+
+.env
+/core/embedding_finetuning/models/
+/core/model_finetuning/data/
