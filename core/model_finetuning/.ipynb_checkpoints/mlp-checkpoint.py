@@ -29,15 +29,16 @@ class EmbeddingDataset(Dataset):
         return self.embeddings[idx], self.labels[idx]
     
 class MLP(nn.Module):
-    def __init__(self, input_size, hidden_size, num_classes):
+    def __init__(self, input_size, hidden_size):
         super(MLP, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.fc2 = nn.Linear(hidden_size, hidden_size)
-        self.fc3 = nn.Linear(hidden_size, num_classes)
+        self.fc3 = nn.Linear(hidden_size, 1)
         self.relu = nn.ReLU()
-        self.dropout = nn.Dropout(p=0.2)
+        self.dropout = nn.Dropout(p=0.7)
         self.bn1 = nn.BatchNorm1d(hidden_size)
         self.bn2 = nn.BatchNorm1d(hidden_size)
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         out = F.normalize(x, p=2, dim=-1)
@@ -50,6 +51,7 @@ class MLP(nn.Module):
         out = self.relu(out)
         out = self.dropout(out)
         out = self.fc3(out)
+        out = self.sigmoid(out)
         return out
 
 def init_weights(m):
@@ -77,28 +79,27 @@ val_labels = torch.load(f'./data/{embedding_model_name}_val_labels.pt')
 test_dataset = torch.load(f'./data/{embedding_model_name}_test_dataset.pt')
 test_labels = torch.load(f'./data/{embedding_model_name}_test_labels.pt')
 
-hidden_size = 1024
+hidden_size = 512
 learning_rate = 1e-5
-batch_size = 64
-patience = 5
+batch_size = 1024
+patience = 25
 weight_decay = 1e-3
 num_epochs = 200
+steps_per_epoch = 100000
 
 train_dataloader = DataLoader(EmbeddingDataset(train_dataset, train_labels), batch_size=batch_size, shuffle=True)
 val_dataloader = DataLoader(EmbeddingDataset(val_dataset, val_labels), batch_size=batch_size, shuffle=False)
 test_dataloader = DataLoader(EmbeddingDataset(test_dataset, test_labels), batch_size=batch_size, shuffle=False)
 
 input_size = train_dataset.shape[1]
-num_classes = 2
 
-model = MLP(input_size, hidden_size, num_classes)
-model = model.to(device)
-
-model = MLP(input_size, hidden_size, num_classes)
+model = MLP(input_size, hidden_size)
 model.apply(init_weights)
 model = model.to(device)
 
-criterion = nn.CrossEntropyLoss()
+print(model)
+
+criterion = nn.BCELoss()
 optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=2, factor=0.5)
 
@@ -109,9 +110,11 @@ early_stopping_counter = 0
 for epoch in range(num_epochs):
     model.train()
     total_loss = 0
-    for embeddings, labels in train_dataloader:
+    for step, (embeddings, labels) in enumerate(train_dataloader):
+        if step >= steps_per_epoch:
+            break
         embeddings = embeddings.to(device)
-        labels = labels.to(device)
+        labels = labels.to(device).float().unsqueeze(1)  # Make sure labels are floats and reshaped correctly
 
         outputs = model(embeddings)
         loss = criterion(outputs, labels)
@@ -132,13 +135,13 @@ for epoch in range(num_epochs):
         for batch in val_dataloader:
             inputs, labels = batch
             inputs = inputs.to(device)
-            labels = labels.to(device)
+            labels = labels.to(device).float().unsqueeze(1)  # Make sure labels are floats and reshaped correctly
 
             outputs = model(inputs)
             loss = criterion(outputs, labels)
             val_loss += loss.item()
 
-            _, predicted = torch.max(outputs.data, 1)
+            predicted = (outputs > 0.5).float()
             val_total += labels.size(0)
             val_correct += (predicted == labels).sum().item()
 
@@ -174,11 +177,11 @@ test_targets = []
 with torch.no_grad():
     for embeddings, labels in test_dataloader:
         embeddings = embeddings.to(device)
-        labels = labels.to(device)
+        labels = labels.to(device).float().unsqueeze(1)  # Make sure labels are floats and reshaped correctly
 
         outputs = model(embeddings)
 
-        _, predicted = torch.max(outputs.data, 1)
+        predicted = (outputs > 0.5).float()
 
         test_preds.extend(predicted.cpu().numpy())
         test_targets.extend(labels.cpu().numpy())
@@ -188,3 +191,17 @@ print(f'ROC AUC: {roc_auc_score(test_targets, test_preds):.4f}')
 print('Confusion Matrix:')
 print(confusion_matrix(test_targets, test_preds))
 print('F1_score:', f1_score(test_targets, test_preds))
+
+# !!! tfidf einschränken !!!
+
+# Change to Sigmoid
+# Binary Cross Entropy
+
+# RMSProp
+# Batch size 512; 1024
+# Steps per epoch bspw. 1000; 2000... trainieren
+# Dropout 0.7, 0.5
+# Nicht embeddings concatinieren, sondern texte und dann embedden
+# Benchmark Modell: sentence encoder von einem abstract --> tfidf --> custom embedding layer --> LSTM
+
+# Random Forest --> Extract Feature --> Use those features for classification

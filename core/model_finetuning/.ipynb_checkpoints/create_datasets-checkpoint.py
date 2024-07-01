@@ -96,7 +96,7 @@ def process_texts(pos_edge_index, neg_edge_index, text):
     
     return dataset, labels
 
-embedding_model_name = "word2vec"
+embedding_model_name = "tfidf"
 
 
 FILE_PATH = f'{get_git_repo_root_path()}/'
@@ -128,22 +128,23 @@ neg_test_edge_index = splits['test'].neg_edge_label_index
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+train_dataset, train_labels = process_texts(
+    splits['train'].pos_edge_label_index, 
+    splits['train'].neg_edge_label_index, 
+    text
+)
+val_dataset, val_labels = process_texts(
+    splits['valid'].pos_edge_label_index, 
+    splits['valid'].neg_edge_label_index, 
+    text
+)
+test_dataset, test_labels = process_texts(
+    splits['test'].pos_edge_label_index, 
+    splits['test'].neg_edge_label_index, 
+    text
+)
+
 if embedding_model_name == "tfidf":
-    train_dataset, train_labels = process_texts(
-        splits['train'].pos_edge_label_index, 
-        splits['train'].neg_edge_label_index, 
-        text
-    )
-    val_dataset, val_labels = process_texts(
-        splits['valid'].pos_edge_label_index, 
-        splits['valid'].neg_edge_label_index, 
-        text
-    )
-    test_dataset, test_labels = process_texts(
-        splits['test'].pos_edge_label_index, 
-        splits['test'].neg_edge_label_index, 
-        text
-    )
     vectorizer = TfidfVectorizer()
     train_dataset = vectorizer.fit_transform(train_dataset).toarray()
     val_dataset = vectorizer.transform(val_dataset).toarray()
@@ -151,50 +152,11 @@ if embedding_model_name == "tfidf":
 elif embedding_model_name == "word2vec":
     sentences = [text[i].split() for i in range(len(text))]
     word2vec_model = Word2Vec(sentences, vector_size=100, window=5, min_count=1, workers=4)
-    train_dataset, train_labels = process_edges(
-        splits['train'].pos_edge_label_index, 
-        splits['train'].neg_edge_label_index, 
-        text, 
-        word2vec_model, 
-        "word2vec"
-    )
-    val_dataset, val_labels = process_edges(
-        splits['valid'].pos_edge_label_index, 
-        splits['valid'].neg_edge_label_index, 
-        text, 
-        word2vec_model, 
-        "word2vec"
-    )
-    test_dataset, test_labels = process_edges(
-        splits['test'].pos_edge_label_index, 
-        splits['test'].neg_edge_label_index, 
-        text, 
-        word2vec_model, 
-        "word2vec"
-    )
 else:
     embedding_model = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
-    train_dataset, train_labels = process_edges(
-        splits['train'].pos_edge_label_index, 
-        splits['train'].neg_edge_label_index, 
-        text, 
-        embedding_model, 
-        "mpnet"
-    )
-    val_dataset, val_labels = process_edges(
-        splits['valid'].pos_edge_label_index, 
-        splits['valid'].neg_edge_label_index, 
-        text, 
-        embedding_model, 
-        "mpnet"
-    )
-    test_dataset, test_labels = process_edges(
-        splits['test'].pos_edge_label_index, 
-        splits['test'].neg_edge_label_index, 
-        text, 
-        embedding_model, 
-        "mpnet"
-    )
+    train_dataset = embedding_model.encode(train_dataset)
+    val_dataset = embedding_model.encode(val_dataset)
+    test_dataset = embedding_model.encode(test_dataset)
 
 # Convert to tensors
 train_dataset = torch.tensor(train_dataset, dtype=torch.float32)
