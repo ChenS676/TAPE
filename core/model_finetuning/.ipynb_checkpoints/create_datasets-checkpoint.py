@@ -15,11 +15,21 @@ from utils import set_cfg, parse_args, get_git_repo_root_path, Logger, custom_se
 from torch_geometric.graphgym.config import dump_cfg, makedirs_rm_exist
 from data_utils.load import load_data_nc, load_data_lp
 from sklearn.feature_extraction.text import TfidfVectorizer
+from gensim.models import Word2Vec
 
-def get_embeddings(text):
-    if embeddig_model_type == "tfidf":
-        test_dataset
-    return embedding_model.encode(text)
+def get_word2vec_embeddings(model, text):
+    words = text.split()
+    word_vectors = [model.wv[word] for word in words if word in model.wv]
+    if len(word_vectors) > 0:
+        return np.mean(word_vectors, axis=0)
+    else:
+        return np.zeros(model.vector_size)
+
+def get_embeddings(text, embedding_model_name, embedding_model):
+    if embedding_model_name == "word2vec":
+        return get_word2vec_embeddings(embedding_model, text)
+    else:
+        return embedding_model.encode(text)
 
 class EmbeddingDataset(Dataset):
     def __init__(self, embeddings, labels):
@@ -32,22 +42,7 @@ class EmbeddingDataset(Dataset):
     def __getitem__(self, idx):
         return self.embeddings[idx], self.labels[idx]
     
-class MLP(nn.Module):
-    def __init__(self, input_size, hidden_size, num_classes):
-        super(MLP, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size)
-        self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(hidden_size, num_classes)
-        self.softmax = nn.Softmax(dim=1)
-
-    def forward(self, x):
-        out = self.fc1(x)
-        out = self.relu(out)
-        out = self.fc2(out)
-        out = self.softmax(out)
-        return out
-
-def process_edges(pos_edge_index, neg_edge_index, text):
+def process_edges(pos_edge_index, neg_edge_index, text, embedding_model, embedding_model_name):
     dataset = []
     labels = []
     # Process positive edges
@@ -56,8 +51,8 @@ def process_edges(pos_edge_index, neg_edge_index, text):
         node2 = pos_edge_index[1, i].item()
         text1 = text[node1]
         text2 = text[node2]
-        embedding_text1 = get_embeddings(text1)
-        embedding_text2 = get_embeddings(text2)
+        embedding_text1 = get_embeddings(text1, embedding_model_name, embedding_model)
+        embedding_text2 = get_embeddings(text2, embedding_model_name, embedding_model)
         combined_embedding = np.concatenate((embedding_text1, embedding_text2))
         dataset.append(combined_embedding)
         labels.append(1)
@@ -68,8 +63,8 @@ def process_edges(pos_edge_index, neg_edge_index, text):
         node2 = neg_edge_index[1, i].item()
         text1 = text[node1]
         text2 = text[node2]
-        embedding_text1 = get_embeddings(text1)
-        embedding_text2 = get_embeddings(text2)
+        embedding_text1 = get_embeddings(text1, embedding_model_name, embedding_model)
+        embedding_text2 = get_embeddings(text2, embedding_model_name, embedding_model)
         combined_embedding = np.concatenate((embedding_text1, embedding_text2))
         dataset.append(combined_embedding)
         labels.append(0)
@@ -101,7 +96,7 @@ def process_texts(pos_edge_index, neg_edge_index, text):
     
     return dataset, labels
 
-embedding_model_name = "tfidf"
+embedding_model_name = "word2vec"
 
 
 FILE_PATH = f'{get_git_repo_root_path()}/'
@@ -134,7 +129,6 @@ neg_test_edge_index = splits['test'].neg_edge_label_index
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 if embedding_model_name == "tfidf":
-    # Prepare train, validation, and test datasets
     train_dataset, train_labels = process_texts(
         splits['train'].pos_edge_label_index, 
         splits['train'].neg_edge_label_index, 
@@ -154,25 +148,53 @@ if embedding_model_name == "tfidf":
     train_dataset = vectorizer.fit_transform(train_dataset).toarray()
     val_dataset = vectorizer.transform(val_dataset).toarray()
     test_dataset  = vectorizer.transform(test_dataset).toarray()
-else:
-    embedding_model = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
-    # Prepare train, validation, and test datasets
+elif embedding_model_name == "word2vec":
+    sentences = [text[i].split() for i in range(len(text))]
+    word2vec_model = Word2Vec(sentences, vector_size=100, window=5, min_count=1, workers=4)
     train_dataset, train_labels = process_edges(
         splits['train'].pos_edge_label_index, 
         splits['train'].neg_edge_label_index, 
-        text
+        text, 
+        word2vec_model, 
+        "word2vec"
     )
     val_dataset, val_labels = process_edges(
         splits['valid'].pos_edge_label_index, 
         splits['valid'].neg_edge_label_index, 
-        text
+        text, 
+        word2vec_model, 
+        "word2vec"
     )
     test_dataset, test_labels = process_edges(
         splits['test'].pos_edge_label_index, 
         splits['test'].neg_edge_label_index, 
-        text
+        text, 
+        word2vec_model, 
+        "word2vec"
     )
-
+else:
+    embedding_model = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
+    train_dataset, train_labels = process_edges(
+        splits['train'].pos_edge_label_index, 
+        splits['train'].neg_edge_label_index, 
+        text, 
+        embedding_model, 
+        "mpnet"
+    )
+    val_dataset, val_labels = process_edges(
+        splits['valid'].pos_edge_label_index, 
+        splits['valid'].neg_edge_label_index, 
+        text, 
+        embedding_model, 
+        "mpnet"
+    )
+    test_dataset, test_labels = process_edges(
+        splits['test'].pos_edge_label_index, 
+        splits['test'].neg_edge_label_index, 
+        text, 
+        embedding_model, 
+        "mpnet"
+    )
 
 # Convert to tensors
 train_dataset = torch.tensor(train_dataset, dtype=torch.float32)
@@ -181,6 +203,7 @@ val_dataset = torch.tensor(val_dataset, dtype=torch.float32)
 val_labels = torch.tensor(val_labels, dtype=torch.long)
 test_dataset = torch.tensor(test_dataset, dtype=torch.float32)
 test_labels = torch.tensor(test_labels, dtype=torch.long)
+
 
 # Save datasets
 torch.save(train_dataset, f'./data/{embedding_model_name}_train_dataset.pt')

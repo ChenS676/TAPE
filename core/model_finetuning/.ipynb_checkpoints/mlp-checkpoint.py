@@ -15,6 +15,7 @@ from utils import set_cfg, parse_args, get_git_repo_root_path, Logger, custom_se
 from torch_geometric.graphgym.config import dump_cfg, makedirs_rm_exist
 from data_utils.load import load_data_nc, load_data_lp
 import optuna
+import torch.nn.functional as F
 
 class EmbeddingDataset(Dataset):
     def __init__(self, embeddings, labels):
@@ -39,7 +40,8 @@ class MLP(nn.Module):
         self.bn2 = nn.BatchNorm1d(hidden_size)
 
     def forward(self, x):
-        out = self.fc1(x)
+        out = F.normalize(x, p=2, dim=-1)
+        out = self.fc1(out)
         out = self.bn1(out)
         out = self.relu(out)
         out = self.dropout(out)
