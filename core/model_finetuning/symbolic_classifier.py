@@ -53,7 +53,7 @@ print(f'Best hyperparameters: {best_params}')
 
 # Train the final model with the best hyperparameters
 best_rf = RandomForestClassifier(**best_params)"""
-best_rf = RandomForestClassifier()
+best_rf = RandomForestClassifier(n_estimators=100)
 best_rf.fit(X_train, y_train)
 
 # Evaluate on the test set

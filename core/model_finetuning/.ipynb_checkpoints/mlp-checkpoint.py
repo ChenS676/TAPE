@@ -1,7 +1,7 @@
 import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix
+from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, f1_score
 import torch
 from torch.utils.data import DataLoader, Dataset
 from sentence_transformers import SentenceTransformer
@@ -31,14 +31,34 @@ class MLP(nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
         super(MLP, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size)
+        self.fc2 = nn.Linear(hidden_size, hidden_size)
+        self.fc3 = nn.Linear(hidden_size, num_classes)
         self.relu = nn.ReLU()
-        self.softmax = nn.Softmax(dim=1)
+        self.dropout = nn.Dropout(p=0.2)
+        self.bn1 = nn.BatchNorm1d(hidden_size)
+        self.bn2 = nn.BatchNorm1d(hidden_size)
 
     def forward(self, x):
         out = self.fc1(x)
+        out = self.bn1(out)
         out = self.relu(out)
-        out = self.softmax(out)
+        out = self.dropout(out)
+        out = self.fc2(out)
+        out = self.bn2(out)
+        out = self.relu(out)
+        out = self.dropout(out)
+        out = self.fc3(out)
         return out
+
+def init_weights(m):
+    if isinstance(m, nn.Linear):
+        torch.nn.init.xavier_uniform_(m.weight)
+        if m.bias is not None:
+            torch.nn.init.zeros_(m.bias)
+
+# Sample dataset
+np.random.seed(0)
+torch.manual_seed(0)
 
     
 embedding_model_name = "tfidf"
@@ -55,82 +75,12 @@ val_labels = torch.load(f'./data/{embedding_model_name}_val_labels.pt')
 test_dataset = torch.load(f'./data/{embedding_model_name}_test_dataset.pt')
 test_labels = torch.load(f'./data/{embedding_model_name}_test_labels.pt')
 
-def train_model(trial):
-    hidden_size = trial.suggest_int('hidden_size', 32, 512)
-    learning_rate = trial.suggest_loguniform('learning_rate', 1e-5, 1e-3)
-    batch_size = trial.suggest_categorical('batch_size', [8, 16, 32, 64])
-
-    # Create DataLoader for embeddings and labels
-    train_dataloader = DataLoader(EmbeddingDataset(train_dataset, train_labels), batch_size=batch_size, shuffle=True)
-    val_dataloader = DataLoader(EmbeddingDataset(val_dataset, val_labels), batch_size=batch_size, shuffle=False)
-
-    input_size = train_dataset.shape[1]
-    num_classes = 2
-
-    # Initialize MLP model
-    model = MLP(input_size, hidden_size, num_classes)
-    model = model.to(device)
-
-    # Define loss and optimizer
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
-
-    num_epochs = 15
-
-    for epoch in range(num_epochs):
-        model.train()
-        total_loss = 0
-        for embeddings, labels in train_dataloader:
-            embeddings = embeddings.to(device)
-            labels = labels.to(device)
-
-            # Forward pass
-            outputs = model(embeddings)
-            loss = criterion(outputs, labels)
-
-            # Backward pass and optimization
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-
-            total_loss += loss.item()
-
-        # Calculate validation loss
-        model.eval()
-        val_loss = 0
-        with torch.no_grad():
-            for embeddings, labels in val_dataloader:
-                embeddings = embeddings.to(device)
-                labels = labels.to(device)
-                outputs = model(embeddings)
-                loss = criterion(outputs, labels)
-                val_loss += loss.item()
-
-        val_loss /= len(val_dataloader)
-
-        trial.report(val_loss, epoch)
-
-        # Handle pruning based on the intermediate value
-        if trial.should_prune():
-            raise optuna.exceptions.TrialPruned()
-
-    return val_loss
-
-def objective(trial):
-    return train_model(trial)
-
-# Hyperparameter tuning using Optuna
-study = optuna.create_study(direction='minimize')
-study.optimize(objective, n_trials=2)
-
-# Get the best hyperparameters
-best_params = study.best_params
-print(f'Best hyperparameters: {best_params}')
-
-# Train final model with the best hyperparameters
-hidden_size = best_params['hidden_size']
-learning_rate = best_params['learning_rate']
-batch_size = best_params['batch_size']
+hidden_size = 1024
+learning_rate = 1e-5
+batch_size = 64
+patience = 5
+weight_decay = 1e-3
+num_epochs = 200
 
 train_dataloader = DataLoader(EmbeddingDataset(train_dataset, train_labels), batch_size=batch_size, shuffle=True)
 val_dataloader = DataLoader(EmbeddingDataset(val_dataset, val_labels), batch_size=batch_size, shuffle=False)
@@ -142,13 +92,17 @@ num_classes = 2
 model = MLP(input_size, hidden_size, num_classes)
 model = model.to(device)
 
+model = MLP(input_size, hidden_size, num_classes)
+model.apply(init_weights)
+model = model.to(device)
+
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=2, factor=0.5)
 
-num_epochs = 15
-
-best_val_loss = float('inf')
+best_f1_score = 0
 best_model_path = 'fine_tuned_models/best_mlp_model.pth'
+early_stopping_counter = 0
 
 for epoch in range(num_epochs):
     model.train()
@@ -168,28 +122,52 @@ for epoch in range(num_epochs):
 
     model.eval()
     val_loss = 0
+    val_correct = 0
+    val_total = 0
+    val_preds = []
+    val_targets = []
     with torch.no_grad():
-        for embeddings, labels in val_dataloader:
-            embeddings = embeddings.to(device)
+        for batch in val_dataloader:
+            inputs, labels = batch
+            inputs = inputs.to(device)
             labels = labels.to(device)
-            outputs = model(embeddings)
+
+            outputs = model(inputs)
             loss = criterion(outputs, labels)
             val_loss += loss.item()
 
+            _, predicted = torch.max(outputs.data, 1)
+            val_total += labels.size(0)
+            val_correct += (predicted == labels).sum().item()
+
+            val_preds.extend(predicted.cpu().numpy())
+            val_targets.extend(labels.cpu().numpy())
+
     val_loss /= len(val_dataloader)
+    val_accuracy = val_correct / val_total
+    val_f1 = f1_score(val_targets, val_preds)
 
-    if val_loss < best_val_loss:
-        best_val_loss = val_loss
+    if val_f1 > best_f1_score:
+        best_f1_score = val_f1
         torch.save(model.state_dict(), best_model_path)
+        early_stopping_counter = 0
+    else:
+        early_stopping_counter += 1
 
-    print(f'Epoch [{epoch+1}/{num_epochs}], Train Loss: {total_loss / len(train_dataloader):.4f}, Val Loss: {val_loss:.4f}')
+    if early_stopping_counter >= patience:
+        print("Early stopping triggered")
+        break
+
+    scheduler.step(val_loss)
+
+    print(f'Epoch [{epoch+1}/{num_epochs}], Train Loss: {total_loss / len(train_dataloader):.4f}, Val Loss: {val_loss:.4f}, Val Accuracy: {val_accuracy:.4f}, Val F1 Score: {val_f1:.4f}')
 
 # Load the best model for evaluation
 model.load_state_dict(torch.load(best_model_path))
 model.eval()
 
-all_preds = []
-all_labels = []
+test_preds = []
+test_targets = []
 
 with torch.no_grad():
     for embeddings, labels in test_dataloader:
@@ -197,11 +175,14 @@ with torch.no_grad():
         labels = labels.to(device)
 
         outputs = model(embeddings)
-        _, preds = torch.max(outputs, 1)
-        all_preds.extend(preds.cpu().numpy())
-        all_labels.extend(labels.cpu().numpy())
 
-print(f'Accuracy: {accuracy_score(all_labels, all_preds):.4f}')
-print(f'ROC AUC: {roc_auc_score(all_labels, all_preds):.4f}')
+        _, predicted = torch.max(outputs.data, 1)
+
+        test_preds.extend(predicted.cpu().numpy())
+        test_targets.extend(labels.cpu().numpy())
+
+print(f'Accuracy: {accuracy_score(test_targets, test_preds):.4f}')
+print(f'ROC AUC: {roc_auc_score(test_targets, test_preds):.4f}')
 print('Confusion Matrix:')
-print(confusion_matrix(all_labels, all_preds))
+print(confusion_matrix(test_targets, test_preds))
+print('F1_score:', f1_score(test_targets, test_preds))

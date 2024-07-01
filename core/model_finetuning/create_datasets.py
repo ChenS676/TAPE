@@ -25,10 +25,8 @@ def get_word2vec_embeddings(model, text):
     else:
         return np.zeros(model.vector_size)
 
-def get_embeddings(text):
-    if embedding_model_type == "tfidf":
-        return embedding_model.encode(text)
-    elif embedding_model_type == "word2vec":
+def get_embeddings(text, embedding_model_name, embedding_model):
+    if embedding_model_name == "word2vec":
         return get_word2vec_embeddings(embedding_model, text)
     else:
         return embedding_model.encode(text)
@@ -44,7 +42,7 @@ class EmbeddingDataset(Dataset):
     def __getitem__(self, idx):
         return self.embeddings[idx], self.labels[idx]
     
-def process_edges(pos_edge_index, neg_edge_index, text):
+def process_edges(pos_edge_index, neg_edge_index, text, embedding_model, embedding_model_name):
     dataset = []
     labels = []
     # Process positive edges
@@ -53,8 +51,8 @@ def process_edges(pos_edge_index, neg_edge_index, text):
         node2 = pos_edge_index[1, i].item()
         text1 = text[node1]
         text2 = text[node2]
-        embedding_text1 = get_embeddings(text1)
-        embedding_text2 = get_embeddings(text2)
+        embedding_text1 = get_embeddings(text1, embedding_model_name, embedding_model)
+        embedding_text2 = get_embeddings(text2, embedding_model_name, embedding_model)
         combined_embedding = np.concatenate((embedding_text1, embedding_text2))
         dataset.append(combined_embedding)
         labels.append(1)
@@ -65,8 +63,8 @@ def process_edges(pos_edge_index, neg_edge_index, text):
         node2 = neg_edge_index[1, i].item()
         text1 = text[node1]
         text2 = text[node2]
-        embedding_text1 = get_embeddings(text1)
-        embedding_text2 = get_embeddings(text2)
+        embedding_text1 = get_embeddings(text1, embedding_model_name, embedding_model)
+        embedding_text2 = get_embeddings(text2, embedding_model_name, embedding_model)
         combined_embedding = np.concatenate((embedding_text1, embedding_text2))
         dataset.append(combined_embedding)
         labels.append(0)
@@ -98,7 +96,7 @@ def process_texts(pos_edge_index, neg_edge_index, text):
     
     return dataset, labels
 
-embedding_model_name = "tfidf"
+embedding_model_name = "word2vec"
 
 
 FILE_PATH = f'{get_git_repo_root_path()}/'
@@ -205,6 +203,7 @@ val_dataset = torch.tensor(val_dataset, dtype=torch.float32)
 val_labels = torch.tensor(val_labels, dtype=torch.long)
 test_dataset = torch.tensor(test_dataset, dtype=torch.float32)
 test_labels = torch.tensor(test_labels, dtype=torch.long)
+
 
 # Save datasets
 torch.save(train_dataset, f'./data/{embedding_model_name}_train_dataset.pt')
