@@ -14,8 +14,8 @@ from ogb.linkproppred import PygLinkPropPredDataset, Evaluator
 from heuristic.eval import get_metric_score
 from data_utils.load import data_loader_nc
 from embedding.tune_utils import parse_args, param_tune_acc_mrr 
-from utils import get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel, set_cfg
-from lpda.adjacency import plot_coo_matrix, construct_sparse_adj
+from core.graphgps.utility.utils import get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel, set_cfg
+from core.graphgps.visualization.adj import construct_sparse_adj, plot_coo_matrix, plot_pos_neg_adj
 
 method = 'nonlinear_mlp'
     

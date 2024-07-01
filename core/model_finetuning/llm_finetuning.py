@@ -1,9 +1,12 @@
 import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from utils import set_cfg, parse_args, get_git_repo_root_path, Logger, custom_set_out_dir \
-    , custom_set_run_dir, set_printing, run_loop_settings, create_optimizer, config_device, \
-        init_model_from_pretrained, create_logger, use_pretrained_llm_embeddings
+from graphgps.utility.utils import (
+    set_cfg, parse_args, get_git_repo_root_path, Logger, custom_set_out_dir,
+    custom_set_run_dir, set_printing, run_loop_settings, create_optimizer,
+    config_device, init_model_from_pretrained, create_logger, use_pretrained_llm_embeddings
+)
+
 from torch_geometric.graphgym.config import (dump_cfg, 
                                              makedirs_rm_exist)
 from sklearn.metrics import *

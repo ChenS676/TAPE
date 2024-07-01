@@ -11,10 +11,9 @@ import json
 from torch_geometric.transforms import RandomLinkSplit
 import pandas as pd
 from torch_geometric.data import Data, InMemoryDataset
-from lpda.adjacency import plot_coo_matrix
 from data_utils.load_data_lp import get_raw_text_pubmed, get_pubmed_lp
 import matplotlib.pyplot as plt
-from lpda.adjacency import construct_sparse_adj
+from core.graphgps.visualization.adj import construct_sparse_adj, plot_coo_matrix, plot_pos_neg_adj
 import scipy.sparse as ssp
 
 from heuristic.lsf import CN, AA, RA, InverseRA
@@ -24,7 +23,7 @@ from torch_geometric.data import Dataset
 import torch
 from ogb.linkproppred import PygLinkPropPredDataset, Evaluator
 from heuristic.eval import evaluate_auc, evaluate_hits, evaluate_mrr, get_metric_score, get_prediction
-from utils import get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel
+from core.graphgps.utility.utils import get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel
 from textfeat.mlp_dot_product import pairwise_prediction
 
 

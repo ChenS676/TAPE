@@ -155,6 +155,7 @@ def shortest_path(A, edge_index, remove=False):
     print(f'evaluated shortest path for {len(scores)} edges')
     return torch.FloatTensor(scores)
 
+
 def katz_apro(A, edge_index, beta=0.005, path_len=3, remove=False):
 
     scores = []

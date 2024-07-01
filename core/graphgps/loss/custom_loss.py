@@ -2,20 +2,7 @@ import torch
 from torch import nn
 import torch_geometric
 from torch import sigmoid
-
-
-class InnerProductDecoder(torch.nn.Module):
-    """解码器，用向量内积表示重建的图结构"""
-    
-    def forward(self, z, edge_index, sigmoid=True):
-        """
-        参数说明：
-        z: 节点表示
-        edge_index: 边索引，也就是节点对
-        """
-        value = (z[edge_index[0]] * z[edge_index[1]]).sum(dim=1)
-        return torch.sigmoid(value) if sigmoid else value
-
+from torch_geometric.nn import InnerProductDecoder
 
 class RecLoss(nn.Module):
     def __init__(self, decoder=InnerProductDecoder(), acf='sigmoid'):

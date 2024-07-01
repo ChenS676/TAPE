@@ -16,7 +16,7 @@ from yacs.config import CfgNode as CN
 from heuristic.eval import get_metric_score
 from data_utils.load import load_data_lp as data_loader
 from lpda.adjacency import plot_coo_matrix, construct_sparse_adj
-from utils import (
+from core.graphgps.utility.utils import (
     get_git_repo_root_path,
     append_acc_to_excel,
     append_mrr_to_excel

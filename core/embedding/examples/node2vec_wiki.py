@@ -10,7 +10,7 @@ from sklearn.manifold import TSNE
 from IPython import embed
 import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from core.Embedding.tune_utils import get_git_repo_root_path
+from core.graphgps.utility.utils import get_git_repo_root_path
 from ge.classify import read_node_label, Classifier
 from ge import Node2Vec
 

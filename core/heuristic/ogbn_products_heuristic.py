@@ -9,13 +9,13 @@ from data_utils.dataset import CustomPygDataset, CustomLinkDataset
 from heuristic.lsf import CN, AA, RA, InverseRA
 from heuristic.gsf import Ben_PPR, shortest_path, katz_apro, katz_close , SymPPR
 import matplotlib.pyplot as plt
-from lpda.adjacency import construct_sparse_adj
+from core.graphgps.visualization.adj import construct_sparse_adj, plot_coo_matrix, plot_pos_neg_adj
 import scipy.sparse as ssp
-from lpda.adjacency import plot_coo_matrix, plot_pos_neg_adj
+
 from ogb.linkproppred import PygLinkPropPredDataset, Evaluator
 from eval import evaluate_auc, evaluate_hits, evaluate_mrr, get_metric_score, get_prediction
 FILE_PATH = get_git_repo_root_path() + '/'
-from utils import get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel
+from core.graphgps.utility.utils import get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel
 
 
 def get_raw_text_products(use_text=False, seed=0,

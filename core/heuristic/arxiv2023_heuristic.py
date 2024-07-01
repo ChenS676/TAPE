@@ -11,10 +11,9 @@ from heuristic.lsf import CN, AA, RA, InverseRA
 from heuristic.gsf import Ben_PPR, shortest_path, katz_apro, katz_close , SymPPR
 from data_utils.load_data_lp import get_raw_text_pubmed, get_pubmed_lp
 import matplotlib.pyplot as plt
-from lpda.adjacency import construct_sparse_adj
+from core.graphgps.visualization.adj import construct_sparse_adj, plot_coo_matrix
 import scipy.sparse as ssp
-from lpda.adjacency import plot_coo_matrix
-from utils import get_git_repo_root_path
+from core.graphgps.utility.utils import get_git_repo_root_path
 from typing import Dict
 FILE_PATH = get_git_repo_root_path() + '/'
 
@@ -22,7 +21,7 @@ FILE_PATH = get_git_repo_root_path() + '/'
 import torch
 from ogb.linkproppred import PygLinkPropPredDataset, Evaluator
 from heuristic.eval import evaluate_auc, evaluate_hits, evaluate_mrr, get_metric_score, get_prediction
-from utils import get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel
+from core.graphgps.utility.utils import get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel
 from textfeat.mlp_dot_product import pairwise_prediction
 from data_utils.load_data_lp import get_raw_text_arxiv_2023_lp
 

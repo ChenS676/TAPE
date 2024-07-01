@@ -10,9 +10,35 @@
 			"request": "launch",
 			"program": "${file}",
 			"console": "integratedTerminal",
-			"justMyCode": false,
+			"justMyCode": true,
 			// "args": ["--cfg", "core/configs/arxiv_2023/struc2vec.yaml", "--sweep", "core/configs/arxiv_2023/struc2vec_sp1.yaml"],
-			// "args": ["--cfg", "core/configs/pubmed/node_sim.yaml"],
+			// "args": [
+			// 	"--data",
+			// 	"cora",
+			// 	"--device",
+			// 	"cpu"
+			// ],
+		}
+	],
+	"configurations": [
+		{
+			"name": "Python Debugger: Current File with Arguments",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "${file}",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"python.tensorboard.logDirectory": "/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/core/gcns/runs", 
+			"args": [
+				// "--data",
+				// "cora",
+				// "--device",
+				// "cpu",
+				// "--epochs",
+				// "100",
+				"--embedder",
+				"tfidf"
+			],
 		}
 	]
 }

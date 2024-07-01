@@ -6,8 +6,7 @@ import numpy as np
 import scipy.sparse as ssp
 import torch
 import matplotlib.pyplot as plt
-from lpda.adjacency import plot_coo_matrix, construct_sparse_adj
-from embedding.tune_utils import get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel
+from graphgps.visualization.adj import plot_coo_matrix, construct_sparse_adj
 from ogb.linkproppred import Evaluator
 from heuristic.eval import get_metric_score
 from embedding.ge.models import Node2Vec
@@ -17,6 +16,8 @@ from torch_geometric.graphgym.cmd_args import parse_args
 from torch_geometric.graphgym.config import (cfg)
 from embedding.node2vec_tagplus import node2vec
 from data_utils.load import load_data_lp as data_loader
+
+from core.graphgps.utility.utils import get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel
 
 FILE_PATH = get_git_repo_root_path() + '/'
 

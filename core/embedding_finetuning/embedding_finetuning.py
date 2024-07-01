@@ -2,7 +2,9 @@ import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from data_utils.load import load_data_lp
-from utils import set_cfg, parse_args, get_git_repo_root_path
+from graphgps.utility.utils  import set_cfg, parse_args, get_git_repo_root_path
+
+# from utils import set_cfg, parse_args, get_git_repo_root_path
 from sentence_transformers import SentenceTransformer
 from typing import List
 import torch
@@ -19,6 +21,7 @@ from sentence_transformers import InputExample
 from torch.utils.data import DataLoader
 from sentence_transformers import losses
 import torch.nn as nn
+from graphgps.utility.utils import Logger, save_emb, get_root_dir, get_logger, config_device
 
 FILE_PATH = f'{get_git_repo_root_path()}/'
 
@@ -27,7 +30,8 @@ args = parse_args()
 cfg = set_cfg(FILE_PATH, args.cfg_file)
 cfg.merge_from_list(args.opts)
 
-splits, text = load_data_lp[cfg.data.name](cfg.data)
+cfg = config_device(cfg)
+splits, text, _ = load_data_lp[cfg.data.name](cfg.data)
 
 
 dataset = []
@@ -62,3 +66,4 @@ model.to(device)
 model.fit(train_objectives=[(train_dataloader, train_loss)], epochs=1) 
 model_save_path = "./models/"
 model.save(model_save_path)
+

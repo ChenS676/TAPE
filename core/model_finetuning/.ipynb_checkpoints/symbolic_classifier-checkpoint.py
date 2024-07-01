@@ -53,7 +53,7 @@ print(f'Best hyperparameters: {best_params}')
 
 # Train the final model with the best hyperparameters
 best_rf = RandomForestClassifier(**best_params)"""
-best_rf = RandomForestClassifier(n_estimators=500)
+best_rf = RandomForestClassifier()
 best_rf.fit(X_train, y_train)
 
 # Evaluate on the test set
@@ -65,5 +65,3 @@ print(f'Accuracy: {accuracy_score(test_labels, y_pred):.4f}')
 print(f'ROC AUC: {roc_auc_score(test_labels, y_pred_proba):.4f}')
 print('Confusion Matrix:')
 print(confusion_matrix(test_labels, y_pred))
-
-# Gradient Boosting Classifier

@@ -1,3 +1,8 @@
+import os
+import sys
+# Add parent directory to sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 
 import torch 
 from torch_geometric.nn import GCNConv, SAGEConv, GINConv, GATConv
@@ -7,12 +12,21 @@ import math
 from torch.nn import (ModuleList, Linear, Conv1d, MaxPool1d, Embedding)
 from torch.nn import BatchNorm1d as BN
 from torch_geometric.nn import global_sort_pool
+from torch_geometric.utils import negative_sampling
+from torch.nn import Module
+from yacs.config import CfgNode as CN
 
 
-class GCN(torch.nn.Module):
-    def __init__(self, in_channels, hidden_channels, out_channels, num_layers,
-                 dropout, data_name=None):
-        super(GCN, self).__init__()
+
+class GCN_Variant(torch.nn.Module):
+    def __init__(self, 
+                 in_channels, 
+                 hidden_channels, 
+                 out_channels, 
+                 num_layers,
+                 dropout, 
+                 data_name=None):
+        super(GCN_Variant, self).__init__()
 
         self.convs = torch.nn.ModuleList()
 
@@ -64,33 +78,40 @@ class GCN(torch.nn.Module):
         return x
 
 
-class GAT(torch.nn.Module):
-    def __init__(self, in_channels, hidden_channels, out_channels, num_layers,
-                 dropout, mlp_layer=None,  head=None, node_num=None,  cat_node_feat_mf=False, data_name=None):
-        super(GAT, self).__init__()
+class GAT_Variant(torch.nn.Module):
+    def __init__(self, 
+                 in_channels, 
+                 hidden_channels, 
+                 out_channels, 
+                 num_layers,
+                 dropout, 
+                 head=None, 
+                 data_name=None):
+        super(GAT_Variant, self).__init__()
 
-        self.convs = torch.nn.ModuleList()
+        
         self.hidden_channels = hidden_channels
         self.out_channels = out_channels
-
-        if num_layers == 1:
-            out_channels = int(self.out_channels/head)
-            self.convs.append(GATConv(in_channels, out_channels, heads=head))
-
-        elif num_layers > 1:
-            hidden_channels= int(self.hidden_channels/head)
-            self.convs.append(GATConv(in_channels, hidden_channels, heads=head))
-            
-            for _ in range(num_layers - 2):
-                hidden_channels =  int(self.hidden_channels/head)
-                self.convs.append(
-                    GATConv(hidden_channels, hidden_channels, heads=head))
-            
-            out_channels = int(self.out_channels/head)
-            self.convs.append(GATConv(hidden_channels, out_channels, heads=head))
-
+        self.num_layers = num_layers
+        self.head = head 
+        self.in_channels = in_channels
         self.dropout = dropout
-        # self.p = args
+        
+        self.convs = torch.nn.ModuleList()
+        if self.num_layers == 1:
+            out_channels = int(self.out_channels/self.head)
+            self.convs.append(GATConv(self.in_channels, out_channels, heads=self.head))
+
+        else:
+            hidden_channels= int(self.hidden_channels/self.head)
+            self.convs.append(GATConv(self.in_channels, hidden_channels, heads=self.head))
+            
+            for _ in range(self.num_layers - 2):
+                self.convs.append(
+                    GATConv(self.hidden_channels, hidden_channels, heads=self.head))
+                
+            out_channels = int(self.out_channels/head)
+            self.convs.append(GATConv(self.hidden_channels, out_channels, heads=self.head))
        
         self.invest = 1
 
@@ -104,7 +125,10 @@ class GAT(torch.nn.Module):
         if self.invest == 1:
             print('layers in gat: ', len(self.convs))
             self.invest = 0
-            
+        
+        # x.shape = 2708, 1433
+        # conv1 1433, 64, heads 4
+        # x1 2708 256
         for conv in self.convs[:-1]:
             x = conv(x, adj_t)
             x = F.relu(x)
@@ -114,10 +138,14 @@ class GAT(torch.nn.Module):
         return x
 
 
-class SAGE(torch.nn.Module):
-    def __init__(self, in_channels, hidden_channels, out_channels, num_layers,
+class SAGE_Variant(torch.nn.Module):
+    def __init__(self, 
+                 in_channels, 
+                 hidden_channels, 
+                 out_channels, 
+                 num_layers,
                  dropout,  mlp_layer=None,  head=None, node_num=None,  cat_node_feat_mf=False,  data_name=None):
-        super(SAGE, self).__init__()
+        super(SAGE_Variant, self).__init__()
 
         self.convs = torch.nn.ModuleList()
 
@@ -152,7 +180,7 @@ class SAGE(torch.nn.Module):
 
 class mlp_model(torch.nn.Module):
     def __init__(self, in_channels, hidden_channels, out_channels, num_layers,
-                 dropout,  mlp_layer=None,  head=None, node_num=None,  cat_node_feat_mf=False,  data_name=None):
+                 dropout,  data_name=None):
         super(mlp_model, self).__init__()
 
         self.lins = torch.nn.ModuleList()
@@ -186,13 +214,18 @@ class mlp_model(torch.nn.Module):
 
         x = self.lins[-1](x)
 
-        return x
+        return x.squeeze()
 
 
-class GIN(torch.nn.Module):
-    def __init__(self, in_channels, hidden_channels, out_channels, num_layers,
-                 dropout,  mlp_layer=None,  head=None, node_num=None,  cat_node_feat_mf=False,  data_name=None):
-        super(GIN, self).__init__()
+class GIN_Variant(torch.nn.Module):
+    def __init__(self, 
+                 in_channels, 
+                 hidden_channels, 
+                 out_channels, 
+                 num_layers,
+                 dropout,  
+                 mlp_layer=None,  data_name=None):
+        super(GIN_Variant, self).__init__()
 
         # self.mlp1= mlp_model( in_channels, hidden_channels, hidden_channels, gin_mlp_layer, dropout)
         # self.mlp2 = mlp_model( hidden_channels, hidden_channels, out_channels, gin_mlp_layer, dropout)
@@ -241,79 +274,6 @@ class GIN(torch.nn.Module):
         return x
 
 
-class MF(torch.nn.Module):
-    def __init__(self, in_channels, hidden_channels, out_channels, num_layers,
-                 dropout,  mlp_layer=None,  head=None, node_num=None, cat_node_feat_mf=False,  data_name=None):
-        super(MF, self).__init__()
-
-        self.lins = torch.nn.ModuleList()
-        self.data = data_name
-        if num_layers == 0:
-            out_mf = out_channels
-            if self.data=='ogbl-citation2':
-                out_mf = 96
-
-            self.emb =  torch.nn.Embedding(node_num, out_mf)
-        else:
-            self.emb =  torch.nn.Embedding(node_num, in_channels)
-
-        if cat_node_feat_mf:
-            in_channels = in_channels*2
-    
-
-        if num_layers == 1:
-            self.lins.append(torch.nn.Linear(in_channels, hidden_channels))
-        else:
-            self.lins.append(torch.nn.Linear(in_channels, hidden_channels))
-            for _ in range(num_layers - 2):
-                self.lins.append(torch.nn.Linear(hidden_channels, hidden_channels))
-
-            self.lins.append(torch.nn.Linear(hidden_channels, out_channels))
-
-        self.dropout = dropout
-        self.invest = 1
-        self.num_layers = num_layers
-        self.cat_node_feat_mf = cat_node_feat_mf
-
-    def reset_parameters(self):
-        for lin in self.lins:
-            lin.reset_parameters()
-            
-        if self.data == 'ogbl-citation2':
-            print('!!!! citaion2 !!!!!')
-            torch.nn.init.normal_(self.emb.weight, std = 0.2)
-
-        else: 
-            self.emb.reset_parameters()
-
-
-
-    def forward(self, x=None, adj_t=None):
-        if self.invest == 1:
-            print('layers in mlp: ', len(self.lins))
-            self.invest = 0
-        if self.cat_node_feat_mf and x != None:
-            # print('xxxxxxx')
-            x = torch.cat((x, self.emb.weight), dim=-1)
-
-        else:
-            x =  self.emb.weight
-
-
-        if self.num_layers == 0:
-            return self.emb.weight
-        
-        else:
-            for lin in self.lins[:-1]:
-                x = lin(x)
-                x = F.relu(x)
-                x = F.dropout(x, p=self.dropout, training=self.training)
-
-            x = self.lins[-1](x)
-
-            return x
-
-
 class DGCNN(torch.nn.Module):
     def __init__(self, hidden_channels, num_layers, max_z, k=0.6, train_dataset=None, 
                  dynamic_train=False, GNN=GCNConv, use_feature=False, 
@@ -327,15 +287,13 @@ class DGCNN(torch.nn.Module):
             if train_dataset is None:
                 k = 30
             else:
-                if dynamic_train:
-                    sampled_train = train_dataset[:1000]
-                else:
-                    sampled_train = train_dataset
+                sampled_train = train_dataset[:1000] if dynamic_train else train_dataset
                 num_nodes = sorted([g.num_nodes for g in sampled_train])
                 k = num_nodes[int(math.ceil(k * len(num_nodes))) - 1]
                 k = max(10, k)
         self.k = int(k)
-
+        
+        # embedding for DRNL?
         self.max_z = max_z
         self.z_embedding = Embedding(self.max_z, hidden_channels)
 
@@ -354,17 +312,16 @@ class DGCNN(torch.nn.Module):
         conv1d_channels = [16, 32]
         total_latent_dim = hidden_channels * num_layers + 1
         conv1d_kws = [total_latent_dim, 5]
-        self.conv1 = Conv1d(1, conv1d_channels[0], conv1d_kws[0],
-                            conv1d_kws[0])
+        self.conv1 = Conv1d(1                 , conv1d_channels[0], conv1d_kws[0], conv1d_kws[0])
         self.maxpool1d = MaxPool1d(2, 2)
-        self.conv2 = Conv1d(conv1d_channels[0], conv1d_channels[1],
-                            conv1d_kws[1], 1)
+        self.conv2 = Conv1d(conv1d_channels[0], conv1d_channels[1], conv1d_kws[1], 1)
         dense_dim = int((self.k - 2) / 2 + 1)
         dense_dim = (dense_dim - conv1d_kws[1] + 1) * conv1d_channels[1]
         self.lin1 = Linear(dense_dim, 128)
         self.lin2 = Linear(128, 1)
 
     def forward(self, z, edge_index, batch, x=None, edge_weight=None, node_id=None):
+        # batch is the batch idx for each data samples
         z_emb = self.z_embedding(z)
         if z_emb.ndim == 3:  # in case z has multiple integer labels
             z_emb = z_emb.sum(dim=1)
@@ -388,41 +345,50 @@ class DGCNN(torch.nn.Module):
         x = self.maxpool1d(x)
         x = F.relu(self.conv2(x))
         x = x.view(x.size(0), -1)  # [num_graphs, dense_dim]
-        emb = x
 
         # MLP.
         x = F.relu(self.lin1(x))
         x = F.dropout(x, p=0.5, training=self.training)
         x = self.lin2(x)
         return x
+   
 
+class GAE_forall(torch.nn.Module):
+    """graph auto encoder。
+    """
+    def __init__(self, 
+                 encoder: Module, 
+                 decoder: Module):
+        super().__init__()
+        self.encoder = encoder
+        self.decoder = decoder
 
-class mlp_score(torch.nn.Module):
-    def __init__(self, in_channels, hidden_channels, out_channels, num_layers,
-                 dropout):
-        super(mlp_score, self).__init__()
+    def encode(self, *args, **kwargs):
+        return self.encoder(*args, **kwargs)
 
-        self.lins = torch.nn.ModuleList()
-        if num_layers == 1: 
-            self.lins.append(torch.nn.Linear(in_channels, out_channels))
-        else:
-            self.lins.append(torch.nn.Linear(in_channels, hidden_channels))
-            for _ in range(num_layers - 2):
-                self.lins.append(torch.nn.Linear(hidden_channels, hidden_channels))
-            self.lins.append(torch.nn.Linear(hidden_channels, out_channels))
+    def decode(self, *args, **kwargs):
+        return self.decoder(*args, **kwargs)
+    
+    def recon_loss(self, z, pos_edge_index, neg_edge_index=None):
+        """In this script we use the binary cross entropy loss function.
 
-        self.dropout = dropout
+        params
+        ----
+        z: output of encoder
+        pos_edge_index: positive edge index
+        neg_edge_index: negative edge index
+        """
+        EPS = 1e-15 
 
-    def reset_parameters(self):
-        for lin in self.lins:
-            lin.reset_parameters()
+        pos_logits = self.decoder(z[pos_edge_index[0]], z[pos_edge_index[1]])
+        pos_loss = -torch.log(
+            pos_logits + EPS).mean() # loss for positive samples
 
-    def forward(self, x_i, x_j):
-        x = x_i * x_j
+        if neg_edge_index is None:
+            neg_edge_index = negative_sampling(pos_edge_index, z.size(0)) # negative sampling
+        neg_logits = self.decoder(z[neg_edge_index[0]], z[neg_edge_index[1]])
+        neg_loss = -torch.log(
+            1 - neg_logits + EPS).mean() # loss for negative samples
 
-        for lin in self.lins[:-1]:
-            x = lin(x)
-            x = F.relu(x)
-            x = F.dropout(x, p=self.dropout, training=self.training)
-        x = self.lins[-1](x)
-        return torch.sigmoid(x)
+        return pos_loss + neg_loss
+

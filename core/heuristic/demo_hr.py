@@ -24,7 +24,7 @@ from torch_geometric.utils import to_networkx, to_undirected
 
 from ogb.linkproppred import PygLinkPropPredDataset, Evaluator
 
-from utils import get_root_dir
+from core.graphgps.utility.utils import get_root_dir
 
 from core.heuristic.eval import evaluate_hits, evaluate_mrr, evaluate_auc
 from gsf import *

@@ -1,6 +1,24 @@
 import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix
+import torch
+from torch.utils.data import DataLoader, Dataset
+from sentence_transformers import SentenceTransformer
+import torch.nn as nn
+from tqdm import tqdm
+import torch.optim as optim
+import numpy as np
+from ogb.linkproppred import PygLinkPropPredDataset, Evaluator
+# Assuming other necessary imports from your script
+from graphgps.utility.utils import (
+    set_cfg, parse_args, get_git_repo_root_path, Logger, custom_set_out_dir,
+    custom_set_run_dir, set_printing, run_loop_settings, create_optimizer,
+    config_device, init_model_from_pretrained, create_logger, use_pretrained_llm_embeddings
+)
+import os, sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, f1_score
 import torch
 from torch.utils.data import DataLoader, Dataset
@@ -9,13 +27,8 @@ import torch.nn as nn
 from tqdm import tqdm
 import torch.optim as optim
 import numpy as np
+from heuristic.eval import get_metric_score
 
-# Assuming other necessary imports from your script
-from utils import set_cfg, parse_args, get_git_repo_root_path, Logger, custom_set_out_dir, custom_set_run_dir, set_printing, run_loop_settings, create_optimizer, config_device, init_model_from_pretrained, create_logger, use_pretrained_llm_embeddings
-from torch_geometric.graphgym.config import dump_cfg, makedirs_rm_exist
-from data_utils.load import load_data_nc, load_data_lp
-import optuna
-import torch.nn.functional as F
 
 class EmbeddingDataset(Dataset):
     def __init__(self, embeddings, labels):
@@ -29,20 +42,18 @@ class EmbeddingDataset(Dataset):
         return self.embeddings[idx], self.labels[idx]
     
 class MLP(nn.Module):
-    def __init__(self, input_size, hidden_size):
+    def __init__(self, input_size, hidden_size, num_classes):
         super(MLP, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.fc2 = nn.Linear(hidden_size, hidden_size)
-        self.fc3 = nn.Linear(hidden_size, 1)
+        self.fc3 = nn.Linear(hidden_size, num_classes)
         self.relu = nn.ReLU()
-        self.dropout = nn.Dropout(p=0.7)
+        self.dropout = nn.Dropout(p=0.2)
         self.bn1 = nn.BatchNorm1d(hidden_size)
         self.bn2 = nn.BatchNorm1d(hidden_size)
-        self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        out = F.normalize(x, p=2, dim=-1)
-        out = self.fc1(out)
+        out = self.fc1(x)
         out = self.bn1(out)
         out = self.relu(out)
         out = self.dropout(out)
@@ -51,7 +62,6 @@ class MLP(nn.Module):
         out = self.relu(out)
         out = self.dropout(out)
         out = self.fc3(out)
-        out = self.sigmoid(out)
         return out
 
 def init_weights(m):
@@ -72,49 +82,67 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 # Convert to tensors
-train_dataset = torch.load(f'./data/{embedding_model_name}_train_dataset.pt')
-train_labels = torch.load(f'./data/{embedding_model_name}_train_labels.pt')
-val_dataset = torch.load(f'./data/{embedding_model_name}_val_dataset.pt')
-val_labels = torch.load(f'./data/{embedding_model_name}_val_labels.pt')
-test_dataset = torch.load(f'./data/{embedding_model_name}_test_dataset.pt')
-test_labels = torch.load(f'./data/{embedding_model_name}_test_labels.pt')
+train_dataset = torch.load(f'./generated_dataset/{embedding_model_name}_train_dataset.pt')
+train_labels = torch.load(f'./generated_dataset/{embedding_model_name}_train_labels.pt')
+val_dataset = torch.load(f'./generated_dataset/{embedding_model_name}_val_dataset.pt')
+val_labels = torch.load(f'./generated_dataset/{embedding_model_name}_val_labels.pt')
+test_dataset = torch.load(f'./generated_dataset/{embedding_model_name}_test_dataset.pt')
+test_labels = torch.load(f'./generated_dataset/{embedding_model_name}_test_labels.pt')
 
-hidden_size = 512
+from sklearn.linear_model import RidgeClassifier
+
+clf = RidgeClassifier(tol=1e-2, solver="sparse_cg")
+clf.fit(train_dataset, train_labels)
+pred = clf.predict(test_dataset)
+acc = sum(np.asarray(test_labels) == pred) / len(test_labels)    
+
+from sklearn.neural_network import MLPClassifier
+clf = MLPClassifier(random_state=1, max_iter=300).fit(train_dataset, train_labels)
+test_proba = clf.predict_proba(test_dataset)
+test_pred = clf.predict(test_dataset)
+acc = clf.score(test_dataset, test_labels)
+
+y_pos_pred, y_neg_pred = test_pred[test_labels == 1], test_pred[test_labels == 0]
+evaluator_hit = Evaluator(name='ogbl-collab')
+evaluator_mrr = Evaluator(name='ogbl-citation2')
+metrics = get_metric_score(evaluator_hit, evaluator_mrr, y_pos_pred, y_neg_pred)
+
+print(f'Accuracy: {acc:.4f}')
+print(f'metrics : {metrics}')
+
+exit(-1)
+hidden_size = 1024
 learning_rate = 1e-5
-batch_size = 1024
-patience = 25
+batch_size = 64
+patience = 5
 weight_decay = 1e-3
 num_epochs = 200
-steps_per_epoch = 100000
 
 train_dataloader = DataLoader(EmbeddingDataset(train_dataset, train_labels), batch_size=batch_size, shuffle=True)
 val_dataloader = DataLoader(EmbeddingDataset(val_dataset, val_labels), batch_size=batch_size, shuffle=False)
 test_dataloader = DataLoader(EmbeddingDataset(test_dataset, test_labels), batch_size=batch_size, shuffle=False)
 
 input_size = train_dataset.shape[1]
+num_classes = 2
 
-model = MLP(input_size, hidden_size)
+model = MLP(input_size, hidden_size, num_classes)
 model.apply(init_weights)
 model = model.to(device)
 
-print(model)
-
-criterion = nn.BCELoss()
+criterion = nn.CrossEntropyLoss()
 optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=2, factor=0.5)
 
 best_f1_score = 0
-best_model_path = 'fine_tuned_models/best_mlp_model.pth'
+best_model_path = 'best_mlp_model.pth'
 early_stopping_counter = 0
 
 for epoch in range(num_epochs):
     model.train()
     total_loss = 0
-    for step, (embeddings, labels) in enumerate(train_dataloader):
-        if step >= steps_per_epoch:
-            break
+    for embeddings, labels in train_dataloader:
         embeddings = embeddings.to(device)
-        labels = labels.to(device).float().unsqueeze(1)  # Make sure labels are floats and reshaped correctly
+        labels = labels.to(device)
 
         outputs = model(embeddings)
         loss = criterion(outputs, labels)
@@ -135,13 +163,13 @@ for epoch in range(num_epochs):
         for batch in val_dataloader:
             inputs, labels = batch
             inputs = inputs.to(device)
-            labels = labels.to(device).float().unsqueeze(1)  # Make sure labels are floats and reshaped correctly
+            labels = labels.to(device)
 
             outputs = model(inputs)
             loss = criterion(outputs, labels)
             val_loss += loss.item()
 
-            predicted = (outputs > 0.5).float()
+            _, predicted = torch.max(outputs.data, 1)
             val_total += labels.size(0)
             val_correct += (predicted == labels).sum().item()
 
@@ -177,11 +205,11 @@ test_targets = []
 with torch.no_grad():
     for embeddings, labels in test_dataloader:
         embeddings = embeddings.to(device)
-        labels = labels.to(device).float().unsqueeze(1)  # Make sure labels are floats and reshaped correctly
+        labels = labels.to(device)
 
         outputs = model(embeddings)
 
-        predicted = (outputs > 0.5).float()
+        _, predicted = torch.max(outputs.data, 1)
 
         test_preds.extend(predicted.cpu().numpy())
         test_targets.extend(labels.cpu().numpy())
@@ -191,17 +219,3 @@ print(f'ROC AUC: {roc_auc_score(test_targets, test_preds):.4f}')
 print('Confusion Matrix:')
 print(confusion_matrix(test_targets, test_preds))
 print('F1_score:', f1_score(test_targets, test_preds))
-
-# !!! tfidf einschränken !!!
-
-# Change to Sigmoid
-# Binary Cross Entropy
-
-# RMSProp
-# Batch size 512; 1024
-# Steps per epoch bspw. 1000; 2000... trainieren
-# Dropout 0.7, 0.5
-# Nicht embeddings concatinieren, sondern texte und dann embedden
-# Benchmark Modell: sentence encoder von einem abstract --> tfidf --> custom embedding layer --> LSTM
-
-# Random Forest --> Extract Feature --> Use those features for classification

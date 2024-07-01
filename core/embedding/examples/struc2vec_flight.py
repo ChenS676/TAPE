@@ -2,16 +2,16 @@ import os, sys
 sys.path.insert(0, '/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE/core')
 
 import numpy as np
-from Embedding.ge.classify import read_node_label, Classifier
-from Embedding.ge.models.struc2vec import Struc2Vec
+from embedding.ge.classify import read_node_label, Classifier
+from embedding.ge.models.struc2vec import Struc2Vec
 from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
 import networkx as nx
 from sklearn.manifold import TSNE
-from utils import (
+from core.graphgps.utility.utils import (
     get_git_repo_root_path
 )
-from Embedding.tune_utils import param_tune_acc_mrr
+from embedding.tune_utils import param_tune_acc_mrr
 import uuid 
 import wandb
 

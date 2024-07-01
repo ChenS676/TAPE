@@ -194,7 +194,7 @@ def get_metric_score(evaluator_hit, evaluator_mrr, pos_test_pred, neg_test_pred)
     result['mrr_hit20']  = (result_mrr_test['mrr_hit20'])
     result['mrr_hit50']  = (result_mrr_test['mrr_hit50'])
     result['mrr_hit100']  = (result_mrr_test['mrr_hit100'])
-
+    # print(result_mrr_test['mrr_hit100'])
     test_pred = torch.cat([pos_test_pred, neg_test_pred])
     test_true = torch.cat([torch.ones(pos_test_pred.size(0), dtype=int), 
                             torch.zeros(neg_test_pred.size(0), dtype=int)])

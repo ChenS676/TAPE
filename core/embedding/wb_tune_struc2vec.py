@@ -16,13 +16,13 @@ from yacs.config import CfgNode as CN
 from heuristic.eval import get_metric_score
 from data_utils.load import load_data_lp as data_loader
 
-from embedding.tune_utils import (
+from core.graphgps.utility.utils import (
     get_git_repo_root_path
 )
 
 from ge.models import Struc2Vec
 import wandb
-from embedding.tune_utils import (
+from core.embedding.tune_utils import (
     set_cfg,
     parse_args,
     load_sweep_config, 

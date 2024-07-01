@@ -8,7 +8,7 @@ from torch_geometric.transforms import RandomLinkSplit
 from data_utils.dataset import CustomLinkDataset
 
 import torch
-from utils import get_git_repo_root_path
+from core.graphgps.utility.utils import get_git_repo_root_path
 
 
 FILE_PATH = get_git_repo_root_path() + '/'

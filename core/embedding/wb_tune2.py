@@ -14,14 +14,14 @@ from torch_geometric.graphgym.config import cfg
 from embedding.node2vec_tagplus import node2vec, data_loader
 from yacs.config import CfgNode as CN
 from heuristic.eval import get_metric_score
-from utils import (
+from core.graphgps.utility.utils import (
     get_git_repo_root_path,
     append_acc_to_excel,
     append_mrr_to_excel,
 )
 import wandb 
 from ogb.linkproppred import Evaluator
-from embedding.tune_utils import (
+from core.embedding.tune_utils import (
     set_cfg,
     parse_args,
     load_sweep_config, 

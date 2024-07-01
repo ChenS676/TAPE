@@ -28,4 +28,14 @@ module load compiler/gnu/12
 
 
 # python custom_main.py --cfg core/yamls/cora/gcns/gae.yaml --sweep core/yamls/cora/gcns/gae_sp1.yaml
-python core/gcns/wb_tune.py --cfg core/yamls/cora/gcns/gae.yaml --sweep core/yamls/cora/gcns/gae_sp1.yaml
+# python core/gcns/wb_tune.py --cfg core/yamls/cora/gcns/gae.yaml --sweep core/yamls/cora/gcns/gae_sp1.yaml 
+python universal_tune_heart.py --device cuda:0 --data pubmed --model GraphSage --epochs 1000 > graphsage-pubmed-0-universal_tune_heart_output.txt
+python universal_tune_heart.py --device cuda:1 --data arxiv_2023 --model GraphSage --epochs 1000 > graphsage-arxiv_2023-1-universal_tune_heart_output.txt
+python universal_tune_heart.py --device cuda:2 --data arxiv_2023 --model GAT --epochs 1000 > gat-arxiv_2023-1-universal_tune_heart_output.txt
+python universal_tune_heart.py --device cuda:3 --data arxiv_2023 --model GAE --epochs 1000 > gae-arxiv_2023-1-universal_tune_heart_output.txt
+python universal_tune_heart.py --device cuda:3 --data arxiv_2023 --model VGAE --epochs 1000 > vgae-arxiv_2023-1-universal_tune_heart_output.txt
+
+
+echo "Running on data $data with device cuda:$device and model $model"
+python universal_tune_heart.py --device cuda:0 --data cora --model GAT --epochs 100 > gat-cora-0-universal_tune_heart_output.txt
+python universal_tune.py --device cuda:0 --data cora --model GAT --epochs 100 > gat-cora-0-universal_tune_heart_output.txt

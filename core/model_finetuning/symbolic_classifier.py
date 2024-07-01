@@ -10,7 +10,11 @@ from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix
 from sklearn.model_selection import train_test_split, GridSearchCV
 
 # Assuming other necessary imports from your script
-from utils import set_cfg, parse_args, get_git_repo_root_path, Logger, custom_set_out_dir, custom_set_run_dir, set_printing, run_loop_settings, create_optimizer, config_device, init_model_from_pretrained, create_logger, use_pretrained_llm_embeddings
+from graphgps.utility.utils import (
+    set_cfg, parse_args, get_git_repo_root_path, Logger, custom_set_out_dir,
+    custom_set_run_dir, set_printing, run_loop_settings, create_optimizer,
+    config_device, init_model_from_pretrained, create_logger, use_pretrained_llm_embeddings
+)
 from torch_geometric.graphgym.config import dump_cfg, makedirs_rm_exist
 from data_utils.load import load_data_nc, load_data_lp
 import optuna
@@ -21,12 +25,12 @@ from ogb.nodeproppred import Evaluator
 embedding_model_name = "tfidf"
 
 # Load datasets
-train_dataset = torch.load(f'./data/{embedding_model_name}_train_dataset.pt').numpy()
-train_labels = torch.load(f'./data/{embedding_model_name}_train_labels.pt').numpy()
-val_dataset = torch.load(f'./data/{embedding_model_name}_val_dataset.pt').numpy()
-val_labels = torch.load(f'./data/{embedding_model_name}_val_labels.pt').numpy()
-test_dataset = torch.load(f'./data/{embedding_model_name}_test_dataset.pt').numpy()
-test_labels = torch.load(f'./data/{embedding_model_name}_test_labels.pt').numpy()
+train_dataset = torch.load(f'./generated_dataset/{embedding_model_name}_train_dataset.pt').numpy()
+train_labels = torch.load(f'./generated_dataset/{embedding_model_name}_train_labels.pt').numpy()
+val_dataset = torch.load(f'./generated_dataset/{embedding_model_name}_val_dataset.pt').numpy()
+val_labels = torch.load(f'./generated_dataset/{embedding_model_name}_val_labels.pt').numpy()
+test_dataset = torch.load(f'./generated_dataset/{embedding_model_name}_test_dataset.pt').numpy()
+test_labels = torch.load(f'./generated_dataset/{embedding_model_name}_test_labels.pt').numpy()
 
 # Combine train and validation datasets for cross-validation
 X_train = np.concatenate((train_dataset, val_dataset), axis=0)
@@ -53,7 +57,7 @@ print(f'Best hyperparameters: {best_params}')
 
 # Train the final model with the best hyperparameters
 best_rf = RandomForestClassifier(**best_params)"""
-best_rf = RandomForestClassifier(n_estimators=500)
+best_rf = RandomForestClassifier()
 best_rf.fit(X_train, y_train)
 
 # Evaluate on the test set
@@ -65,5 +69,3 @@ print(f'Accuracy: {accuracy_score(test_labels, y_pred):.4f}')
 print(f'ROC AUC: {roc_auc_score(test_labels, y_pred_proba):.4f}')
 print('Confusion Matrix:')
 print(confusion_matrix(test_labels, y_pred))
-
-# Gradient Boosting Classifier

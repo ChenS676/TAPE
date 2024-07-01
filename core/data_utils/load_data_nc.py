@@ -10,10 +10,10 @@ import json
 from ogb.nodeproppred import PygNodePropPredDataset
 import torch_geometric.transforms as T
 from sklearn.preprocessing import normalize
-from torch_geometric.data import InMemoryDataset, Dataset, Data
+from torch_geometric.data import Data
 from torch_geometric.datasets import Planetoid
 from torch_geometric.transforms import RandomLinkSplit
-from utils import get_git_repo_root_path, time_logger
+from graphgps.utility.utils import get_git_repo_root_path # type: ignore
 from typing import Tuple, List, Dict, Set, Any 
 
 FILE = 'core/dataset/ogbn_products_orig/ogbn-products.csv'
@@ -72,7 +72,8 @@ def load_text_arxiv23() -> List[str]:
 
 def load_tag_arxiv23() -> Tuple[Data, List[str]]:
     graph = load_graph_arxiv23()
-    text = load_text_arxiv23()
+    # text = load_text_arxiv23()
+    text = None
     train_id, val_id, test_id, train_mask, val_mask, test_mask = get_node_mask(graph.num_nodes)
     graph.train_id = train_id
     graph.val_id = val_id
@@ -145,8 +146,9 @@ def load_graph_cora(use_mask) -> Data:
 
 
 def load_tag_cora()  -> Tuple[Data, List[str]]:
-    data, data_citeid = load_graph_cora()
-    text = load_text_cora(data_citeid)
+    data, data_citeid = load_graph_cora(use_mask=False) # nc True, lp False
+    # text = load_text_cora(data_citeid)
+    text = None
     return data, text
 
 
@@ -387,7 +389,7 @@ def load_graph_ogbn_arxiv(use_mask):
     else:
         edge_index = data.adj_t.to_symmetric()
         
-    x = torch.tensor(data.x).float()
+    x = torch.tensor(data.x).float()  
     edge_index = torch.LongTensor(edge_index.to_torch_sparse_coo_tensor().coalesce().indices()).long()
     num_nodes = data.num_nodes
     
