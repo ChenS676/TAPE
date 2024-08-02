@@ -1,6 +1,7 @@
+accelerator: auto
 cfg_dest: gae.yaml
 data:
-  device: 0
+  device: 1
   include_negatives: true
   name: cora
   num_features: 1433
@@ -21,12 +22,13 @@ llm:
   model_type: shallow_embedding
 metric_best: acc
 model:
-  in_channels: 1433
+  hidden_channels: 32
+  in_channels: None
   out_channels: 32
   type: GAE
 num_threads: 11
 optimizer:
-  base_lr: 0.01
+  base_lr: 0.001
   type: adam
   weight_decay: 0.0005
 out_dir: results/gae-gae-cora-origin
@@ -35,11 +37,18 @@ run:
   multiple_splits: None
   num_threads: 11
   seed: 0
+sampler:
+  base_lr: 0.01
+  batch_size: 2048
+  num_steps: 30
+  sample_coverage: 100
+  walk_length: 20
+  weight_decay: 0.0005
 seed: 0
 train:
   auto_resume: false
-  batch_size: 1024
-  device: 0
+  batch_size: 2048
+  device: 1
   epochs: 10000
   eval_period: 1
   final_eval: false

@@ -28,6 +28,7 @@ from tqdm import tqdm
 import torch.optim as optim
 import numpy as np
 from heuristic.eval import get_metric_score
+import torch.nn.functional as F
 
 
 class EmbeddingDataset(Dataset):
@@ -47,13 +48,15 @@ class MLP(nn.Module):
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.fc2 = nn.Linear(hidden_size, hidden_size)
         self.fc3 = nn.Linear(hidden_size, num_classes)
+        self.softmax = nn.Softmax(dim=1)
         self.relu = nn.ReLU()
         self.dropout = nn.Dropout(p=0.2)
         self.bn1 = nn.BatchNorm1d(hidden_size)
         self.bn2 = nn.BatchNorm1d(hidden_size)
 
     def forward(self, x):
-        out = self.fc1(x)
+        out = F.normalize(x)
+        out = self.fc1(out)
         out = self.bn1(out)
         out = self.relu(out)
         out = self.dropout(out)
@@ -62,6 +65,7 @@ class MLP(nn.Module):
         out = self.relu(out)
         out = self.dropout(out)
         out = self.fc3(out)
+        out = self.softmax(out)
         return out
 
 def init_weights(m):
@@ -89,28 +93,8 @@ val_labels = torch.load(f'./generated_dataset/{embedding_model_name}_val_labels.
 test_dataset = torch.load(f'./generated_dataset/{embedding_model_name}_test_dataset.pt')
 test_labels = torch.load(f'./generated_dataset/{embedding_model_name}_test_labels.pt')
 
-from sklearn.linear_model import RidgeClassifier
 
-clf = RidgeClassifier(tol=1e-2, solver="sparse_cg")
-clf.fit(train_dataset, train_labels)
-pred = clf.predict(test_dataset)
-acc = sum(np.asarray(test_labels) == pred) / len(test_labels)    
 
-from sklearn.neural_network import MLPClassifier
-clf = MLPClassifier(random_state=1, max_iter=300).fit(train_dataset, train_labels)
-test_proba = clf.predict_proba(test_dataset)
-test_pred = clf.predict(test_dataset)
-acc = clf.score(test_dataset, test_labels)
-
-y_pos_pred, y_neg_pred = test_pred[test_labels == 1], test_pred[test_labels == 0]
-evaluator_hit = Evaluator(name='ogbl-collab')
-evaluator_mrr = Evaluator(name='ogbl-citation2')
-metrics = get_metric_score(evaluator_hit, evaluator_mrr, y_pos_pred, y_neg_pred)
-
-print(f'Accuracy: {acc:.4f}')
-print(f'metrics : {metrics}')
-
-exit(-1)
 hidden_size = 1024
 learning_rate = 1e-5
 batch_size = 64
@@ -128,6 +112,7 @@ num_classes = 2
 model = MLP(input_size, hidden_size, num_classes)
 model.apply(init_weights)
 model = model.to(device)
+print(model)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
@@ -169,13 +154,13 @@ for epoch in range(num_epochs):
             loss = criterion(outputs, labels)
             val_loss += loss.item()
 
-            _, predicted = torch.max(outputs.data, 1)
+            _, predicted = torch.max(outputs, 1)
             val_total += labels.size(0)
             val_correct += (predicted == labels).sum().item()
-
+            
             val_preds.extend(predicted.cpu().numpy())
             val_targets.extend(labels.cpu().numpy())
-
+            
     val_loss /= len(val_dataloader)
     val_accuracy = val_correct / val_total
     val_f1 = f1_score(val_targets, val_preds)
@@ -199,23 +184,72 @@ for epoch in range(num_epochs):
 model.load_state_dict(torch.load(best_model_path))
 model.eval()
 
-test_preds = []
-test_targets = []
 
+test_probs = []
 with torch.no_grad():
-    for embeddings, labels in test_dataloader:
-        embeddings = embeddings.to(device)
+    for batch in test_dataloader:
+        inputs, labels = batch
+        inputs = inputs.to(device)
         labels = labels.to(device)
 
-        outputs = model(embeddings)
+        outputs = model(inputs)
+        test_probs.extend(outputs.cpu().numpy())
+        
+test_probs = np.array(test_probs)
+test_labels = np.array(test_labels)   
 
-        _, predicted = torch.max(outputs.data, 1)
+y_pred_pos = test_probs[:,1]
+y_pred_neg = test_probs[:,0]
+        
+evaluator = Evaluator(name='ogbl-collab')
+result_inputs = {"y_pred_pos": y_pred_pos, "y_pred_neg": y_pred_neg}
 
-        test_preds.extend(predicted.cpu().numpy())
-        test_targets.extend(labels.cpu().numpy())
+k_list = [1, 5, 10, 20, 50, 100]
+results = {}
+for K in k_list:
+    evaluator.K = K
+    hits = evaluator.eval({
+        'y_pred_pos': y_pred_pos,
+        'y_pred_neg': y_pred_neg,
+    })[f'hits@{K}']
+
+    hits = round(hits, 4)
+
+    results[f'Hits@{K}'] = hits
+
+print(results)
+
+"""
+metrics = get_metric_score(evaluator_hit, evaluator_mrr, y_pos_pred, y_neg_pred)
+
+print(metrics)
 
 print(f'Accuracy: {accuracy_score(test_targets, test_preds):.4f}')
 print(f'ROC AUC: {roc_auc_score(test_targets, test_preds):.4f}')
 print('Confusion Matrix:')
 print(confusion_matrix(test_targets, test_preds))
 print('F1_score:', f1_score(test_targets, test_preds))
+
+
+from sklearn.linear_model import RidgeClassifier
+
+clf = RidgeClassifier(tol=1e-2, solver="sparse_cg")
+clf.fit(train_dataset, train_labels)
+pred = clf.predict(test_dataset)
+acc = sum(np.asarray(test_labels) == pred) / len(test_labels)    
+
+from sklearn.neural_network import MLPClassifier
+clf = MLPClassifier(random_state=1, max_iter=300).fit(train_dataset, train_labels)
+test_proba = clf.predict_proba(test_dataset)
+test_pred = clf.predict(test_dataset)
+acc = clf.score(test_dataset, test_labels)
+
+y_pos_pred, y_neg_pred = test_pred[test_labels == 1], test_pred[test_labels == 0]
+evaluator_hit = Evaluator(name='ogbl-collab')
+evaluator_mrr = Evaluator(name='ogbl-citation2')
+metrics = get_metric_score(evaluator_hit, evaluator_mrr, y_pos_pred, y_neg_pred)
+
+print(f'Accuracy: {acc:.4f}')
+print(f'metrics : {metrics}')
+
+exit(-1)"""
