@@ -29,5 +29,12 @@ module load compiler/gnu/12
 
 ls -ltr
 
-python3 line_tag.py --cfg core/yamls/cora/embedding/line.yaml 
+# python3 node2vec_tagplus.py --sweep core/yamls/cora/embedding/dw_sweep2.yaml --cfg core/yamls/cora/embedding/deepwalk.yaml 
+# python3 node2vec_tagplus.py --sweep core/yamls/pubmed/embedding/dw_sweep2.yaml --cfg core/yamls/pubmed/embedding/deepwalk.yaml 
+python3 node2vec_tagplus.py --sweep core/yamls/arxiv_2023/embedding/dw_sweep3.yaml --cfg core/yamls/arxiv_2023/embedding/deepwalk.yaml 
+
+# python wb_tune_struc2vec.py --sweep core/yamls/cora/struc2vec_sp1.yaml --cfg core/yamls/cora/struc2vec.yaml 
+# python wb_tune_struc2vec.py --sweep core/yamls/cora/struc2vec_sp2.yaml --cfg core/yamls/cora/struc2vec.yaml 
+# python wb_tune_struc2vec.py --sweep core/yamls/cora/struc2vec_sp3.yaml --cfg core/yamls/cora/struc2vec.yaml 
+
 

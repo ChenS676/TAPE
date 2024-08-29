@@ -44,16 +44,16 @@ def initialize_config(file_path, args):
     
     return cfg
 
-def save_parameters(root, model, start, end, epochs):
-    file_path = root + '/model_parameters.csv'
+def save_parameters(root, model, start_train, end_train, epochs, start_eval, end_eval, name):
+    file_path = root + f'/{name}'
     file_exists = os.path.exists(file_path)
     with open(file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
         if not file_exists:
-            writer.writerow(["Model Name", "Total num", "Time 1 epoch"])
+            writer.writerow(["Model Name", "Total num", "Time train 1 epoch", "Time inference"])
         total_params = model.count_parameters()
         model_name = model.__class__.__name__
-        writer.writerow([model_name, total_params, (end - start) / epochs])
+        writer.writerow([model_name, total_params, (end_train - start_train) / epochs, end_eval - start_eval])
 # TODO how to save wandb files 
 
 def parse_args() -> argparse.Namespace:

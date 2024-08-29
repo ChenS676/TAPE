@@ -14,10 +14,10 @@ train:
 model:
   type: node2vec
   node2vec:
-    walk_length: 10
-    num_walks: 80
+    walk_length: 15
+    num_walks: 20
     p: 2.5
-    q: 1.1
+    q: 2.0
     workers: 10
     use_rejection_sampling: 0
     embed_size: 64
@@ -40,7 +40,9 @@ data:
   include_negatives: True
   val_pct: 0.15
   test_pct: 0.05
+  device: cpu
   split_labels: False
+  split_index: [0.8, 0.15, 0.05]
 
 optim:
   optimizer: adam

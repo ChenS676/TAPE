@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --time=8:00:00
 #SBATCH --nodes=1
-#SBATCH --ntasks=20
+#SBATCH --ntasks=4
 #SBATCH --partition=normal
 #SBATCH --job-name=tag_struc2vec
 #SBATCH --mem-per-cpu=1600mb
@@ -29,9 +29,12 @@ module load compiler/gnu/12
 
 ls -ltr
 
-python node2vec_tag.py --sweep core/yamls/cora/embedding/n2v_sweep3.yaml --cfg core/yamls/cora/embedding/node2vec.yaml 
+python struc2vec_tag.py --sweep core/yamls/cora/embedding/struc2vec_sp3.yaml --cfg core/yamls/cora/embedding/struc2vec.yaml 
+# python struc2vec_tag.py --sweep core/yamls/pubmed/embedding/struc2vec_sp3.yaml --cfg core/yamls/pubmed/embedding/struc2vec.yaml 
+# python struc2vec_tag.py --sweep core/yamls/arxiv_2023/embedding/struc2vec_sp3.yaml --cfg core/yamls/arxiv_2023/embedding/struc2vec.yaml 
+
+
+
 # python wb_tune_struc2vec.py --sweep core/yamls/cora/struc2vec_sp1.yaml --cfg core/yamls/cora/struc2vec.yaml 
 # python wb_tune_struc2vec.py --sweep core/yamls/cora/struc2vec_sp2.yaml --cfg core/yamls/cora/struc2vec.yaml 
 # python wb_tune_struc2vec.py --sweep core/yamls/cora/struc2vec_sp3.yaml --cfg core/yamls/cora/struc2vec.yaml 
-
-

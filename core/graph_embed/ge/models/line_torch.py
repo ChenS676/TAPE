@@ -14,6 +14,7 @@ from tqdm import tqdm
 
 class LineLoss(Module):
     def forward(self, y_true, y_pred):
+        # mean sigmoid x1*x2 dot product 
         order1 = -torch.mean(torch.log(torch.sigmoid(y_true[0] * y_pred[0])))
         order2 = -torch.mean(torch.log(torch.sigmoid(y_true[1] * y_pred[1])))
         return order1+order2
@@ -31,13 +32,12 @@ class LINEModel(Module):
     def forward(self, v_i, v_j):
         v_i_emb = self.first_emb(v_i)
         v_j_emb = self.first_emb(v_j)
-
         v_i_emb_second = self.second_emb(v_i)
         v_j_context_emb = self.context_emb(v_j)
 
         first_order = torch.sum(v_i_emb * v_j_emb, dim=-1)
         second_order = torch.sum(v_i_emb_second * v_j_context_emb, dim=-1)
-
+        # print(first_order)
         if self.order == 'first':
             return first_order
         elif self.order == 'second':
@@ -47,7 +47,7 @@ class LINEModel(Module):
 
 
 class LINE_torch:
-    def __init__(self, graph, embedding_size=8, negative_ratio=5, order='second', device='cuda:0'):
+    def __init__(self, graph, embedding_size=8, negative_ratio=5, order='second', device='cpu', lr=None):
         """
 
         :param graph:
@@ -60,7 +60,8 @@ class LINE_torch:
 
         self.graph = graph
         self.idx2node, self.node2idx = preprocess_nxgraph(graph)
-        self.use_alias = True
+        self.use_alias = False # True
+        self.lr = lr
 
         self.rep_size = embedding_size
         self.order = order
@@ -73,7 +74,7 @@ class LINE_torch:
         self.edge_size = graph.number_of_edges()
         self.samples_per_epoch = self.edge_size*(1+negative_ratio)
 
-        self._gen_sampling_table()
+        # self._gen_sampling_table()
         
         self.model = LINEModel(self.node_size, self.rep_size, self.order).to(device)
         self.batch_it = self.batch_iter(self.node2idx)
@@ -81,7 +82,7 @@ class LINE_torch:
         self.criterion = LineLoss()
         
         print(self.model.parameters)
-        self.optimizer = optim.Adam(self.model.parameters(), lr = 1e-5)
+        self.optimizer = optim.Adam(self.model.parameters(), lr = self.lr)
         self.device = device 
         
     def reset_training_args(self, batch_size, times):
@@ -89,7 +90,19 @@ class LINE_torch:
         self.steps_per_epoch = (
             (self.samples_per_epoch - 1) // self.batch_size + 1)*times
 
-
+    def count_parameters(self):
+        total_params = 0
+        self.embedding_dict =  {'first': self.model.first_emb, 'second': self.model.second_emb}
+        if self.order == 'first':
+            total_params += np.prod(self.embedding_dict['first'].weight.shape)
+        elif self.order == 'second':
+            total_params += np.prod(self.embedding_dict['second'].weight.shape)
+        else:
+            total_params += np.prod(self.embedding_dict['first'].weight.shape)
+            total_params += np.prod(self.embedding_dict['second'].weight.shape)
+        
+        return total_params
+    
     def _gen_sampling_table(self):
 
         # create sampling table for vertex
@@ -177,7 +190,7 @@ class LINE_torch:
 
     def get_embeddings(self,):
         
-        self.embedding_dict =  {'first': self.model.first_emb, 'second': self.model.first_emb}
+        self.embedding_dict =  {'first': self.model.first_emb, 'second': self.model.second_emb}
         self._embeddings = {}
         if self.order == 'first':
             embeddings = self.embedding_dict['first'].get_weights()[0]
@@ -205,8 +218,9 @@ class LINE_torch:
                     labels[1] = labels[1].to(self.device)
                     
                 self.optimizer.zero_grad()
-
+                # print(inputs[0], inputs[1])
                 outputs = self.model(inputs[0], inputs[1])
+                
                 if self.model.order == 'all':
                     outputs[0] = outputs[0].to(self.device)
                     
@@ -215,7 +229,7 @@ class LINE_torch:
                 self.optimizer.step()
 
                 running_loss += loss.item()
-                # print(f"running loss", loss.item())
+                print(f"running loss", loss.item())
 
             if verbose and (epoch + 1) % verbose == 0:
                 print(f'Epoch {epoch + 1}, Loss: {running_loss / self.steps_per_epoch}')

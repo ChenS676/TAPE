@@ -22,7 +22,7 @@ import networkx as nx
 
 
 FILE = 'core/dataset/ogbn_products_orig/ogbn-products.csv'
-FILE_PATH = get_git_repo_root_path() + '/'
+FILE_PATH = get_git_repo_root_path() + '/'#'/TAPE/'
 
 
 
@@ -572,7 +572,7 @@ if __name__ == '__main__':
     print(type(graph))
     print(type(text))'''
 
-    graph = load_graph_citationv8()
-    print(type(graph))
-    graph, text = load_tag_citationv8()
-    print(type(text))
+    # graph = load_graph_citationv8()
+    # print(type(graph))
+    # graph, text = load_tag_citationv8()
+    # print(type(text))

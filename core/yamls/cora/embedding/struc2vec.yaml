@@ -15,6 +15,11 @@ model:
   type: struc2vec
   struc2vec:
     max_iter: 100
+    epoch: 15
+    wl: 10
+    num_walks: 60
+    embed_size: 26
+    window_size: 12
 
 num_threads: 11
 data:
