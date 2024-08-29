@@ -28,7 +28,7 @@ from tensorflow.python.keras.layers import Dense, Input
 from tensorflow.python.keras.models import Model
 from tensorflow.python.keras.regularizers import l1_l2
 
-from ..utils import preprocess_nxgraph
+from ..ge.utils import preprocess_nxgraph
 
 
 def l_2nd(beta):

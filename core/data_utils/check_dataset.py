@@ -1,4 +1,7 @@
 import argparse
+
+import torch
+
 from load import load_data_lp
 
 def parse_args() -> argparse.Namespace:
@@ -62,6 +65,23 @@ def check_edges_completeness(splits, data):
     print(f"Edges completeness rate: {rate:.4f}")
 
 
+def check_is_symmetric(edge_index):
+    src, dst = edge_index
+    num_edges = edge_index.size(1)
+
+    reverse_edges = torch.stack([dst, src], dim=0)
+
+    edge_set = set()
+    for i in range(num_edges):
+        edge = (src[i].item(), dst[i].item())
+        edge_set.add(edge)
+    for i in range(num_edges):
+        reverse_edge = (reverse_edges[0, i].item(), reverse_edges[1, i].item())
+        if reverse_edge not in edge_set:
+            return False
+
+    return True
+
 if __name__ == "__main__":
     args = parse_args()
     args.split_index = [0.8, 0.15, 0.05]
@@ -72,5 +92,15 @@ if __name__ == "__main__":
         check_data_leakage(splits)
         check_self_loops(data)
         check_edges_completeness(splits, data)
+        print("Is data.edge_index symmetric?",check_is_symmetric(data.edge_index))
+        print("Is splits['test']['pos_edge_label_index'] symmetric?", check_is_symmetric(splits['test']['pos_edge_label_index']))
+        print("Is splits['valid']['pos_edge_label_index'] symmetric?", check_is_symmetric(splits['valid']['pos_edge_label_index']))
+        print("Is splits['train']['pos_edge_label_index'] symmetric?", check_is_symmetric(splits['train']['pos_edge_label_index']))
+        print("Is splits['test']['neg_edge_label_index'] symmetric?", check_is_symmetric(splits['test']['neg_edge_label_index']))
+        print("Is splits['valid']['neg_edge_label_index'] symmetric?", check_is_symmetric(splits['valid']['neg_edge_label_index']))
+        print("Is splits['train']['neg_edge_label_index'] symmetric?", check_is_symmetric(splits['train']['neg_edge_label_index']))
+        print("Is splits['test']['edge_index'] symmetric?", check_is_symmetric(splits['test']['edge_index']))
+        print("Is splits['valid']['edge_index'] symmetric?", check_is_symmetric(splits['valid']['edge_index']))
+        print("Is splits['train']['edge_index'] symmetric?", check_is_symmetric(splits['train']['edge_index']))
 
 

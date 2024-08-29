@@ -1,0 +1,24 @@
+python lp_node_embed.py --data pubmed --embedder original --device cpu --decoder dot --epoch 2000
+python lp_node_embed.py --data pubmed --embedder original --device cpu --decoder concat --epoch 2000
+python lp_node_embed.py --data pubmed --embedder original --device cpu --decoder euclidean --epoch 2000
+
+============================= JOB FEEDBACK =============================
+
+Job ID: 2579662
+Cluster: hk
+User/Group: cc7738/hk-project-test-p0021478
+Account: hk-project-test-p0022257
+State: TIMEOUT (exit code 0)
+Partition: cpuonly
+Nodes: 1
+Cores per node: 152
+Nodelist: hkn0049
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 304-00:30:24 core-walltime
+Job Wall-clock time: 2-00:00:12
+Starttime: Tue Aug  6 10:31:14 2024
+Endtime: Thu Aug  8 10:31:26 2024
+Memory Utilized: 18.55 GB
+Memory Efficiency: 7.81% of 237.50 GB
+Energy Consumed: 50644221 Joule / 14067.8391666667 Watthours
+Average node power draw: 293.059631275606 Watt

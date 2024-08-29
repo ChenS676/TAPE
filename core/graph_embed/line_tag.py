@@ -14,7 +14,12 @@ from sklearn.linear_model import LogisticRegression
 from ogb.linkproppred import Evaluator
 from torch.utils.tensorboard import SummaryWriter
 
+<<<<<<< HEAD
 from ge.models.line_tf import LINE
+=======
+# Custom imports
+from core.graph_embed.examples.line_tf import LINE
+>>>>>>> 89ecc007765bc968264719cad8b571269a77729f
 from tune_utils import save_parameters
 from heuristic.eval import get_metric_score
 from data_utils.load import load_graph_lp as data_loader
@@ -22,9 +27,16 @@ from data_utils.graph_stats import plot_coo_matrix, construct_sparse_adj
 from data_utils.load_data_lp import get_edge_split
 from graphgps.utility.utils import set_cfg, get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel
 from torch_geometric.utils import to_scipy_sparse_matrix
+<<<<<<< HEAD
 
 # Set the file path for the project
 FILE_PATH = get_git_repo_root_path() + '/'
+=======
+from graph_embed.tune_utils import get_git_repo_root_path
+import wandb
+from networkx import from_scipy_sparse_matrix as from_scipy_sparse_array
+
+>>>>>>> 89ecc007765bc968264719cad8b571269a77729f
 
 def parse_args() -> argparse.Namespace:
     """Parses the command line arguments."""
@@ -60,7 +72,7 @@ def create_graph(splits):
     """Construct the graph from the dataset splits."""
     full_edge_index = splits['test'].edge_index
     adj = to_scipy_sparse_matrix(full_edge_index)
-    G = nx.from_scipy_sparse_array(adj)
+    G = from_scipy_sparse_array(adj)
     return G
 
 def train_line_model(G, cfg, device):

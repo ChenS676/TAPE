@@ -19,11 +19,10 @@ from torch_geometric.graphgym.config import (cfg,
 from torch_geometric.utils import remove_self_loops
 from typing import Tuple, List, Dict
 import logging
-from yacs.config import CfgNode
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from transformers import AutoTokenizer, AutoModel
-from sentence_transformers import SentenceTransformer
+# from sentence_transformers import SentenceTransformer
 import torch.nn.functional as F
 from tqdm import tqdm
 from torch.utils.data import DataLoader, TensorDataset
@@ -1079,6 +1078,8 @@ def save_run_results_to_csv(cfg, loggers, seed, run_id):
     for key in loggers:
         result_dict['model'] = cfg.model.type
         result_dict['seed'] = seed
+        if key == 'ACC': # we remove the ACC metric
+            continue 
         _, _, _, test_bvalid = loggers[key].calc_run_stats(run_id)
         result_dict[key] = test_bvalid
 

@@ -4,24 +4,43 @@
 	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
 	"version": "0.2.0",
 	"configurations": [
-		
 		{
 			"name": "Python Debugger: Current File with Arguments",
 			"type": "debugpy",
 			"request": "launch",
 			"program": "${file}",
 			"console": "integratedTerminal",
-			"justMyCode": true,
+			"justMyCode": false,
 			"python.tensorboard.logDirectory": "/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/core/gcns/runs", 
 			"args": [
-				"--data",
-				"arxiv_2023",
+				"--cfg", "/core/yamls/cora/lms/ft-llama.yaml"
+			
+				// "--data",
+				// "pubmed",
 				// "--device",
 				// "cpu",
-				"--epoch",
-				"100",
-				"--embedder",
-				"w2v"
+				// "--epoch",
+				// "200",
+				// "--embedder",
+				// "tfidf",
+				// "--decoder",
+				// "euclidean"
+
+
+				
+				// "--data",
+				// "pubmed",
+				// "--embedder",
+				// "w2v",
+				// "--device",
+				// "cpu",
+				// "--decoder",
+				// "euclidean",
+				// "--epoch",
+				// "2",
+				// "--report_step",
+				// "1"
+
 			],
 		}
 	]

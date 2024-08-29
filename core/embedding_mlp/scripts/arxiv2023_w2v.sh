@@ -37,15 +37,8 @@ for embedder in "${embedders[@]}"; do
         decoder=${decoders[$i]}
         # device=${devices[$i]}
         echo "python lp_node_embed.py --data $data --embedder $embedder --device $device --decoder $decoder --epoch $max_iter"
-        python lp_node_embed.py --data $data --embedder $embedder --device $device --decoder $decoder --epoch $max_iter --report_step 200 &
+        python lp_node_embed.py       --data $data --embedder $embedder --device $device --decoder $decoder --epoch $max_iter --report_step 200 &
     done
     wait 
 done
 
-# for i in ${!decoders[@]}; do
-#     decoder=${decoders[$i]}
-#     device=${devices[$i]}
-#     echo "python lp_edge_embed.py --data $data --embedder $embedder --device $device "
-#     python lp_edge_embed.py --data $data --embedder $embedder --device $device --epochs $max_iter &
-#     wait 
-# done

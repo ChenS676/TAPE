@@ -110,12 +110,13 @@ def parse_args() -> argparse.Namespace:
                         help='decoder name')
     parser.add_argument('--wandb', dest='wandb', required=False, 
                         help='data name')
-    parser.add_argument('--repeat', type=int, default=3,
+    parser.add_argument('--repeat', type=int, default=5,
                         help='The number of repeated jobs.')
     parser.add_argument('--mark_done', action='store_true',
                         help='Mark yaml as done after a job has finished.')
     parser.add_argument('opts', default=None, nargs=argparse.REMAINDER,
                         help='See graphgym/config.py for remaining options.')
+    parser.add_argument('--cfg', type=str, required=True)
     return parser.parse_args()
 
 yaml_file = {   
@@ -133,6 +134,7 @@ def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
     # process params
     args = parse_args()
     args.cfg_file = yaml_file[args.model]
+    args.cfg_file = args.cfg
     cfg = set_cfg(FILE_PATH, args.cfg_file)
     cfg.merge_from_list(args.opts)
 
@@ -144,7 +146,7 @@ def project_main(): # sourcery skip: avoid-builtin-shadow, low-code-quality
     cfg.train.epochs = args.epoch
     
     cfg_model = eval(f'cfg.model.{args.model}')
-    cfg_score = eval(f'cfg.score.{args.score}')
+    cfg_score = eval(f'cfg.score.{args.model}')
     cfg.model.type = args.model
     # save params
     custom_set_out_dir(cfg, args.cfg_file, cfg.wandb.name_tag)

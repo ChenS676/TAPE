@@ -39,6 +39,8 @@ def remap_node_indices(data, splits):
     data.x = new_x
     for set in ['train', 'valid', 'test']:
         splits[set].x = new_x
+        edge_index_device = splits[set].edge_index.device
+        index_map = index_map.to(edge_index_device)
         splits[set].edge_index = index_map[splits[set].edge_index]
         splits[set].pos_edge_label_index = index_map[splits[set].pos_edge_label_index]
         splits[set].neg_edge_label_index = index_map[splits[set].neg_edge_label_index]
@@ -71,7 +73,62 @@ def visualize_adjacency_matrix(name, num_nodes, pos_edge_index=None, neg_edge_in
     plt.savefig('./visualize/'+ f'Adjacency Matrix - {name}')
     plt.close()
 
+def visualize_weighted_adjacency_matrix(name, num_nodes, pos_edge_index, neg_edge_index, pos_weight, neg_weight):
+    from matplotlib.cm import ScalarMappable
+    from matplotlib.colors import Normalize
+    if num_nodes > 100000:
+        fig, ax = plt.subplots(figsize=(40, 40))
+    else:
+        fig, ax = plt.subplots(figsize=(20, 20))
 
+    ax.set_xlim(-0.5, num_nodes - 0.5)
+    ax.set_ylim(-0.5, num_nodes - 0.5)
+    ax.set_aspect('equal')  # Ensure the plot is square
+    pos_edges = pos_edge_index.t().cpu().numpy()
+    neg_edges = neg_edge_index.t().cpu().numpy()
+    pos_weight = pos_weight.cpu().detach().numpy()
+    neg_weight = neg_weight.cpu().detach().numpy()
+
+    pos_norm = (pos_weight - pos_weight.min()) / (pos_weight.max() - pos_weight.min())
+    neg_norm = 1 - (neg_weight - neg_weight.min()) / (
+                neg_weight.max() - neg_weight.min())  # Reverse normalization for negative weights
+
+    # Use different colormaps for positive and negative edges
+    cmap_pos = plt.cm.Blues  # Color map for positive edges
+    cmap_neg = plt.cm.Reds  # Color map for negative edges
+    pos_colors = cmap_pos(pos_norm)
+    neg_colors = cmap_neg(neg_norm)
+
+    # Plot positive edges with color mapping
+    scatter_pos = ax.scatter(pos_edges[:, 1], pos_edges[:, 0], color=pos_colors, label='Positive Edges', s=100)
+
+    # Plot negative edges with color mapping
+    scatter_neg = ax.scatter(neg_edges[:, 1], neg_edges[:, 0], color=neg_colors, label='Negative Edges', s=100)
+
+    plt.title(f'Adjacency Matrix - {name}')
+    legend = plt.legend(loc='upper right')
+    plt.gca().add_artist(legend)  # Add legend without it overlapping the colorbars
+
+    # Create a new axis for the colorbars to ensure they have the same length
+    cbar_ax_pos = fig.add_axes([0.91, 0.55, 0.02, 0.35])  # Adjust the position as needed
+    cbar_ax_neg = fig.add_axes([0.91, 0.1, 0.02, 0.35])  # Adjust the position as needed
+
+    # Normalize both weights to the 0-1 range
+    norm = Normalize(vmin=0, vmax=1)
+
+    # Create colorbars for both scatter plots
+    sm_pos = ScalarMappable(cmap=cmap_pos, norm=norm)
+    sm_pos.set_array([])
+    cbar_pos = plt.colorbar(sm_pos, cax=cbar_ax_pos)
+    cbar_pos.set_label('Positive Edge Weight')
+
+    sm_neg = ScalarMappable(cmap=cmap_neg, norm=norm)
+    sm_neg.set_array([])
+    cbar_neg = plt.colorbar(sm_neg, cax=cbar_ax_neg)
+    cbar_neg.set_label('Negative Edge Weight')
+
+    plt.savefig('./visualize/' + f'Adjacency Matrix - {name}')
+    plt.close()
 
 
 if __name__ == "__main__":

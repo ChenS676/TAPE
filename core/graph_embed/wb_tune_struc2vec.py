@@ -12,7 +12,7 @@ from torch_geometric.graphgym.config import cfg
 from torch_geometric.utils import to_scipy_sparse_matrix
 from ogb.linkproppred import Evaluator
 from yacs.config import CfgNode as CN
-
+from networkx import from_scipy_sparse_matrix as from_scipy_sparse_array
 from heuristic.eval import get_metric_score
 from data_utils.load import load_data_lp as data_loader
 
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     
     adj = to_scipy_sparse_matrix(full_edge_index)
 
-    G = nx.from_scipy_sparse_array(adj)
+    G = from_scipy_sparse_array(adj)
     
     import random 
     # three parameters

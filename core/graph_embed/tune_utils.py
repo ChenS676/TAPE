@@ -284,9 +284,6 @@ def convert_to_float(metrics: Dict[str, str]) -> Dict[str, float]:
 
 
 def mvari_str2csv(name_tag, metrics, root):
-    # if not exists save the first row
-    # one for new string line 
-    # another for new highest value line
 
     first_value_type = type(next(iter(metrics.values())))
     if all(isinstance(value, first_value_type) for value in metrics.values()):

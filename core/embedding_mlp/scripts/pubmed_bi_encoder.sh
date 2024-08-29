@@ -3,7 +3,7 @@
 
 #SBATCH --time=2-00:00:00
 #SBATCH --partition=cpuonly
-#SBATCH --job-name=w2v-mlp-arxiv2023
+#SBATCH --job-name=pubmed_bi_encoder
 #SBATCH --output=log/TAG_Benchmark_%j.output
 #SBATCH --error=error/TAG_Benchmark_%j.error
 #SBATCH --chdir=/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/batch
@@ -26,9 +26,9 @@ module load compiler/gnu/12
 
 cd /hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/core/embedding_mlp
 
-data="arxiv_2023"
+data="pubmed"
 max_iter=2000
-embedders=("original")
+embedders=("original" "w2v" "tfidf")
 decoders=("dot" "concat" "euclidean")
 device="cpu"
 
@@ -42,10 +42,3 @@ for embedder in "${embedders[@]}"; do
     wait 
 done
 
-# for i in ${!decoders[@]}; do
-#     decoder=${decoders[$i]}
-#     device=${devices[$i]}
-#     echo "python lp_edge_embed.py --data $data --embedder $embedder --device $device "
-#     python lp_edge_embed.py --data $data --embedder $embedder --device $device --epochs $max_iter &
-#     wait 
-# done

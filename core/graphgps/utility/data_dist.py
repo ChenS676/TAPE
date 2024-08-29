@@ -13,7 +13,7 @@ from data_utils.load_data_nc import (
     load_graph_cora, 
     load_graph_pubmed, 
     load_tag_arxiv23, 
-    load_graph_ogbn-arxiv
+    load_graph_ogbn_arxiv
 )
 from graphgps.encoder.seal import do_edge_split, do_ogb_edge_split
 from torch_geometric.utils import to_scipy_sparse_matrix
@@ -21,7 +21,7 @@ from ogb.linkproppred import PygLinkPropPredDataset, Evaluator
 from torch_geometric.datasets import Planetoid
 from torch_geometric.utils import (negative_sampling, add_self_loops,
                                    train_test_split_edges)
-
+from networkx import from_scipy_sparse_matrix as from_scipy_sparse_array
 from torch_geometric.loader import DataLoader
 from tqdm import tqdm 
 
@@ -337,7 +337,7 @@ def plot_CN_citation2_dist(A, split_edge, dataset):
 
 def plot_shortest_path_dist(A, split_edge, dataset):
     use_heuristic = 'shortest_path'
-    G = nx.from_scipy_sparse_array(A)
+    G = from_scipy_sparse_array(A)
     pos_train_pred = shortest_path(G, split_edge['train']['edge'])
 
     neg_edge_index = negative_sampling(
@@ -404,7 +404,7 @@ def plot_shortest_path_dist(A, split_edge, dataset):
 def plot_spath_citation2_dist(A, split_edge, dataset):
     use_heuristic = 'shortest_path'
     len = 100
-    G = nx.from_scipy_sparse_array(A)
+    G = from_scipy_sparse_array(A)
 
     # create edge_index from source and target node
     pos_edge_index  = torch.stack([split_edge['train']['source_node'], split_edge['train']['target_node']])
@@ -542,10 +542,10 @@ if __name__ == '__main__':
         A = ssp.csr_matrix((edge_weight.view(-1), (train_edge_index[0], train_edge_index[1])), shape=(num_nodes, num_nodes)) 
 
         if plot_degree:
-            G = nx.from_scipy_sparse_array(adj)
+            G = from_scipy_sparse_array(adj)
             plot_degree_distribution(G, color, dataset)
         elif plot_clustering:
-            G = nx.from_scipy_sparse_array(adj)
+            G = from_scipy_sparse_array(adj)
             plot_clustering_specturm(G, color, dataset)
 
         elif plot_CN_dist_link:

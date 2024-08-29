@@ -1,0 +1,43 @@
+python lp_edge_embed.py --data pubmed --embedder w2v --device cpu  --epoch 2000
+python lp_edge_embed.py --data pubmed --embedder tfidf --device cpu  --epoch 2000
+load_taglp_pubmed executed in 3.67046 seconds
+train adj shape: 70920
+train: original length 35460
+train: downsampled length 35460
+valid: original length 6648
+valid: downsampled length 6648
+test: original length 2216
+test: downsampled length 2216
+load_taglp_pubmed executed in 3.68640 seconds
+train adj shape: 70920
+train: original length 35460
+train: downsampled length 35460
+valid: original length 6648
+valid: downsampled length 6648
+test: original length 2216
+test: downsampled length 2216
+Embedding time: 813.5657813549042
+run id : 0, seed: 0, split_index: [0.8, 0.15, 0.05]
+Embedding time: 33.06690979003906
+run id : 0, seed: 0, split_index: [0.8, 0.15, 0.05]
+
+============================= JOB FEEDBACK =============================
+
+Job ID: 2579211
+Cluster: hk
+User/Group: cc7738/hk-project-test-p0021478
+Account: hk-project-test-p0022257
+State: FAILED (exit code 2)
+Partition: cpuonly
+Nodes: 1
+Cores per node: 152
+Nodelist: hkn0332
+CPU Utilized: 00:48:19
+CPU Efficiency: 1.07% of 3-02:56:40 core-walltime
+Job Wall-clock time: 00:29:35
+Starttime: Tue Aug  6 07:38:51 2024
+Endtime: Tue Aug  6 08:08:26 2024
+Memory Utilized: 7.52 GB
+Memory Efficiency: 3.17% of 237.50 GB
+Energy Consumed: 536507 Joule / 149.029722222222 Watthours
+Average node power draw: 302.257464788732 Watt

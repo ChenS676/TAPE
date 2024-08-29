@@ -69,6 +69,8 @@ core/Embedding/wandb
 *.png
 
 core/Embedding/data/
+**/runs
+runs/
 core/Embedding/temp_path/
 core/Embedding/temp_struc2vec/
 scripts/error/TAG_Benchmark_2336350.error
@@ -91,8 +93,9 @@ gcns/results
 core/gcns/runs
 core/batch
 
-/results
 
 .env
 /core/embedding_mlp/models/
 /core/embedding_mlp/data/
+
+core/embedding_mlp/runs/

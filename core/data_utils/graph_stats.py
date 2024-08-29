@@ -34,6 +34,7 @@ from graphgps.utility.utils import get_git_repo_root_path, config_device, init_c
 from data_utils.load import load_data_lp
 from data_utils.load_data_lp import load_taglp_citationv8, load_graph_citationv8
 from data_utils.lcc import use_lcc, get_largest_connected_component
+from networkx import from_scipy_sparse_matrix as from_scipy_sparse_array
 
 # adopted from [Google Research - GraphWorld](https://github.com/google-research/graphworld/tree/main/src/graph_world/metrics)
 # inspired by https://dl.acm.org/doi/epdf/10.1145/3633778
@@ -431,7 +432,7 @@ if __name__ == '__main__':
         
         start_time = time.time()
         m = construct_sparse_adj(data.edge_index.numpy())
-        G = nx.from_scipy_sparse_array(m)
+        G = from_scipy_sparse_array(m)
         print(f"Time taken to create graph: {time.time() - start_time} s")
         
         if  plot_cc:
@@ -451,7 +452,7 @@ if __name__ == '__main__':
             
             start_time = time.time()
             m = construct_sparse_adj(data.edge_index.numpy())
-            G = nx.from_scipy_sparse_array(m)
+            G = from_scipy_sparse_array(m)
             print(f"Time taken to create graph: {time.time() - start_time} s")
             
             if  plot_cc:

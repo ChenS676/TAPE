@@ -1,4 +1,5 @@
 import os, sys
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 # import dgl
 import torch
@@ -13,17 +14,17 @@ from sklearn.preprocessing import normalize
 from torch_geometric.data import Data
 from torch_geometric.datasets import Planetoid
 from torch_geometric.transforms import RandomLinkSplit
-from graphgps.utility.utils import get_git_repo_root_path # type: ignore
-from typing import Tuple, List, Dict, Set, Any 
+from graphgps.utility.utils import get_git_repo_root_path  # type: ignore
+from typing import Tuple, List, Dict, Set, Any
 from data_utils.lcc import use_lcc
 import torch_geometric.utils as pyg_utils
-import networkx as nx 
-# import dgl 
+import networkx as nx
+
+# import dgl
 
 
 FILE = 'core/dataset/ogbn_products_orig/ogbn-products.csv'
 FILE_PATH = get_git_repo_root_path() + '/'#'/TAPE/'
-
 
 
 def get_node_mask(num_nodes: int) -> tuple:
@@ -44,12 +45,11 @@ def get_node_mask(num_nodes: int) -> tuple:
 
     test_mask = torch.zeros(num_nodes, dtype=torch.bool)
     test_mask[test_id] = True
-    
+
     return train_id, val_id, test_id, train_mask, val_mask, test_mask
 
 
 def get_node_mask_ogb(num_nodes: int, idx_splits: Dict[str, torch.Tensor]) -> tuple:
-
     train_mask = torch.zeros(num_nodes).bool()
     val_mask = torch.zeros(num_nodes).bool()
     test_mask = torch.zeros(num_nodes).bool()
@@ -65,6 +65,7 @@ def load_graph_arxiv23() -> Data:
     # data.edge_index = data.adj_t.to_symmetric()
     return data
 
+
 # Function to parse PubMed dataset
 def load_text_arxiv23() -> List[str]:
     # Add your implementation here
@@ -78,7 +79,7 @@ def load_text_arxiv23() -> List[str]:
 def load_tag_arxiv23() -> Tuple[Data, List[str]]:
     graph = load_graph_arxiv23()
     text = load_text_arxiv23()
-    
+
     train_id, val_id, test_id, train_mask, val_mask, test_mask = get_node_mask(graph.num_nodes)
     graph.train_id = train_id
     graph.val_id = val_id
@@ -90,17 +91,17 @@ def load_tag_arxiv23() -> Tuple[Data, List[str]]:
 
 
 def load_graph_cora(use_mask) -> Data:
-
     path = f'{FILE_PATH}core/dataset/cora_orig/cora'
     idx_features_labels = np.genfromtxt(f"{path}.content", dtype=np.dtype(str))
     data_X = idx_features_labels[:, 1:-1].astype(np.float32)
-    
+
     if use_mask:
         labels = idx_features_labels[:, -1]
         class_map = {x: i for i, x in enumerate(['Case_Based', 'Genetic_Algorithms', 'Neural_Networks',
-                                                'Probabilistic_Methods', 'Reinforcement_Learning', 'Rule_Learning', 'Theory'])}
+                                                 'Probabilistic_Methods', 'Reinforcement_Learning', 'Rule_Learning',
+                                                 'Theory'])}
         data_Y = np.array([class_map[l] for l in labels])
-        
+
     data_citeid = idx_features_labels[:, 0]
     idx = np.array(data_citeid, dtype=np.dtype(str))
     idx_map = {j: i for i, j in enumerate(idx)}
@@ -110,48 +111,48 @@ def load_graph_cora(use_mask) -> Data:
     data_edges = np.array(edges[~(edges == None).max(1)], dtype='int')
     data_edges = np.vstack((data_edges, np.fliplr(data_edges)))
 
-    
-    dataset = Planetoid('./generated_dataset', 'cora',
-                        transform=T.NormalizeFeatures())
+    # dataset = Planetoid('./generated_dataset', 'cora',
+    #                    transform=T.NormalizeFeatures())
 
     x = torch.tensor(data_X).float()
-    edge_index =  torch.LongTensor(data_edges).T.clone().detach().long() 
+    edge_index = torch.LongTensor(data_edges).T.clone().detach().long()
     num_nodes = len(data_X)
-    
+
     if use_mask:
         y = torch.tensor(data_Y).long()
-        
+
     train_id, val_id, test_id, train_mask, val_mask, test_mask = get_node_mask(num_nodes)
-    
+
     if use_mask:
         return Data(x=x,
-        edge_index=edge_index,
-        y=y,
-        num_nodes=num_nodes,
-        train_mask=train_mask,
-        test_mask=test_mask,
-        val_mask=val_mask,
-        node_attrs=x, 
-        edge_attrs = None, 
-        graph_attrs = None,
-        train_id = train_id,
-        val_id = val_id,
-        test_id = test_id
-    ), data_citeid
-        
+                    edge_index=edge_index,
+                    y=y,
+                    num_nodes=num_nodes,
+                    train_mask=train_mask,
+                    test_mask=test_mask,
+                    val_mask=val_mask,
+                    node_attrs=x,
+                    edge_attrs=None,
+                    graph_attrs=None,
+                    train_id=train_id,
+                    val_id=val_id,
+                    test_id=test_id
+                    ), data_citeid
+
     else:
         return Data(
-        x=x,
-        edge_index=edge_index,
-        num_nodes=num_nodes,
-        node_attrs=x,
-        edge_attrs=None,
-        graph_attrs=None,
-    ), data_citeid
+            x=x,
+            edge_index=edge_index,
+            num_nodes=num_nodes,
+            node_attrs=x,
+            edge_attrs=None,
+            graph_attrs=None,
+        ), data_citeid
 
 
-def load_tag_cora()  -> Tuple[Data, List[str]]:
-    data, data_citeid = load_graph_cora(use_mask=False) # nc True, lp False
+def load_tag_cora() -> Tuple[Data, List[str]]:
+    data, data_citeid = load_graph_cora(use_mask=False)  # nc True, lp False
+
     text = load_text_cora(data_citeid)
     print(f"Number of texts: {len(text)}")
     print(f"first text: {text[0]}")
@@ -179,16 +180,16 @@ def load_text_cora(data_citeid) -> List[str]:
 
     text = []
     not_loaded = []
-    i = 0
+    i, j = 0, 0
     for pid in data_citeid:
         fn = pid_filename[pid]
         try:
-            if os.path.exists(path+fn): 
-                pathfn = path+fn
-            elif os.path.exists(path+fn.replace(":", "_")):
-                pathfn = path+fn.replace(":", "_")
-            elif os.path.exists(path+fn.replace("_", ":")):
-                pathfn = path+fn.replace("_", ":")
+            if os.path.exists(path + fn):
+                pathfn = path + fn
+            elif os.path.exists(path + fn.replace(":", "_")):
+                pathfn = path + fn.replace(":", "_")
+            elif os.path.exists(path + fn.replace("_", ":")):
+                pathfn = path + fn.replace("_", ":")
 
             with open(pathfn) as f:
                 lines = f.read().splitlines()
@@ -198,12 +199,13 @@ def load_text_cora(data_citeid) -> List[str]:
                     ti = line
                 if 'Abstract:' in line:
                     ab = line
-            text.append(ti+'\n'+ab)
+            text.append(ti + '\n' + ab)
         except Exception:
             not_loaded.append(pathfn)
             i += 1
 
     print(f"not loaded {i} papers.")
+    print(f"not loaded {i} paperid.")
     return text
 
 
@@ -211,12 +213,12 @@ def load_text_cora(data_citeid) -> List[str]:
 def load_graph_product():
     raise NotImplementedError
     # Add your implementation here
-    
-    
+
+
 def load_text_product() -> List[str]:
     text = pd.read_csv(FILE_PATH + 'core/dataset/ogbn_products_orig/ogbn-products_subset.csv')
-    text = [f'Product:{ti}; Description: {cont}\n'for ti,
-            cont in zip(text['title'], text['content'])]
+    text = [f'Product:{ti}; Description: {cont}\n' for ti,
+    cont in zip(text['title'], text['content'])]
     return text
 
 
@@ -224,8 +226,8 @@ def load_text_product() -> List[str]:
 def load_tag_product() -> Tuple[Data, List[str]]:
     data = torch.load(FILE_PATH + 'core/dataset/ogbn_products_orig/ogbn-products_subset.pt')
     text = pd.read_csv(FILE_PATH + 'core/dataset/ogbn_products_orig/ogbn-products_subset.csv')
-    text = [f'Product:{ti}; Description: {cont}\n'for ti,
-            cont in zip(text['title'], text['content'])]
+    text = [f'Product:{ti}; Description: {cont}\n' for ti,
+    cont in zip(text['title'], text['content'])]
 
     data.edge_index = data.adj_t.to_symmetric()
 
@@ -233,7 +235,6 @@ def load_tag_product() -> Tuple[Data, List[str]]:
 
 
 def parse_pubmed():
-
     n_nodes = 19717
     n_features = 500
 
@@ -262,7 +263,7 @@ def parse_pubmed():
 
             # label=[1,2,3]
             label = int(items[1].split('=')[-1]) - \
-                1  # subtract 1 to zero-count
+                    1  # subtract 1 to zero-count
             data_Y[i] = label
 
             # f1=val1 \t f2=val2 \t ... \t fn=valn summary=...
@@ -281,7 +282,7 @@ def parse_pubmed():
     # parse graph
     data_A = np.zeros((n_nodes, n_nodes), dtype='float32')
 
-    with open(FILE_PATH+ 'core/dataset/PubMed_orig/data/Pubmed-Diabetes.DIRECTED.cites.tab', 'r') as edge_file:
+    with open(FILE_PATH + 'core/dataset/PubMed_orig/data/Pubmed-Diabetes.DIRECTED.cites.tab', 'r') as edge_file:
         # first two lines are headers
         edge_file.readline()
         edge_file.readline()
@@ -326,31 +327,31 @@ def load_graph_pubmed(use_mask) -> Data:
     if use_mask:
         y = torch.tensor(data_Y)
         train_id, val_id, test_id, train_mask, val_mask, test_mask = get_node_mask(num_nodes)
-        
+
         return Data(x=x,
-            edge_index=edge_index,
-            y=y,
-            num_nodes=num_nodes,
-            train_mask=train_mask,
-            test_mask=test_mask,
-            val_mask=val_mask,
-            node_attrs=x, 
-            edge_attrs = None, 
-            graph_attrs = None,
-            train_id = train_id,
-            val_id = val_id,
-            test_id = test_id
-        ) 
+                    edge_index=edge_index,
+                    y=y,
+                    num_nodes=num_nodes,
+                    train_mask=train_mask,
+                    test_mask=test_mask,
+                    val_mask=val_mask,
+                    node_attrs=x,
+                    edge_attrs=None,
+                    graph_attrs=None,
+                    train_id=train_id,
+                    val_id=val_id,
+                    test_id=test_id
+                    )
     else:
         return Data(x=x,
-            edge_index=edge_index,
-            num_nodes=num_nodes,
-            node_attrs=x, 
-            edge_attrs = None, 
-            graph_attrs = None
-        )
-      
-        
+                    edge_index=edge_index,
+                    num_nodes=num_nodes,
+                    node_attrs=x,
+                    edge_attrs=None,
+                    graph_attrs=None
+                    )
+
+
 # Function to parse PubMed dataset
 def load_text_pubmed() -> List[str]:
     f = open(FILE_PATH + 'core/dataset/PubMed_orig/pubmed.json')
@@ -359,7 +360,7 @@ def load_text_pubmed() -> List[str]:
 
     AB = df_pubmed['AB'].fillna("")
     TI = df_pubmed['TI'].fillna("")
-    return ['Title: ' + ti + '\n'+'Abstract: ' + ab for ti, ab in zip(TI, AB)]
+    return ['Title: ' + ti + '\n' + 'Abstract: ' + ab for ti, ab in zip(TI, AB)]
 
 
 def load_tag_pubmed(use_mask) -> Tuple[Data, List[str]]:
@@ -384,47 +385,47 @@ def load_text_ogbn_arxiv():
         'Title: ' + ti + '\n' + 'Abstract: ' + ab
         for ti, ab in zip(df['title'], df['abs'])
     ]
-      
-    
+
+
 def load_graph_ogbn_arxiv(use_mask):
     dataset = PygNodePropPredDataset(root='./generated_dataset',
-        name='ogbn-arxiv', transform=T.ToSparseTensor())
+                                     name='ogbn-arxiv', transform=T.ToSparseTensor())
     data = dataset[0]
 
     if data.adj_t.is_symmetric():
         is_symmetric = True
     else:
         edge_index = data.adj_t.to_symmetric()
-        
-    x = torch.tensor(data.x).float()  
+
+    x = torch.tensor(data.x).float()
     edge_index = torch.LongTensor(edge_index.to_torch_sparse_coo_tensor().coalesce().indices()).long()
     num_nodes = data.num_nodes
-    
+
     if use_mask:
         y = torch.tensor(data.y).long()
         train_mask, val_mask, test_mask = get_node_mask_ogb(data.num_nodes, dataset.get_idx_split())
 
         return Data(x=x,
-            edge_index=edge_index,
-            y=y,
-            num_nodes=num_nodes,
-            train_mask=train_mask,
-            test_mask=test_mask,
-            val_mask=val_mask,
-            node_attrs=x, 
-            edge_attrs = None, 
-            graph_attrs = None
-        ) 
+                    edge_index=edge_index,
+                    y=y,
+                    num_nodes=num_nodes,
+                    train_mask=train_mask,
+                    test_mask=test_mask,
+                    val_mask=val_mask,
+                    node_attrs=x,
+                    edge_attrs=None,
+                    graph_attrs=None
+                    )
 
     else:
-            return Data(x=x,
-            edge_index=edge_index,
-            num_nodes=num_nodes,
-            node_attrs=x, 
-            edge_attrs = None, 
-            graph_attrs = None
-        )
-            
+        return Data(x=x,
+                    edge_index=edge_index,
+                    num_nodes=num_nodes,
+                    node_attrs=x,
+                    edge_attrs=None,
+                    graph_attrs=None
+                    )
+
 
 def load_tag_ogbn_arxiv() -> List[str]:
     graph = load_graph_ogbn_arxiv(False)
@@ -435,8 +436,8 @@ def load_tag_ogbn_arxiv() -> List[str]:
 def load_tag_product() -> Tuple[Data, List[str]]:
     data = torch.load(FILE_PATH + 'core/dataset/ogbn_products_orig/ogbn-products_subset.pt')
     text = pd.read_csv(FILE_PATH + 'core/dataset/ogbn_products_orig/ogbn-products_subset.csv')
-    text = [f'Product:{ti}; Description: {cont}\n'for ti,
-            cont in zip(text['title'], text['content'])]
+    text = [f'Product:{ti}; Description: {cont}\n' for ti,
+    cont in zip(text['title'], text['content'])]
 
     edge_index = data.adj_t.to_symmetric().to_torch_sparse_coo_tensor().coalesce().indices()
     data.edge_index = torch.LongTensor(edge_index).long()
@@ -446,7 +447,8 @@ def load_tag_product() -> Tuple[Data, List[str]]:
 
 def load_graph_citationv8() -> Data:
     import dgl
-    from pdb import set_trace as st; st()
+    from pdb import set_trace as st;
+    st()
     graph = dgl.load_graphs(FILE_PATH + 'core/dataset/citationv8/Citation-2015.pt')[0][0]
     graph = dgl.to_bidirected(graph)
     from torch_geometric.utils import from_dgl
@@ -455,13 +457,14 @@ def load_graph_citationv8() -> Data:
     # torch.save(graph, FILE_PATH + 'core/dataset/citationv8/citationv8_pyg2015.pt')
     return graph
 
+
 def load_pyg_citationv8() -> Data:
     return torch.load(FILE_PATH + 'core/dataset/citationv8/citationv8_pyg2015.pt')
-    
+
 
 def load_embedded_citationv8(method) -> Data:
     return torch.load(FILE_PATH + f'core/dataset/citationv8/citationv8_{method}.pt')
-    
+
 
 def load_text_citationv8() -> List[str]:
     df = pd.read_csv(FILE_PATH + 'core/dataset/citationv8_orig/Citation-2015.csv')
@@ -491,7 +494,6 @@ def load_graph_citeseer() -> Data:
 
 
 def load_text_citeseer() -> List[str]:
-
     return None
 
 
@@ -502,8 +504,8 @@ def load_tag_citeseer() -> Tuple[Data, List[str]]:
 
 
 def load_graph_pwc_large(method):
-    graph = torch.load(FILE_PATH+f'core/dataset/pwc_large/pwc_{method}_large_undirec.pt')
-    return graph 
+    graph = torch.load(FILE_PATH + f'core/dataset/pwc_large/pwc_{method}_large_undirec.pt')
+    return graph
 
 
 def load_text_pwc_large() -> List[str]:
@@ -512,7 +514,7 @@ def load_text_pwc_large() -> List[str]:
 
 
 def load_graph_pwc_medium(method):
-    return torch.load(FILE_PATH+f'core/dataset/pwc_medium/pwc_{method}_medium_undirec.pt')
+    return torch.load(FILE_PATH + f'core/dataset/pwc_medium/pwc_{method}_medium_undirec.pt')
 
 
 def load_text_pwc_medium(method) -> List[str]:
@@ -521,22 +523,21 @@ def load_text_pwc_medium(method) -> List[str]:
 
 
 def load_graph_pwc_small(method):
-    return torch.load(FILE_PATH+f'core/dataset/pwc_small/pwc_{method}_small_undirec.pt') 
+    return torch.load(FILE_PATH + f'core/dataset/pwc_small/pwc_{method}_small_undirec.pt')
 
 
 def load_text_pwc_small(method) -> List[str]:
     raw_text = pd.read_csv(FILE_PATH + f'core/dataset/pwc_small/pwc_{method}_small_text.csv')
     return raw_text['feat'].tolist()
-    
-    
+
+
 def extract_lcc_pwc_undir() -> Data:
     # return the largest connected components with text attrs
-    graph = torch.load(FILE_PATH+'core/dataset/pwc_large/pwc_tfidf_large_undir.pt')
+    graph = torch.load(FILE_PATH + 'core/dataset/pwc_large/pwc_tfidf_large_undir.pt')
     data_lcc = use_lcc(graph)
     root = '/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/'
-    torch.save(data_lcc, root+'core/dataset/pwc_large/pwc_tfidf_medium_undir.pt')
-    from pdb import set_trace as st; st()
-    return 
+    torch.save(data_lcc, root + 'core/dataset/pwc_large/pwc_tfidf_medium_undir.pt')
+    return
 
 
 # Test code
@@ -545,7 +546,6 @@ if __name__ == '__main__':
     print(type(graph))
     graph, text = load_tag_citeseer()
     print(type(text))
-
 
     graph = load_graph_arxiv23()
     # print(type(graph))
@@ -562,11 +562,11 @@ if __name__ == '__main__':
     graph, text = load_tag_ogbn_arxiv()
     print(type(graph))
     print(type(text))
-    
+
     graph, text = load_tag_product()
     print(type(graph))
     print(type(text))
-    
+
     graph = load_graph_pubmed()
     graph, text = load_tag_pubmed()
     print(type(graph))

@@ -1,0 +1,122 @@
+[nltk_data] Downloading package punkt to /home/hk-project-
+[nltk_data]     test-p0021478/cc7738/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+  0%|          | 0/35460 [00:00<?, ?it/s][nltk_data] Downloading package punkt to /home/hk-project-
+[nltk_data]     test-p0021478/cc7738/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+  0%|          | 0/35460 [00:00<?, ?it/s] 18%|█▊        | 6273/35460 [00:00<00:00, 62722.73it/s] 17%|█▋        | 6173/35460 [00:00<00:00, 61713.87it/s] 35%|███▌      | 12550/35460 [00:00<00:00, 62745.20it/s] 35%|███▌      | 12457/35460 [00:00<00:00, 62369.44it/s] 53%|█████▎    | 18843/35460 [00:00<00:00, 62825.71it/s] 53%|█████▎    | 18748/35460 [00:00<00:00, 62613.48it/s] 71%|███████   | 25126/35460 [00:00<00:00, 61673.25it/s] 71%|███████   | 25010/35460 [00:00<00:00, 61753.86it/s] 88%|████████▊ | 31297/35460 [00:00<00:00, 59902.13it/s] 88%|████████▊ | 31188/35460 [00:00<00:00, 60279.43it/s]100%|██████████| 35460/35460 [00:00<00:00, 60467.22it/s]
+  0%|          | 0/35460 [00:00<?, ?it/s]100%|██████████| 35460/35460 [00:00<00:00, 60679.36it/s]
+  0%|          | 0/35460 [00:00<?, ?it/s] 16%|█▌        | 5631/35460 [00:00<00:00, 56302.54it/s] 16%|█▌        | 5728/35460 [00:00<00:00, 57272.68it/s] 32%|███▏      | 11296/35460 [00:00<00:00, 56500.45it/s] 32%|███▏      | 11489/35460 [00:00<00:00, 57469.76it/s] 48%|████▊     | 16976/35460 [00:00<00:00, 56633.05it/s] 49%|████▊     | 17262/35460 [00:00<00:00, 57583.53it/s] 64%|██████▍   | 22657/35460 [00:00<00:00, 56700.09it/s] 65%|██████▍   | 23028/35460 [00:00<00:00, 57611.19it/s] 80%|███████▉  | 28349/35460 [00:00<00:00, 56776.18it/s] 81%|████████  | 28805/35460 [00:00<00:00, 57667.09it/s] 96%|█████████▌| 34043/35460 [00:00<00:00, 56828.90it/s] 98%|█████████▊| 34574/35460 [00:00<00:00, 57671.95it/s]100%|██████████| 35460/35460 [00:00<00:00, 56722.04it/s]100%|██████████| 35460/35460 [00:00<00:00, 57661.22it/s]
+  0%|          | 0/6648 [00:00<?, ?it/s]
+  0%|          | 0/6648 [00:00<?, ?it/s] 86%|████████▌ | 5685/6648 [00:00<00:00, 56845.99it/s] 87%|████████▋ | 5757/6648 [00:00<00:00, 57561.68it/s]100%|██████████| 6648/6648 [00:00<00:00, 56803.10it/s]
+  0%|          | 0/6648 [00:00<?, ?it/s]100%|██████████| 6648/6648 [00:00<00:00, 57539.33it/s]
+  0%|          | 0/6648 [00:00<?, ?it/s] 85%|████████▍ | 5640/6648 [00:00<00:00, 56390.51it/s] 86%|████████▋ | 5741/6648 [00:00<00:00, 57402.66it/s]100%|██████████| 6648/6648 [00:00<00:00, 56376.79it/s]100%|██████████| 6648/6648 [00:00<00:00, 57404.53it/s]
+  0%|          | 0/2216 [00:00<?, ?it/s]
+  0%|          | 0/2216 [00:00<?, ?it/s]100%|██████████| 2216/2216 [00:00<00:00, 57347.74it/s]
+  0%|          | 0/2216 [00:00<?, ?it/s]100%|██████████| 2216/2216 [00:00<00:00, 56321.22it/s]
+  0%|          | 0/2216 [00:00<?, ?it/s]100%|██████████| 2216/2216 [00:00<00:00, 57214.30it/s]100%|██████████| 2216/2216 [00:00<00:00, 56397.08it/s]
+Exception in thread Thread-3:
+Traceback (most recent call last):
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/threading.py", line 932, in _bootstrap_inner
+    self.run()
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 244, in run
+    self._run()
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 275, in _run
+    self._record_writer.write(data)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/record_writer.py", line 40, in write
+    self._writer.write(header + header_crc + data + footer_crc)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 773, in write
+    self.fs.append(self.filename, file_content, self.binary_mode)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 167, in append
+    self._write(filename, file_content, "ab" if binary_mode else "a")
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 171, in _write
+    with io.open(filename, mode, encoding=encoding) as f:
+FileNotFoundError: [Errno 2] No such file or directory: b'runs/Aug06_07-40-43_hkn0332.localdomain/events.out.tfevents.1722922843.hkn0332.localdomain.68935.0'
+Traceback (most recent call last):
+  File "lp_edge_embed.py", line 222, in <module>
+    project_main()
+  File "lp_edge_embed.py", line 189, in project_main
+    trainer.train()
+  File "/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/core/graphgps/train/embedding_LLM_train.py", line 113, in train
+    self.tensorboard_writer.add_scalar(f"Metrics/Valid/{key}", result[1], epoch)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/torch/utils/tensorboard/writer.py", line 396, in add_scalar
+    self._get_file_writer().add_summary(summary, global_step, walltime)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/torch/utils/tensorboard/writer.py", line 114, in add_summary
+    self.add_event(event, global_step, walltime)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/torch/utils/tensorboard/writer.py", line 98, in add_event
+    self.event_writer.add_event(event)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 117, in add_event
+    self._async_writer.write(event.SerializeToString())
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 178, in write
+    self._check_worker_status()
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 212, in _check_worker_status
+    raise exception
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/threading.py", line 932, in _bootstrap_inner
+    self.run()
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 244, in run
+    self._run()
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 275, in _run
+    self._record_writer.write(data)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/record_writer.py", line 40, in write
+    self._writer.write(header + header_crc + data + footer_crc)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 773, in write
+    self.fs.append(self.filename, file_content, self.binary_mode)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 167, in append
+    self._write(filename, file_content, "ab" if binary_mode else "a")
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 171, in _write
+    with io.open(filename, mode, encoding=encoding) as f:
+FileNotFoundError: [Errno 2] No such file or directory: b'runs/Aug06_07-40-43_hkn0332.localdomain/events.out.tfevents.1722922843.hkn0332.localdomain.68935.0'
+
+Exception in thread Thread-3:
+Traceback (most recent call last):
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/threading.py", line 932, in _bootstrap_inner
+    self.run()
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 244, in run
+    self._run()
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 275, in _run
+    self._record_writer.write(data)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/record_writer.py", line 40, in write
+    self._writer.write(header + header_crc + data + footer_crc)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 773, in write
+    self.fs.append(self.filename, file_content, self.binary_mode)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 167, in append
+    self._write(filename, file_content, "ab" if binary_mode else "a")
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 171, in _write
+    with io.open(filename, mode, encoding=encoding) as f:
+FileNotFoundError: [Errno 2] No such file or directory: b'runs/Aug06_07-40-43_hkn0332.localdomain/events.out.tfevents.1722922843.hkn0332.localdomain.68936.0'
+Traceback (most recent call last):
+  File "lp_edge_embed.py", line 222, in <module>
+    project_main()
+  File "lp_edge_embed.py", line 189, in project_main
+    trainer.train()
+  File "/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/core/graphgps/train/embedding_LLM_train.py", line 114, in train
+    self.tensorboard_writer.add_scalar(f"Metrics/Test/{key}", result[2], epoch)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/torch/utils/tensorboard/writer.py", line 396, in add_scalar
+    self._get_file_writer().add_summary(summary, global_step, walltime)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/torch/utils/tensorboard/writer.py", line 114, in add_summary
+    self.add_event(event, global_step, walltime)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/torch/utils/tensorboard/writer.py", line 98, in add_event
+    self.event_writer.add_event(event)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 117, in add_event
+    self._async_writer.write(event.SerializeToString())
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 178, in write
+    self._check_worker_status()
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 212, in _check_worker_status
+    raise exception
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/threading.py", line 932, in _bootstrap_inner
+    self.run()
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 244, in run
+    self._run()
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/event_file_writer.py", line 275, in _run
+    self._record_writer.write(data)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/summary/writer/record_writer.py", line 40, in write
+    self._writer.write(header + header_crc + data + footer_crc)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 773, in write
+    self.fs.append(self.filename, file_content, self.binary_mode)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 167, in append
+    self._write(filename, file_content, "ab" if binary_mode else "a")
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 171, in _write
+    with io.open(filename, mode, encoding=encoding) as f:
+FileNotFoundError: [Errno 2] No such file or directory: b'runs/Aug06_07-40-43_hkn0332.localdomain/events.out.tfevents.1722922843.hkn0332.localdomain.68936.0'
+/var/spool/slurmd/job2579211/slurm_script: line 38: syntax error near unexpected token `done'
+/var/spool/slurmd/job2579211/slurm_script: line 38: `done'

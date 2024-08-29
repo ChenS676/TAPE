@@ -18,11 +18,17 @@ from graph_embed.ge.models import Node2Vec
 from tune_utils import save_parameters
 from data_utils.load_data_lp import get_edge_split
 from data_utils.load import load_graph_lp as data_loader
+<<<<<<< HEAD
 from data_utils.lcc import construct_sparse_adj
 from data_utils.graph_stats import plot_coo_matrix
 from graphgps.utility.utils import set_cfg, get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel, parse_args
 from heuristic.eval import get_metric_score
 
+=======
+from data_utils.graph_stats import plot_coo_matrix, construct_sparse_adj
+from graphgps.utility.utils import set_cfg, get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel
+from networkx import from_scipy_sparse_matrix as from_scipy_sparse_array
+>>>>>>> 89ecc007765bc968264719cad8b571269a77729f
 # Set the file path for the project
 FILE_PATH = get_git_repo_root_path() + '/'
 
@@ -111,7 +117,7 @@ def eval_mrr_acc(cfg, writer=None) -> None:
 
     # Extract Node2Vec parameters from config
     node2vec_params = cfg.model.node2vec
-    G = nx.from_scipy_sparse_array(full_A, create_using=nx.Graph())
+    G = from_scipy_sparse_array(full_A, create_using=nx.Graph())
 
     model = Node2Vec(G, walk_length=node2vec_params.walk_length, 
                         num_walks=node2vec_params.num_walks,
