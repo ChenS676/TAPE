@@ -1,0 +1,55 @@
+total 459
+-rw-r--r-- 1 cc7738 aifb  4032 Aug 13 22:38 README.md
+-rw-r--r-- 1 cc7738 aifb     0 Aug 13 22:38 __init__.py
+drwxr-xr-x 2 cc7738 aifb  4096 Aug 13 22:38 examples
+-rw-r--r-- 1 cc7738 aifb  6659 Aug 13 22:38 wb_tune2.py
+-rw-r--r-- 1 cc7738 aifb  5434 Aug 13 22:38 wb_tune_struc2vec.py
+drwxr-xr-x 4 cc7738 aifb  4096 Aug 20 17:26 ge
+drwxr-xr-x 4 cc7738 aifb  4096 Aug 20 19:56 res_outputs_emb
+-rw-r--r-- 1 cc7738 aifb  4054 Aug 21 17:21 tester.ipynb
+-rw-r--r-- 1 cc7738 aifb 10766 Aug 27 18:56 tune_utils.py
+drwxr-xr-x 2 cc7738 aifb  4096 Aug 27 18:58 __pycache__
+drwxr-xr-x 4 cc7738 aifb  4096 Aug 28 14:21 generated_dataset
+drwxr-xr-x 5 cc7738 aifb  4096 Aug 28 16:19 temp_path
+-rw-r--r-- 1 cc7738 aifb  5577 Aug 28 17:03 line_tagold.py
+drwxr-xr-x 2 cc7738 aifb  4096 Aug 28 17:27 scripts
+-rw-r--r-- 1 cc7738 aifb  8129 Aug 28 17:40 line_tag.py
+-rw-r--r-- 1 cc7738 aifb 41160 Aug 28 17:48 cora_node2vec.png
+-rw-r--r-- 1 cc7738 aifb 24623 Aug 28 18:07 line_pred.png
+-rw-r--r-- 1 cc7738 aifb  8506 Aug 29 11:47 struc2vec_tag.py
+-rw-r--r-- 1 cc7738 aifb 82107 Aug 29 12:42 struc2vec_pred.png
+-rw-r--r-- 1 cc7738 aifb  8708 Aug 29 13:43 node2vec_tag.py
+-rw-r--r-- 1 cc7738 aifb 14395 Aug 29 14:01 node2vec_tagplus.py
+-rw-r--r-- 1 cc7738 aifb 41276 Aug 29 14:11 test_edge_index.png
+-rw-r--r-- 1 cc7738 aifb 65509 Aug 29 14:11 node2vec_pred.png
+embedding size (19717, 64)
+{'deepwalk_acc': 0.7917418772563177} {'deepwalk_mrr': {'Hits@1': 0.0754, 'Hits@3': 0.2351, 'Hits@10': 0.3375, 'Hits@20': 0.4179, 'Hits@50': 0.5925, 'Hits@100': 0.6972, 'MRR': 0.1749, 'mrr_hit1': 0.0754, 'mrr_hit3': 0.2351, 'mrr_hit10': 0.3375, 'mrr_hit20': 0.4179, 'mrr_hit50': 0.5925, 'mrr_hit100': 0.6972, 'AUC': 0.8301, 'AP': 0.8872, 'ACC': 0.7917418772563177}}
+embedding size (19717, 64)
+{'deepwalk_acc': 0.8131768953068592} {'deepwalk_mrr': {'Hits@1': 0.1462, 'Hits@3': 0.1949, 'Hits@10': 0.4093, 'Hits@20': 0.5384, 'Hits@50': 0.6412, 'Hits@100': 0.7134, 'MRR': 0.2206, 'mrr_hit1': 0.1462, 'mrr_hit3': 0.1949, 'mrr_hit10': 0.4093, 'mrr_hit20': 0.5384, 'mrr_hit50': 0.6412, 'mrr_hit100': 0.7134, 'AUC': 0.8474, 'AP': 0.9007, 'ACC': 0.8131768953068592}}
+embedding size (19717, 64)
+{'deepwalk_acc': 0.8075361010830325} {'deepwalk_mrr': {'Hits@1': 0.1778, 'Hits@3': 0.2283, 'Hits@10': 0.4084, 'Hits@20': 0.5433, 'Hits@50': 0.6462, 'Hits@100': 0.7175, 'MRR': 0.2384, 'mrr_hit1': 0.1778, 'mrr_hit3': 0.2283, 'mrr_hit10': 0.4084, 'mrr_hit20': 0.5433, 'mrr_hit50': 0.6462, 'mrr_hit100': 0.7175, 'AUC': 0.8357, 'AP': 0.8948, 'ACC': 0.8075361010830325}}
+embedding size (19717, 64)
+{'deepwalk_acc': 0.8147563176895307} {'deepwalk_mrr': {'Hits@1': 0.0695, 'Hits@3': 0.2071, 'Hits@10': 0.3804, 'Hits@20': 0.5253, 'Hits@50': 0.671, 'Hits@100': 0.7274, 'MRR': 0.1765, 'mrr_hit1': 0.0695, 'mrr_hit3': 0.2071, 'mrr_hit10': 0.3804, 'mrr_hit20': 0.5253, 'mrr_hit50': 0.671, 'mrr_hit100': 0.7274, 'AUC': 0.8435, 'AP': 0.8988, 'ACC': 0.8147563176895307}}
+embedding size (19717, 64)
+{'deepwalk_acc': 0.8077617328519856} {'deepwalk_mrr': {'Hits@1': 0.1169, 'Hits@3': 0.1372, 'Hits@10': 0.3574, 'Hits@20': 0.5153, 'Hits@50': 0.648, 'Hits@100': 0.718, 'MRR': 0.1724, 'mrr_hit1': 0.1169, 'mrr_hit3': 0.1372, 'mrr_hit10': 0.3574, 'mrr_hit20': 0.5153, 'mrr_hit50': 0.648, 'mrr_hit100': 0.718, 'AUC': 0.841, 'AP': 0.8955, 'ACC': 0.8077617328519856}}
+
+============================= JOB FEEDBACK =============================
+
+Job ID: 1464999
+Cluster: haic
+User/Group: cc7738/aifb
+Account: aifb
+State: COMPLETED (exit code 0)
+Partition: normal
+Nodes: 1
+Cores per node: 40
+Nodelist: haicn1705
+CPU Utilized: 00:13:24
+CPU Efficiency: 4.66% of 04:47:20 core-walltime
+Job Wall-clock time: 00:07:11
+Starttime: Thu Aug 29 14:11:18 2024
+Endtime: Thu Aug 29 14:18:29 2024
+Memory Utilized: 3.14 GB
+Memory Efficiency: 5.02% of 62.50 GB
+Energy Consumed: 331936 Joule / 92.2044444444444 Watthours
+Average node power draw: 770.15313225058 Watt

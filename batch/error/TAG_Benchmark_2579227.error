@@ -1,0 +1,253 @@
+[nltk_data] Downloading package punkt to /home/hk-project-
+[nltk_data]     test-p0021478/cc7738/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+2024-08-06 08:12:44,283 - torch.Size([19717, 500])
+2024-08-06 08:19:16,051 - Run: 01, Key: Hits@100, Epoch: 200, Loss: 2600.4279, Train: 21.80, Valid: 42.61, Test: 62.86%
+2024-08-06 08:19:16,051 - Run: 01, Key: Hits@100, Epoch: 200, Loss: 2600.4279, Train: 21.80, Valid: 42.61, Test: 62.86%
+2024-08-06 08:19:16,052 - Run: 01, Key: MRR, Epoch: 200, Loss: 2600.4279, Train: 1.87, Valid: 7.82, Test: 20.11%
+2024-08-06 08:19:16,052 - Run: 01, Key: MRR, Epoch: 200, Loss: 2600.4279, Train: 1.87, Valid: 7.82, Test: 20.11%
+2024-08-06 08:19:16,053 - Run: 01, Key: AUC, Epoch: 200, Loss: 2600.4279, Train: 94.13, Valid: 93.02, Test: 92.70%
+2024-08-06 08:19:16,053 - Run: 01, Key: AUC, Epoch: 200, Loss: 2600.4279, Train: 94.13, Valid: 93.02, Test: 92.70%
+2024-08-06 08:19:16,054 - ---
+2024-08-06 08:19:16,054 - ---
+2024-08-06 09:26:55,329 - Run: 01, Key: Hits@100, Epoch: 400, Loss: 2264.1476, Train: 26.12, Valid: 45.41, Test: 66.29%
+2024-08-06 09:26:55,329 - Run: 01, Key: Hits@100, Epoch: 400, Loss: 2264.1476, Train: 26.12, Valid: 45.41, Test: 66.29%
+2024-08-06 09:26:55,329 - Run: 01, Key: MRR, Epoch: 400, Loss: 2264.1476, Train: 2.32, Valid: 8.21, Test: 21.83%
+2024-08-06 09:26:55,329 - Run: 01, Key: MRR, Epoch: 400, Loss: 2264.1476, Train: 2.32, Valid: 8.21, Test: 21.83%
+2024-08-06 09:26:55,333 - Run: 01, Key: AUC, Epoch: 400, Loss: 2264.1476, Train: 95.78, Valid: 94.00, Test: 93.83%
+2024-08-06 09:26:55,333 - Run: 01, Key: AUC, Epoch: 400, Loss: 2264.1476, Train: 95.78, Valid: 94.00, Test: 93.83%
+2024-08-06 09:26:55,333 - ---
+2024-08-06 09:26:55,333 - ---
+2024-08-06 11:35:49,427 - Run: 01, Key: Hits@100, Epoch: 600, Loss: 1945.1534, Train: 31.02, Valid: 46.98, Test: 69.13%
+2024-08-06 11:35:49,427 - Run: 01, Key: Hits@100, Epoch: 600, Loss: 1945.1534, Train: 31.02, Valid: 46.98, Test: 69.13%
+2024-08-06 11:35:49,427 - Run: 01, Key: MRR, Epoch: 600, Loss: 1945.1534, Train: 2.71, Valid: 9.03, Test: 22.98%
+2024-08-06 11:35:49,427 - Run: 01, Key: MRR, Epoch: 600, Loss: 1945.1534, Train: 2.71, Valid: 9.03, Test: 22.98%
+2024-08-06 11:35:49,429 - Run: 01, Key: AUC, Epoch: 600, Loss: 1945.1534, Train: 97.02, Valid: 94.50, Test: 94.41%
+2024-08-06 11:35:49,429 - Run: 01, Key: AUC, Epoch: 600, Loss: 1945.1534, Train: 97.02, Valid: 94.50, Test: 94.41%
+2024-08-06 11:35:49,429 - ---
+2024-08-06 11:35:49,429 - ---
+2024-08-06 14:03:15,018 - Run: 01, Key: Hits@100, Epoch: 800, Loss: 1610.3551, Train: 36.48, Valid: 50.11, Test: 70.58%
+2024-08-06 14:03:15,018 - Run: 01, Key: Hits@100, Epoch: 800, Loss: 1610.3551, Train: 36.48, Valid: 50.11, Test: 70.58%
+2024-08-06 14:03:15,018 - Run: 01, Key: MRR, Epoch: 800, Loss: 1610.3551, Train: 3.34, Valid: 8.90, Test: 22.65%
+2024-08-06 14:03:15,018 - Run: 01, Key: MRR, Epoch: 800, Loss: 1610.3551, Train: 3.34, Valid: 8.90, Test: 22.65%
+2024-08-06 14:03:15,020 - Run: 01, Key: AUC, Epoch: 800, Loss: 1610.3551, Train: 98.13, Valid: 94.88, Test: 94.80%
+2024-08-06 14:03:15,020 - Run: 01, Key: AUC, Epoch: 800, Loss: 1610.3551, Train: 98.13, Valid: 94.88, Test: 94.80%
+2024-08-06 14:03:15,020 - ---
+2024-08-06 14:03:15,020 - ---
+2024-08-06 16:27:54,675 - Run: 01, Key: Hits@100, Epoch: 1000, Loss: 1274.7733, Train: 48.19, Valid: 51.52, Test: 71.39%
+2024-08-06 16:27:54,675 - Run: 01, Key: Hits@100, Epoch: 1000, Loss: 1274.7733, Train: 48.19, Valid: 51.52, Test: 71.39%
+2024-08-06 16:27:54,675 - Run: 01, Key: MRR, Epoch: 1000, Loss: 1274.7733, Train: 4.18, Valid: 8.53, Test: 22.17%
+2024-08-06 16:27:54,675 - Run: 01, Key: MRR, Epoch: 1000, Loss: 1274.7733, Train: 4.18, Valid: 8.53, Test: 22.17%
+2024-08-06 16:27:54,677 - Run: 01, Key: AUC, Epoch: 1000, Loss: 1274.7733, Train: 99.05, Valid: 95.17, Test: 95.05%
+2024-08-06 16:27:54,677 - Run: 01, Key: AUC, Epoch: 1000, Loss: 1274.7733, Train: 99.05, Valid: 95.17, Test: 95.05%
+2024-08-06 16:27:54,677 - ---
+2024-08-06 16:27:54,677 - ---
+2024-08-06 19:09:01,572 - Run: 01, Key: Hits@100, Epoch: 1200, Loss: 931.2403, Train: 69.92, Valid: 54.30, Test: 72.11%
+2024-08-06 19:09:01,572 - Run: 01, Key: Hits@100, Epoch: 1200, Loss: 931.2403, Train: 69.92, Valid: 54.30, Test: 72.11%
+2024-08-06 19:09:01,572 - Run: 01, Key: MRR, Epoch: 1200, Loss: 931.2403, Train: 5.69, Valid: 8.52, Test: 21.38%
+2024-08-06 19:09:01,572 - Run: 01, Key: MRR, Epoch: 1200, Loss: 931.2403, Train: 5.69, Valid: 8.52, Test: 21.38%
+2024-08-06 19:09:01,574 - Run: 01, Key: AUC, Epoch: 1200, Loss: 931.2403, Train: 99.64, Valid: 95.38, Test: 95.22%
+2024-08-06 19:09:01,574 - Run: 01, Key: AUC, Epoch: 1200, Loss: 931.2403, Train: 99.64, Valid: 95.38, Test: 95.22%
+2024-08-06 19:09:01,577 - ---
+2024-08-06 19:09:01,577 - ---
+2024-08-06 21:48:07,468 - Run: 01, Key: Hits@100, Epoch: 1400, Loss: 725.6813, Train: 87.82, Valid: 56.50, Test: 72.74%
+2024-08-06 21:48:07,468 - Run: 01, Key: Hits@100, Epoch: 1400, Loss: 725.6813, Train: 87.82, Valid: 56.50, Test: 72.74%
+2024-08-06 21:48:07,469 - Run: 01, Key: MRR, Epoch: 1400, Loss: 725.6813, Train: 7.80, Valid: 8.27, Test: 20.97%
+2024-08-06 21:48:07,469 - Run: 01, Key: MRR, Epoch: 1400, Loss: 725.6813, Train: 7.80, Valid: 8.27, Test: 20.97%
+2024-08-06 21:48:07,470 - Run: 01, Key: AUC, Epoch: 1400, Loss: 725.6813, Train: 99.84, Valid: 95.44, Test: 95.31%
+2024-08-06 21:48:07,470 - Run: 01, Key: AUC, Epoch: 1400, Loss: 725.6813, Train: 99.84, Valid: 95.44, Test: 95.31%
+2024-08-06 21:48:07,471 - ---
+2024-08-06 21:48:07,471 - ---
+2024-08-07 00:18:02,162 - Run: 01, Key: Hits@100, Epoch: 1600, Loss: 614.8993, Train: 96.20, Valid: 55.64, Test: 73.15%
+2024-08-07 00:18:02,162 - Run: 01, Key: Hits@100, Epoch: 1600, Loss: 614.8993, Train: 96.20, Valid: 55.64, Test: 73.15%
+2024-08-07 00:18:02,163 - Run: 01, Key: MRR, Epoch: 1600, Loss: 614.8993, Train: 10.09, Valid: 8.26, Test: 21.21%
+2024-08-07 00:18:02,163 - Run: 01, Key: MRR, Epoch: 1600, Loss: 614.8993, Train: 10.09, Valid: 8.26, Test: 21.21%
+2024-08-07 00:18:02,164 - Run: 01, Key: AUC, Epoch: 1600, Loss: 614.8993, Train: 99.91, Valid: 95.47, Test: 95.34%
+2024-08-07 00:18:02,164 - Run: 01, Key: AUC, Epoch: 1600, Loss: 614.8993, Train: 99.91, Valid: 95.47, Test: 95.34%
+2024-08-07 00:18:02,165 - ---
+2024-08-07 00:18:02,165 - ---
+2024-08-07 02:41:21,869 - Run: 01, Key: Hits@100, Epoch: 1800, Loss: 550.8702, Train: 98.92, Valid: 55.60, Test: 73.69%
+2024-08-07 02:41:21,869 - Run: 01, Key: Hits@100, Epoch: 1800, Loss: 550.8702, Train: 98.92, Valid: 55.60, Test: 73.69%
+2024-08-07 02:41:21,869 - Run: 01, Key: MRR, Epoch: 1800, Loss: 550.8702, Train: 12.50, Valid: 8.19, Test: 20.83%
+2024-08-07 02:41:21,869 - Run: 01, Key: MRR, Epoch: 1800, Loss: 550.8702, Train: 12.50, Valid: 8.19, Test: 20.83%
+2024-08-07 02:41:21,871 - Run: 01, Key: AUC, Epoch: 1800, Loss: 550.8702, Train: 99.94, Valid: 95.48, Test: 95.32%
+2024-08-07 02:41:21,871 - Run: 01, Key: AUC, Epoch: 1800, Loss: 550.8702, Train: 99.94, Valid: 95.48, Test: 95.32%
+2024-08-07 02:41:21,871 - ---
+2024-08-07 02:41:21,871 - ---
+2024-08-07 04:59:14,871 - Run: 01, Key: Hits@100, Epoch: 2000, Loss: 514.2376, Train: 99.62, Valid: 54.92, Test: 73.24%
+2024-08-07 04:59:14,871 - Run: 01, Key: Hits@100, Epoch: 2000, Loss: 514.2376, Train: 99.62, Valid: 54.92, Test: 73.24%
+2024-08-07 04:59:14,871 - Run: 01, Key: MRR, Epoch: 2000, Loss: 514.2376, Train: 15.02, Valid: 8.20, Test: 20.68%
+2024-08-07 04:59:14,871 - Run: 01, Key: MRR, Epoch: 2000, Loss: 514.2376, Train: 15.02, Valid: 8.20, Test: 20.68%
+2024-08-07 04:59:14,873 - Run: 01, Key: AUC, Epoch: 2000, Loss: 514.2376, Train: 99.96, Valid: 95.47, Test: 95.33%
+2024-08-07 04:59:14,873 - Run: 01, Key: AUC, Epoch: 2000, Loss: 514.2376, Train: 99.96, Valid: 95.47, Test: 95.33%
+2024-08-07 04:59:14,874 - ---
+2024-08-07 04:59:14,874 - ---
+2024-08-07 05:05:43,034 - Run: 02, Key: Hits@100, Epoch: 200, Loss: 2602.8314, Train: 21.90, Valid: 42.51, Test: 62.82%
+2024-08-07 05:05:43,034 - Run: 02, Key: Hits@100, Epoch: 200, Loss: 2602.8314, Train: 21.90, Valid: 42.51, Test: 62.82%
+2024-08-07 05:05:43,034 - Run: 02, Key: Hits@100, Epoch: 200, Loss: 2602.8314, Train: 21.90, Valid: 42.51, Test: 62.82%
+2024-08-07 05:05:43,035 - Run: 02, Key: MRR, Epoch: 200, Loss: 2602.8314, Train: 1.90, Valid: 8.14, Test: 19.14%
+2024-08-07 05:05:43,035 - Run: 02, Key: MRR, Epoch: 200, Loss: 2602.8314, Train: 1.90, Valid: 8.14, Test: 19.14%
+2024-08-07 05:05:43,035 - Run: 02, Key: MRR, Epoch: 200, Loss: 2602.8314, Train: 1.90, Valid: 8.14, Test: 19.14%
+2024-08-07 05:05:43,036 - Run: 02, Key: AUC, Epoch: 200, Loss: 2602.8314, Train: 94.17, Valid: 93.06, Test: 92.76%
+2024-08-07 05:05:43,036 - Run: 02, Key: AUC, Epoch: 200, Loss: 2602.8314, Train: 94.17, Valid: 93.06, Test: 92.76%
+2024-08-07 05:05:43,036 - Run: 02, Key: AUC, Epoch: 200, Loss: 2602.8314, Train: 94.17, Valid: 93.06, Test: 92.76%
+2024-08-07 05:05:43,037 - ---
+2024-08-07 05:05:43,037 - ---
+2024-08-07 05:05:43,037 - ---
+2024-08-07 06:10:59,584 - Run: 02, Key: Hits@100, Epoch: 400, Loss: 2262.3918, Train: 25.53, Valid: 45.20, Test: 66.52%
+2024-08-07 06:10:59,584 - Run: 02, Key: Hits@100, Epoch: 400, Loss: 2262.3918, Train: 25.53, Valid: 45.20, Test: 66.52%
+2024-08-07 06:10:59,584 - Run: 02, Key: Hits@100, Epoch: 400, Loss: 2262.3918, Train: 25.53, Valid: 45.20, Test: 66.52%
+2024-08-07 06:10:59,585 - Run: 02, Key: MRR, Epoch: 400, Loss: 2262.3918, Train: 2.17, Valid: 8.83, Test: 21.59%
+2024-08-07 06:10:59,585 - Run: 02, Key: MRR, Epoch: 400, Loss: 2262.3918, Train: 2.17, Valid: 8.83, Test: 21.59%
+2024-08-07 06:10:59,585 - Run: 02, Key: MRR, Epoch: 400, Loss: 2262.3918, Train: 2.17, Valid: 8.83, Test: 21.59%
+2024-08-07 06:10:59,588 - Run: 02, Key: AUC, Epoch: 400, Loss: 2262.3918, Train: 95.74, Valid: 94.00, Test: 93.85%
+2024-08-07 06:10:59,588 - Run: 02, Key: AUC, Epoch: 400, Loss: 2262.3918, Train: 95.74, Valid: 94.00, Test: 93.85%
+2024-08-07 06:10:59,588 - Run: 02, Key: AUC, Epoch: 400, Loss: 2262.3918, Train: 95.74, Valid: 94.00, Test: 93.85%
+2024-08-07 06:10:59,588 - ---
+2024-08-07 06:10:59,588 - ---
+2024-08-07 06:10:59,588 - ---
+2024-08-07 08:12:00,851 - Run: 02, Key: Hits@100, Epoch: 600, Loss: 1957.8651, Train: 30.33, Valid: 47.32, Test: 67.51%
+2024-08-07 08:12:00,851 - Run: 02, Key: Hits@100, Epoch: 600, Loss: 1957.8651, Train: 30.33, Valid: 47.32, Test: 67.51%
+2024-08-07 08:12:00,851 - Run: 02, Key: Hits@100, Epoch: 600, Loss: 1957.8651, Train: 30.33, Valid: 47.32, Test: 67.51%
+2024-08-07 08:12:00,851 - Run: 02, Key: MRR, Epoch: 600, Loss: 1957.8651, Train: 2.46, Valid: 9.56, Test: 21.00%
+2024-08-07 08:12:00,851 - Run: 02, Key: MRR, Epoch: 600, Loss: 1957.8651, Train: 2.46, Valid: 9.56, Test: 21.00%
+2024-08-07 08:12:00,851 - Run: 02, Key: MRR, Epoch: 600, Loss: 1957.8651, Train: 2.46, Valid: 9.56, Test: 21.00%
+2024-08-07 08:12:00,853 - Run: 02, Key: AUC, Epoch: 600, Loss: 1957.8651, Train: 96.98, Valid: 94.49, Test: 94.43%
+2024-08-07 08:12:00,853 - Run: 02, Key: AUC, Epoch: 600, Loss: 1957.8651, Train: 96.98, Valid: 94.49, Test: 94.43%
+2024-08-07 08:12:00,853 - Run: 02, Key: AUC, Epoch: 600, Loss: 1957.8651, Train: 96.98, Valid: 94.49, Test: 94.43%
+2024-08-07 08:12:00,853 - ---
+2024-08-07 08:12:00,853 - ---
+2024-08-07 08:12:00,853 - ---
+2024-08-07 10:32:45,372 - Run: 02, Key: Hits@100, Epoch: 800, Loss: 1599.4248, Train: 36.41, Valid: 50.02, Test: 71.48%
+2024-08-07 10:32:45,372 - Run: 02, Key: Hits@100, Epoch: 800, Loss: 1599.4248, Train: 36.41, Valid: 50.02, Test: 71.48%
+2024-08-07 10:32:45,372 - Run: 02, Key: Hits@100, Epoch: 800, Loss: 1599.4248, Train: 36.41, Valid: 50.02, Test: 71.48%
+2024-08-07 10:32:45,373 - Run: 02, Key: MRR, Epoch: 800, Loss: 1599.4248, Train: 2.98, Valid: 9.28, Test: 19.65%
+2024-08-07 10:32:45,373 - Run: 02, Key: MRR, Epoch: 800, Loss: 1599.4248, Train: 2.98, Valid: 9.28, Test: 19.65%
+2024-08-07 10:32:45,373 - Run: 02, Key: MRR, Epoch: 800, Loss: 1599.4248, Train: 2.98, Valid: 9.28, Test: 19.65%
+2024-08-07 10:32:45,374 - Run: 02, Key: AUC, Epoch: 800, Loss: 1599.4248, Train: 98.17, Valid: 94.88, Test: 94.88%
+2024-08-07 10:32:45,374 - Run: 02, Key: AUC, Epoch: 800, Loss: 1599.4248, Train: 98.17, Valid: 94.88, Test: 94.88%
+2024-08-07 10:32:45,374 - Run: 02, Key: AUC, Epoch: 800, Loss: 1599.4248, Train: 98.17, Valid: 94.88, Test: 94.88%
+2024-08-07 10:32:45,375 - ---
+2024-08-07 10:32:45,375 - ---
+2024-08-07 10:32:45,375 - ---
+2024-08-07 12:41:19,957 - Run: 02, Key: Hits@100, Epoch: 1000, Loss: 1206.2428, Train: 51.60, Valid: 51.14, Test: 71.98%
+2024-08-07 12:41:19,957 - Run: 02, Key: Hits@100, Epoch: 1000, Loss: 1206.2428, Train: 51.60, Valid: 51.14, Test: 71.98%
+2024-08-07 12:41:19,957 - Run: 02, Key: Hits@100, Epoch: 1000, Loss: 1206.2428, Train: 51.60, Valid: 51.14, Test: 71.98%
+2024-08-07 12:41:19,958 - Run: 02, Key: MRR, Epoch: 1000, Loss: 1206.2428, Train: 3.80, Valid: 9.29, Test: 19.71%
+2024-08-07 12:41:19,958 - Run: 02, Key: MRR, Epoch: 1000, Loss: 1206.2428, Train: 3.80, Valid: 9.29, Test: 19.71%
+2024-08-07 12:41:19,958 - Run: 02, Key: MRR, Epoch: 1000, Loss: 1206.2428, Train: 3.80, Valid: 9.29, Test: 19.71%
+2024-08-07 12:41:19,959 - Run: 02, Key: AUC, Epoch: 1000, Loss: 1206.2428, Train: 99.18, Valid: 95.20, Test: 95.15%
+2024-08-07 12:41:19,959 - Run: 02, Key: AUC, Epoch: 1000, Loss: 1206.2428, Train: 99.18, Valid: 95.20, Test: 95.15%
+2024-08-07 12:41:19,959 - Run: 02, Key: AUC, Epoch: 1000, Loss: 1206.2428, Train: 99.18, Valid: 95.20, Test: 95.15%
+2024-08-07 12:41:19,960 - ---
+2024-08-07 12:41:19,960 - ---
+2024-08-07 12:41:19,960 - ---
+2024-08-07 15:30:18,732 - Run: 02, Key: Hits@100, Epoch: 1200, Loss: 859.3728, Train: 74.39, Valid: 51.65, Test: 73.92%
+2024-08-07 15:30:18,732 - Run: 02, Key: Hits@100, Epoch: 1200, Loss: 859.3728, Train: 74.39, Valid: 51.65, Test: 73.92%
+2024-08-07 15:30:18,732 - Run: 02, Key: Hits@100, Epoch: 1200, Loss: 859.3728, Train: 74.39, Valid: 51.65, Test: 73.92%
+2024-08-07 15:30:18,733 - Run: 02, Key: MRR, Epoch: 1200, Loss: 859.3728, Train: 5.45, Valid: 9.24, Test: 19.77%
+2024-08-07 15:30:18,733 - Run: 02, Key: MRR, Epoch: 1200, Loss: 859.3728, Train: 5.45, Valid: 9.24, Test: 19.77%
+2024-08-07 15:30:18,733 - Run: 02, Key: MRR, Epoch: 1200, Loss: 859.3728, Train: 5.45, Valid: 9.24, Test: 19.77%
+2024-08-07 15:30:18,734 - Run: 02, Key: AUC, Epoch: 1200, Loss: 859.3728, Train: 99.71, Valid: 95.38, Test: 95.24%
+2024-08-07 15:30:18,734 - Run: 02, Key: AUC, Epoch: 1200, Loss: 859.3728, Train: 99.71, Valid: 95.38, Test: 95.24%
+2024-08-07 15:30:18,734 - Run: 02, Key: AUC, Epoch: 1200, Loss: 859.3728, Train: 99.71, Valid: 95.38, Test: 95.24%
+2024-08-07 15:30:18,735 - ---
+2024-08-07 15:30:18,735 - ---
+2024-08-07 15:30:18,735 - ---
+2024-08-07 18:18:43,980 - Run: 02, Key: Hits@100, Epoch: 1400, Loss: 660.4608, Train: 91.60, Valid: 51.62, Test: 73.42%
+2024-08-07 18:18:43,980 - Run: 02, Key: Hits@100, Epoch: 1400, Loss: 660.4608, Train: 91.60, Valid: 51.62, Test: 73.42%
+2024-08-07 18:18:43,980 - Run: 02, Key: Hits@100, Epoch: 1400, Loss: 660.4608, Train: 91.60, Valid: 51.62, Test: 73.42%
+2024-08-07 18:18:43,980 - Run: 02, Key: MRR, Epoch: 1400, Loss: 660.4608, Train: 7.52, Valid: 9.30, Test: 19.90%
+2024-08-07 18:18:43,980 - Run: 02, Key: MRR, Epoch: 1400, Loss: 660.4608, Train: 7.52, Valid: 9.30, Test: 19.90%
+2024-08-07 18:18:43,980 - Run: 02, Key: MRR, Epoch: 1400, Loss: 660.4608, Train: 7.52, Valid: 9.30, Test: 19.90%
+2024-08-07 18:18:43,982 - Run: 02, Key: AUC, Epoch: 1400, Loss: 660.4608, Train: 99.87, Valid: 95.45, Test: 95.27%
+2024-08-07 18:18:43,982 - Run: 02, Key: AUC, Epoch: 1400, Loss: 660.4608, Train: 99.87, Valid: 95.45, Test: 95.27%
+2024-08-07 18:18:43,982 - Run: 02, Key: AUC, Epoch: 1400, Loss: 660.4608, Train: 99.87, Valid: 95.45, Test: 95.27%
+2024-08-07 18:18:43,982 - ---
+2024-08-07 18:18:43,982 - ---
+2024-08-07 18:18:43,982 - ---
+2024-08-07 21:05:32,015 - Run: 02, Key: Hits@100, Epoch: 1600, Loss: 563.9064, Train: 98.53, Valid: 52.54, Test: 72.47%
+2024-08-07 21:05:32,015 - Run: 02, Key: Hits@100, Epoch: 1600, Loss: 563.9064, Train: 98.53, Valid: 52.54, Test: 72.47%
+2024-08-07 21:05:32,015 - Run: 02, Key: Hits@100, Epoch: 1600, Loss: 563.9064, Train: 98.53, Valid: 52.54, Test: 72.47%
+2024-08-07 21:05:32,015 - Run: 02, Key: MRR, Epoch: 1600, Loss: 563.9064, Train: 9.97, Valid: 8.96, Test: 19.93%
+2024-08-07 21:05:32,015 - Run: 02, Key: MRR, Epoch: 1600, Loss: 563.9064, Train: 9.97, Valid: 8.96, Test: 19.93%
+2024-08-07 21:05:32,015 - Run: 02, Key: MRR, Epoch: 1600, Loss: 563.9064, Train: 9.97, Valid: 8.96, Test: 19.93%
+2024-08-07 21:05:32,019 - Run: 02, Key: AUC, Epoch: 1600, Loss: 563.9064, Train: 99.92, Valid: 95.47, Test: 95.29%
+2024-08-07 21:05:32,019 - Run: 02, Key: AUC, Epoch: 1600, Loss: 563.9064, Train: 99.92, Valid: 95.47, Test: 95.29%
+2024-08-07 21:05:32,019 - Run: 02, Key: AUC, Epoch: 1600, Loss: 563.9064, Train: 99.92, Valid: 95.47, Test: 95.29%
+2024-08-07 21:05:32,019 - ---
+2024-08-07 21:05:32,019 - ---
+2024-08-07 21:05:32,019 - ---
+2024-08-07 23:48:51,170 - Run: 02, Key: Hits@100, Epoch: 1800, Loss: 499.7639, Train: 99.61, Valid: 52.51, Test: 72.16%
+2024-08-07 23:48:51,170 - Run: 02, Key: Hits@100, Epoch: 1800, Loss: 499.7639, Train: 99.61, Valid: 52.51, Test: 72.16%
+2024-08-07 23:48:51,170 - Run: 02, Key: Hits@100, Epoch: 1800, Loss: 499.7639, Train: 99.61, Valid: 52.51, Test: 72.16%
+2024-08-07 23:48:51,171 - Run: 02, Key: MRR, Epoch: 1800, Loss: 499.7639, Train: 12.46, Valid: 8.79, Test: 19.01%
+2024-08-07 23:48:51,171 - Run: 02, Key: MRR, Epoch: 1800, Loss: 499.7639, Train: 12.46, Valid: 8.79, Test: 19.01%
+2024-08-07 23:48:51,171 - Run: 02, Key: MRR, Epoch: 1800, Loss: 499.7639, Train: 12.46, Valid: 8.79, Test: 19.01%
+2024-08-07 23:48:51,172 - Run: 02, Key: AUC, Epoch: 1800, Loss: 499.7639, Train: 99.95, Valid: 95.49, Test: 95.27%
+2024-08-07 23:48:51,172 - Run: 02, Key: AUC, Epoch: 1800, Loss: 499.7639, Train: 99.95, Valid: 95.49, Test: 95.27%
+2024-08-07 23:48:51,172 - Run: 02, Key: AUC, Epoch: 1800, Loss: 499.7639, Train: 99.95, Valid: 95.49, Test: 95.27%
+2024-08-07 23:48:51,173 - ---
+2024-08-07 23:48:51,173 - ---
+2024-08-07 23:48:51,173 - ---
+2024-08-08 02:18:51,203 - Run: 02, Key: Hits@100, Epoch: 2000, Loss: 470.5985, Train: 99.91, Valid: 52.50, Test: 72.11%
+2024-08-08 02:18:51,203 - Run: 02, Key: Hits@100, Epoch: 2000, Loss: 470.5985, Train: 99.91, Valid: 52.50, Test: 72.11%
+2024-08-08 02:18:51,203 - Run: 02, Key: Hits@100, Epoch: 2000, Loss: 470.5985, Train: 99.91, Valid: 52.50, Test: 72.11%
+2024-08-08 02:18:51,204 - Run: 02, Key: MRR, Epoch: 2000, Loss: 470.5985, Train: 14.80, Valid: 8.57, Test: 18.87%
+2024-08-08 02:18:51,204 - Run: 02, Key: MRR, Epoch: 2000, Loss: 470.5985, Train: 14.80, Valid: 8.57, Test: 18.87%
+2024-08-08 02:18:51,204 - Run: 02, Key: MRR, Epoch: 2000, Loss: 470.5985, Train: 14.80, Valid: 8.57, Test: 18.87%
+2024-08-08 02:18:51,205 - Run: 02, Key: AUC, Epoch: 2000, Loss: 470.5985, Train: 99.96, Valid: 95.50, Test: 95.26%
+2024-08-08 02:18:51,205 - Run: 02, Key: AUC, Epoch: 2000, Loss: 470.5985, Train: 99.96, Valid: 95.50, Test: 95.26%
+2024-08-08 02:18:51,205 - Run: 02, Key: AUC, Epoch: 2000, Loss: 470.5985, Train: 99.96, Valid: 95.50, Test: 95.26%
+2024-08-08 02:18:51,206 - ---
+2024-08-08 02:18:51,206 - ---
+2024-08-08 02:18:51,206 - ---
+2024-08-08 02:25:17,687 - Run: 03, Key: Hits@100, Epoch: 200, Loss: 2603.5973, Train: 22.10, Valid: 42.73, Test: 62.95%
+2024-08-08 02:25:17,687 - Run: 03, Key: Hits@100, Epoch: 200, Loss: 2603.5973, Train: 22.10, Valid: 42.73, Test: 62.95%
+2024-08-08 02:25:17,687 - Run: 03, Key: Hits@100, Epoch: 200, Loss: 2603.5973, Train: 22.10, Valid: 42.73, Test: 62.95%
+2024-08-08 02:25:17,687 - Run: 03, Key: Hits@100, Epoch: 200, Loss: 2603.5973, Train: 22.10, Valid: 42.73, Test: 62.95%
+2024-08-08 02:25:17,688 - Run: 03, Key: MRR, Epoch: 200, Loss: 2603.5973, Train: 1.93, Valid: 7.89, Test: 20.11%
+2024-08-08 02:25:17,688 - Run: 03, Key: MRR, Epoch: 200, Loss: 2603.5973, Train: 1.93, Valid: 7.89, Test: 20.11%
+2024-08-08 02:25:17,688 - Run: 03, Key: MRR, Epoch: 200, Loss: 2603.5973, Train: 1.93, Valid: 7.89, Test: 20.11%
+2024-08-08 02:25:17,688 - Run: 03, Key: MRR, Epoch: 200, Loss: 2603.5973, Train: 1.93, Valid: 7.89, Test: 20.11%
+2024-08-08 02:25:17,689 - Run: 03, Key: AUC, Epoch: 200, Loss: 2603.5973, Train: 94.16, Valid: 93.05, Test: 92.74%
+2024-08-08 02:25:17,689 - Run: 03, Key: AUC, Epoch: 200, Loss: 2603.5973, Train: 94.16, Valid: 93.05, Test: 92.74%
+2024-08-08 02:25:17,689 - Run: 03, Key: AUC, Epoch: 200, Loss: 2603.5973, Train: 94.16, Valid: 93.05, Test: 92.74%
+2024-08-08 02:25:17,689 - Run: 03, Key: AUC, Epoch: 200, Loss: 2603.5973, Train: 94.16, Valid: 93.05, Test: 92.74%
+2024-08-08 02:25:17,690 - ---
+2024-08-08 02:25:17,690 - ---
+2024-08-08 02:25:17,690 - ---
+2024-08-08 02:25:17,690 - ---
+2024-08-08 03:45:28,372 - Run: 03, Key: Hits@100, Epoch: 400, Loss: 2282.4209, Train: 26.41, Valid: 44.80, Test: 65.61%
+2024-08-08 03:45:28,372 - Run: 03, Key: Hits@100, Epoch: 400, Loss: 2282.4209, Train: 26.41, Valid: 44.80, Test: 65.61%
+2024-08-08 03:45:28,372 - Run: 03, Key: Hits@100, Epoch: 400, Loss: 2282.4209, Train: 26.41, Valid: 44.80, Test: 65.61%
+2024-08-08 03:45:28,372 - Run: 03, Key: Hits@100, Epoch: 400, Loss: 2282.4209, Train: 26.41, Valid: 44.80, Test: 65.61%
+2024-08-08 03:45:28,372 - Run: 03, Key: MRR, Epoch: 400, Loss: 2282.4209, Train: 2.27, Valid: 8.27, Test: 22.84%
+2024-08-08 03:45:28,372 - Run: 03, Key: MRR, Epoch: 400, Loss: 2282.4209, Train: 2.27, Valid: 8.27, Test: 22.84%
+2024-08-08 03:45:28,372 - Run: 03, Key: MRR, Epoch: 400, Loss: 2282.4209, Train: 2.27, Valid: 8.27, Test: 22.84%
+2024-08-08 03:45:28,372 - Run: 03, Key: MRR, Epoch: 400, Loss: 2282.4209, Train: 2.27, Valid: 8.27, Test: 22.84%
+2024-08-08 03:45:28,374 - Run: 03, Key: AUC, Epoch: 400, Loss: 2282.4209, Train: 95.67, Valid: 93.93, Test: 93.76%
+2024-08-08 03:45:28,374 - Run: 03, Key: AUC, Epoch: 400, Loss: 2282.4209, Train: 95.67, Valid: 93.93, Test: 93.76%
+2024-08-08 03:45:28,374 - Run: 03, Key: AUC, Epoch: 400, Loss: 2282.4209, Train: 95.67, Valid: 93.93, Test: 93.76%
+2024-08-08 03:45:28,374 - Run: 03, Key: AUC, Epoch: 400, Loss: 2282.4209, Train: 95.67, Valid: 93.93, Test: 93.76%
+2024-08-08 03:45:28,374 - ---
+2024-08-08 03:45:28,374 - ---
+2024-08-08 03:45:28,374 - ---
+2024-08-08 03:45:28,374 - ---
+2024-08-08 06:04:02,009 - Run: 03, Key: Hits@100, Epoch: 600, Loss: 1974.3858, Train: 31.20, Valid: 46.80, Test: 68.19%
+2024-08-08 06:04:02,009 - Run: 03, Key: Hits@100, Epoch: 600, Loss: 1974.3858, Train: 31.20, Valid: 46.80, Test: 68.19%
+2024-08-08 06:04:02,009 - Run: 03, Key: Hits@100, Epoch: 600, Loss: 1974.3858, Train: 31.20, Valid: 46.80, Test: 68.19%
+2024-08-08 06:04:02,009 - Run: 03, Key: Hits@100, Epoch: 600, Loss: 1974.3858, Train: 31.20, Valid: 46.80, Test: 68.19%
+2024-08-08 06:04:02,010 - Run: 03, Key: MRR, Epoch: 600, Loss: 1974.3858, Train: 2.62, Valid: 8.84, Test: 23.30%
+2024-08-08 06:04:02,010 - Run: 03, Key: MRR, Epoch: 600, Loss: 1974.3858, Train: 2.62, Valid: 8.84, Test: 23.30%
+2024-08-08 06:04:02,010 - Run: 03, Key: MRR, Epoch: 600, Loss: 1974.3858, Train: 2.62, Valid: 8.84, Test: 23.30%
+2024-08-08 06:04:02,010 - Run: 03, Key: MRR, Epoch: 600, Loss: 1974.3858, Train: 2.62, Valid: 8.84, Test: 23.30%
+2024-08-08 06:04:02,011 - Run: 03, Key: AUC, Epoch: 600, Loss: 1974.3858, Train: 96.92, Valid: 94.46, Test: 94.37%
+2024-08-08 06:04:02,011 - Run: 03, Key: AUC, Epoch: 600, Loss: 1974.3858, Train: 96.92, Valid: 94.46, Test: 94.37%
+2024-08-08 06:04:02,011 - Run: 03, Key: AUC, Epoch: 600, Loss: 1974.3858, Train: 96.92, Valid: 94.46, Test: 94.37%
+2024-08-08 06:04:02,011 - Run: 03, Key: AUC, Epoch: 600, Loss: 1974.3858, Train: 96.92, Valid: 94.46, Test: 94.37%
+2024-08-08 06:04:02,012 - ---
+2024-08-08 06:04:02,012 - ---
+2024-08-08 06:04:02,012 - ---
+2024-08-08 06:04:02,012 - ---
+slurmstepd: error: *** JOB 2579227 ON hkn0332 CANCELLED AT 2024-08-08T08:11:20 DUE TO TIME LIMIT ***

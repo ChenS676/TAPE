@@ -36,7 +36,7 @@ evaluator_mrr = Evaluator(name='ogbl-citation2')
 
 # Example usage
 FILE_PATH = '/hkfs/work/workspace/scratch/cc7738-benchmark_tag/educational_demo/'
-ncnc_cora_path = FILE_PATH + 'err_ncnc_llama/ncnc-cora_AUC_0.9669_MRR_0.5275.csv'
+ncnc_cora_path = 'Error_analysis_ncnc_llama-2/ncnc-cora_AUC_0.9669_MRR_0.5275.csv'
 
 # optimal threshold detection
 P1, P2, pos_index, neg_index = load_results(ncnc_cora_path)

@@ -14,14 +14,14 @@ train:
 model:
   type: node2vec
   node2vec:
-    walk_length: 10
-    num_walks: 80
-    p: 2.5
-    q: 1.1
+    walk_length: 14
+    num_walks: 20
+    p: 4.5
+    q: 0.5
     workers: 10
     use_rejection_sampling: 0
     embed_size: 64
-    window_size: 5
+    window_size: 9
     max_iter: 100
     num_neg_samples: 1 
     walks_per_node: 20
@@ -31,7 +31,6 @@ model:
     epoch: 5
     sg: 0
     hs: 0
-
 
 num_threads: 11
 data:

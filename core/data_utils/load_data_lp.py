@@ -5,8 +5,6 @@ import torch
 import pandas as pd
 from typing import Dict
 import numpy as np
-import scipy.sparse as ssp
-import json
 import pandas as pd
 from nltk.tokenize import word_tokenize
 import nltk
@@ -27,7 +25,7 @@ from nltk.tokenize import word_tokenize
 from gensim.models import Word2Vec
 from tqdm import tqdm 
 import time
-from data_utils.dataset import CustomLinkDataset
+
 from data_utils.load_data_nc import load_tag_cora, load_tag_pubmed, \
     load_tag_product, load_tag_ogbn_arxiv, load_tag_product, \
     load_tag_arxiv23, load_graph_cora, load_graph_pubmed, \
@@ -94,9 +92,10 @@ def load_taglp_cora(cfg: CN, if_lcc: bool=True, alg_name: str='', node_features=
     
     if node_features is not None:
         data.x = node_features
-        
-    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
-    data.edge_index, _ = remove_self_loops(data.edge_index)
+    
+    edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
+    edge_index = remove_self_loops(edge_index.T)[0]
+    data.edge_index = edge_index
     print(f"original num of nodes: {data.num_nodes}")
     if alg_name.lower() == 'hl-gnn':
         return [], [], data
@@ -365,7 +364,7 @@ def load_taglp_pwc_medium(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
     return splits, text, data
 
 
-def load_taglp_pwc_small(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
+def load_taglp_pwc_small(cfg: CN, if_lcc = True) -> Tuple[Dict[str, Data], List[str]]:
     if hasattr(cfg, 'method'):
         pass
     else:

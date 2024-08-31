@@ -79,20 +79,20 @@ def parse_args() -> argparse.Namespace:
     r"""Parses the command line arguments."""
     parser = argparse.ArgumentParser(description='GraphGym')
     parser.add_argument('--data', dest='data', type=str, required=False,
-                        default='ogbn-arxiv',
+                        default='pubmed',
                         help='data name')
     parser.add_argument('--device', dest='device', required=False, 
                         help='device id', default='cpu')
-    parser.add_argument('--epoch', dest='epoch', type=int, required=False,
-                        default=1,
+    parser.add_argument('--epoch', dest='epoch', type=int, required=True,
+                        default=200,
                         help='data name')
     parser.add_argument('--report_step', dest='report_step', type=int, required=False,
                         default=1,
                         help='data name')
-    parser.add_argument('--embedder', dest='embedder', type=str, required=False,
-                        default='original',
+    parser.add_argument('--embedder', dest='embedder', type=str, required=True,
+                        default='w2v',
                         help='word embedding method')
-    parser.add_argument('--decoder', dest='decoder', type=str, required=False,
+    parser.add_argument('--decoder', dest='decoder', type=str, required=True,
                         default='dot', choices=['concat', 'dot', 'euclidean'],
                         help='word embedding method')
     parser.add_argument('--score', dest='score', type=str, required=False, default='mlp_score',

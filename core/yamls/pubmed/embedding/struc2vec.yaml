@@ -14,8 +14,11 @@ model:
   type: struc2vec
   struc2vec:
     max_iter: 100
-
-
+    epoch: 15
+    wl: 21
+    num_walks: 18
+    embed_size: 16
+    window_size: 8
 
 num_threads: 11
 data:
@@ -24,5 +27,7 @@ data:
   include_negatives: True
   val_pct: 0.15
   test_pct: 0.05
+  device: cpu
   split_labels: False
+  split_index: [0.8, 0.15, 0.05]
 

@@ -19,11 +19,10 @@ from torch_geometric.graphgym.config import (cfg,
 from torch_geometric.utils import remove_self_loops
 from typing import Tuple, List, Dict
 import logging
-from yacs.config import CfgNode
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from transformers import AutoTokenizer, AutoModel
-from sentence_transformers import SentenceTransformer
+# from sentence_transformers import SentenceTransformer
 import torch.nn.functional as F
 from tqdm import tqdm
 from torch.utils.data import DataLoader, TensorDataset
@@ -50,8 +49,8 @@ def get_git_repo_root_path():
         if result.returncode == 0:
             return result.stdout.strip()
         print("Error:", result.stderr)
-        return None
-
+        # return None
+        return  '/hkfs/work/workspace_haic/scratch/cc7738-TAGBench/TAPE_gerrman'
         
         
 def init_random_state(seed=0):
@@ -206,15 +205,7 @@ def append_mrr_to_excel(uuid_val, metrics_mrr, root, name, method):
     highest_values = columns_without_none.apply(lambda column: max(column, default=None))
     
     Best_list = ['Best'] + highest_values.tolist()
-    # print(csv_columns)
-    print(Best_list)
-    print(new_Data.columns)
-    print(len(Best_list))
-    print(len(new_Data.columns))
-    # print(len(csv_columns))
-    # while len(Best_list) < len(new_Data.columns):
-    #     Best_list += [None] * (len(new_Data.columns) - len(Best_list))
-
+    
     Best_df = pd.DataFrame([Best_list], columns=new_Data.columns)
     upt_Data = pd.concat([new_Data, Best_df], ignore_index=True)
     
@@ -587,7 +578,7 @@ def parse_args() -> argparse.Namespace:
     r"""Parses the command line arguments."""
     parser = argparse.ArgumentParser(description='GraphGym')
 
-    parser.add_argument('--cfg', dest='cfg_file', type=str, required=False,
+    parser.add_argument('--cfg', type=str, required=False,
                         default='core/yamls/cora/gcns/gae.yaml',
                         help='The configuration file path.')
     parser.add_argument('--sweep', dest='sweep_file', type=str, required=False,
@@ -1087,6 +1078,8 @@ def save_run_results_to_csv(cfg, loggers, seed, run_id):
     for key in loggers:
         result_dict['model'] = cfg.model.type
         result_dict['seed'] = seed
+        if key == 'ACC': # we remove the ACC metric
+            continue 
         _, _, _, test_bvalid = loggers[key].calc_run_stats(run_id)
         result_dict[key] = test_bvalid
 

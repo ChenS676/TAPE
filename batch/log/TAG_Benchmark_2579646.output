@@ -1,0 +1,267 @@
+python lp_edge_embed.py --data pubmed --embedder w2v --device cpu  --epoch 2000
+python lp_edge_embed.py --data pubmed --embedder tfidf --device cpu  --epoch 2000
+load_taglp_pubmed executed in 3.85095 seconds
+train adj shape: 70920
+train: original length 35460
+train: downsampled length 35460
+valid: original length 6648
+valid: downsampled length 6648
+test: original length 2216
+test: downsampled length 2216
+load_taglp_pubmed executed in 3.85415 seconds
+train adj shape: 70920
+train: original length 35460
+train: downsampled length 35460
+valid: original length 6648
+valid: downsampled length 6648
+test: original length 2216
+test: downsampled length 2216
+Embedding time: 801.2788152694702
+run id : 0, seed: 0, split_index: [0.8, 0.15, 0.05]
+Training time:  6387.399384260178
+Highest Train: 0.13 at Epoch 900, Highest Valid: 0.68 at Epoch 100, Final Train: 0.01 at Epoch 100 Final Test: 0.05 at Epoch 100.
+Highest Train: 1.14 at Epoch 800, Highest Valid: 0.96 at Epoch 200, Final Train: 0.45 at Epoch 200 Final Test: 1.44 at Epoch 200.
+Highest Train: 1.78 at Epoch 900, Highest Valid: 1.88 at Epoch 100, Final Train: 0.60 at Epoch 100 Final Test: 3.70 at Epoch 100.
+Highest Train: 2.49 at Epoch 800, Highest Valid: 2.80 at Epoch 200, Final Train: 1.47 at Epoch 200 Final Test: 6.45 at Epoch 200.
+Highest Train: 4.28 at Epoch 900, Highest Valid: 5.70 at Epoch 900, Final Train: 4.28 at Epoch 900 Final Test: 12.05 at Epoch 900.
+Highest Train: 7.14 at Epoch 900, Highest Valid: 10.02 at Epoch 800, Final Train: 6.76 at Epoch 800 Final Test: 17.82 at Epoch 800.
+Highest Train: 0.91 at Epoch 900, Highest Valid: 1.21 at Epoch 100, Final Train: 0.34 at Epoch 100 Final Test: 1.58 at Epoch 100.
+Highest Train: 0.13 at Epoch 900, Highest Valid: 0.68 at Epoch 100, Final Train: 0.01 at Epoch 100 Final Test: 0.05 at Epoch 100.
+Highest Train: 1.14 at Epoch 800, Highest Valid: 0.96 at Epoch 200, Final Train: 0.45 at Epoch 200 Final Test: 1.44 at Epoch 200.
+Highest Train: 1.78 at Epoch 900, Highest Valid: 1.88 at Epoch 100, Final Train: 0.60 at Epoch 100 Final Test: 3.70 at Epoch 100.
+Highest Train: 2.49 at Epoch 800, Highest Valid: 2.80 at Epoch 200, Final Train: 1.47 at Epoch 200 Final Test: 6.45 at Epoch 200.
+Highest Train: 4.28 at Epoch 900, Highest Valid: 5.70 at Epoch 900, Final Train: 4.28 at Epoch 900 Final Test: 12.05 at Epoch 900.
+Highest Train: 7.14 at Epoch 900, Highest Valid: 10.02 at Epoch 800, Final Train: 6.76 at Epoch 800 Final Test: 17.82 at Epoch 800.
+Highest Train: 77.07 at Epoch 900, Highest Valid: 67.95 at Epoch 800, Final Train: 76.91 at Epoch 800 Final Test: 67.64 at Epoch 800.
+Highest Train: 77.43 at Epoch 900, Highest Valid: 68.30 at Epoch 800, Final Train: 77.25 at Epoch 800 Final Test: 68.09 at Epoch 800.
+run id : 1, seed: 1, split_index: [0.8, 0.15, 0.05]
+Training time:  8382.567819356918
+Highest Train: 0.06 at Epoch 800, Highest Valid: 0.42 at Epoch 300, Final Train: 0.02 at Epoch 300 Final Test: 0.00 at Epoch 300.
+Highest Train: 0.60 at Epoch 900, Highest Valid: 0.77 at Epoch 800, Final Train: 0.51 at Epoch 800 Final Test: 1.31 at Epoch 800.
+Highest Train: 1.93 at Epoch 800, Highest Valid: 2.20 at Epoch 900, Final Train: 1.84 at Epoch 900 Final Test: 3.93 at Epoch 900.
+Highest Train: 2.74 at Epoch 800, Highest Valid: 3.67 at Epoch 600, Final Train: 2.22 at Epoch 600 Final Test: 6.14 at Epoch 600.
+Highest Train: 4.15 at Epoch 900, Highest Valid: 6.15 at Epoch 900, Final Train: 4.15 at Epoch 900 Final Test: 12.05 at Epoch 900.
+Highest Train: 7.25 at Epoch 900, Highest Valid: 10.20 at Epoch 900, Final Train: 7.25 at Epoch 900 Final Test: 17.78 at Epoch 900.
+Highest Train: 0.74 at Epoch 900, Highest Valid: 1.06 at Epoch 300, Final Train: 0.44 at Epoch 300 Final Test: 1.52 at Epoch 300.
+Highest Train: 0.06 at Epoch 800, Highest Valid: 0.42 at Epoch 300, Final Train: 0.02 at Epoch 300 Final Test: 0.00 at Epoch 300.
+Highest Train: 0.60 at Epoch 900, Highest Valid: 0.77 at Epoch 800, Final Train: 0.51 at Epoch 800 Final Test: 1.31 at Epoch 800.
+Highest Train: 1.93 at Epoch 800, Highest Valid: 2.20 at Epoch 900, Final Train: 1.84 at Epoch 900 Final Test: 3.93 at Epoch 900.
+Highest Train: 2.74 at Epoch 800, Highest Valid: 3.67 at Epoch 600, Final Train: 2.22 at Epoch 600 Final Test: 6.14 at Epoch 600.
+Highest Train: 4.15 at Epoch 900, Highest Valid: 6.15 at Epoch 900, Final Train: 4.15 at Epoch 900 Final Test: 12.05 at Epoch 900.
+Highest Train: 7.25 at Epoch 900, Highest Valid: 10.20 at Epoch 900, Final Train: 7.25 at Epoch 900 Final Test: 17.78 at Epoch 900.
+Highest Train: 77.78 at Epoch 900, Highest Valid: 67.92 at Epoch 900, Final Train: 77.78 at Epoch 900 Final Test: 67.60 at Epoch 900.
+Highest Train: 78.07 at Epoch 900, Highest Valid: 68.65 at Epoch 900, Final Train: 78.07 at Epoch 900 Final Test: 68.13 at Epoch 900.
+All runs:
+Hits@1
+Highest Train: 0.09 ± 0.05
+Highest Valid: 0.55 ± 0.18
+Train with the best valid: 0.01 ± 0.01
+Test with the best valid epoch: 0.03 ± 0.04
+Hits@3
+Highest Train: 0.87 ± 0.38
+Highest Valid: 0.87 ± 0.13
+Train with the best valid: 0.48 ± 0.04
+Test with the best valid epoch: 1.38 ± 0.09
+Hits@10
+Highest Train: 1.86 ± 0.11
+Highest Valid: 2.04 ± 0.23
+Train with the best valid: 1.22 ± 0.88
+Test with the best valid epoch: 3.82 ± 0.16
+Hits@20
+Highest Train: 2.62 ± 0.18
+Highest Valid: 3.24 ± 0.62
+Train with the best valid: 1.85 ± 0.53
+Test with the best valid epoch: 6.30 ± 0.22
+Hits@50
+Highest Train: 4.22 ± 0.09
+Highest Valid: 5.93 ± 0.32
+Train with the best valid: 4.22 ± 0.09
+Test with the best valid epoch: 12.05 ± 0.00
+Hits@100
+Highest Train: 7.19 ± 0.08
+Highest Valid: 10.11 ± 0.13
+Train with the best valid: 7.01 ± 0.35
+Test with the best valid epoch: 17.80 ± 0.03
+MRR
+Highest Train: 0.83 ± 0.12
+Highest Valid: 1.13 ± 0.11
+Train with the best valid: 0.39 ± 0.07
+Test with the best valid epoch: 1.55 ± 0.04
+mrr_hit1
+Highest Train: 0.09 ± 0.05
+Highest Valid: 0.55 ± 0.18
+Train with the best valid: 0.01 ± 0.01
+Test with the best valid epoch: 0.03 ± 0.04
+mrr_hit3
+Highest Train: 0.87 ± 0.38
+Highest Valid: 0.87 ± 0.13
+Train with the best valid: 0.48 ± 0.04
+Test with the best valid epoch: 1.38 ± 0.09
+mrr_hit10
+Highest Train: 1.86 ± 0.11
+Highest Valid: 2.04 ± 0.23
+Train with the best valid: 1.22 ± 0.88
+Test with the best valid epoch: 3.82 ± 0.16
+mrr_hit20
+Highest Train: 2.62 ± 0.18
+Highest Valid: 3.24 ± 0.62
+Train with the best valid: 1.85 ± 0.53
+Test with the best valid epoch: 6.30 ± 0.22
+mrr_hit50
+Highest Train: 4.22 ± 0.09
+Highest Valid: 5.93 ± 0.32
+Train with the best valid: 4.22 ± 0.09
+Test with the best valid epoch: 12.05 ± 0.00
+mrr_hit100
+Highest Train: 7.19 ± 0.08
+Highest Valid: 10.11 ± 0.13
+Train with the best valid: 7.01 ± 0.35
+Test with the best valid epoch: 17.80 ± 0.03
+AUC
+Highest Train: 77.43 ± 0.50
+Highest Valid: 67.93 ± 0.02
+Train with the best valid: 77.35 ± 0.62
+Test with the best valid epoch: 67.62 ± 0.03
+AP
+Highest Train: 77.75 ± 0.45
+Highest Valid: 68.48 ± 0.25
+Train with the best valid: 77.66 ± 0.58
+Test with the best valid epoch: 68.11 ± 0.03
+ACC
+result is saved to /hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/results/pubmed_lm_mrr.csv.
+result is saved to /hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/results/tfidf/pubmed_lm_mrr.csv.
+Embedding time: 34.15721678733826
+run id : 0, seed: 0, split_index: [0.8, 0.15, 0.05]
+Training time:  51301.248744010925
+Highest Train: 8.27 at Epoch 900, Highest Valid: 0.20 at Epoch 300, Final Train: 2.16 at Epoch 300 Final Test: 0.00 at Epoch 300.
+Highest Train: 15.38 at Epoch 900, Highest Valid: 0.53 at Epoch 500, Final Train: 7.62 at Epoch 500 Final Test: 0.45 at Epoch 500.
+Highest Train: 27.59 at Epoch 900, Highest Valid: 1.32 at Epoch 0, Final Train: 2.04 at Epoch 0 Final Test: 2.71 at Epoch 0.
+Highest Train: 34.08 at Epoch 900, Highest Valid: 2.08 at Epoch 0, Final Train: 4.11 at Epoch 0 Final Test: 4.74 at Epoch 0.
+Highest Train: 46.20 at Epoch 900, Highest Valid: 4.53 at Epoch 0, Final Train: 8.30 at Epoch 0 Final Test: 9.97 at Epoch 0.
+Highest Train: 60.14 at Epoch 900, Highest Valid: 7.19 at Epoch 0, Final Train: 13.31 at Epoch 0 Final Test: 17.69 at Epoch 0.
+Highest Train: 14.51 at Epoch 900, Highest Valid: 0.57 at Epoch 0, Final Train: 0.91 at Epoch 0 Final Test: 1.49 at Epoch 0.
+Highest Train: 8.27 at Epoch 900, Highest Valid: 0.20 at Epoch 300, Final Train: 2.16 at Epoch 300 Final Test: 0.00 at Epoch 300.
+Highest Train: 15.38 at Epoch 900, Highest Valid: 0.53 at Epoch 500, Final Train: 7.62 at Epoch 500 Final Test: 0.45 at Epoch 500.
+Highest Train: 27.59 at Epoch 900, Highest Valid: 1.32 at Epoch 0, Final Train: 2.04 at Epoch 0 Final Test: 2.71 at Epoch 0.
+Highest Train: 34.08 at Epoch 900, Highest Valid: 2.08 at Epoch 0, Final Train: 4.11 at Epoch 0 Final Test: 4.74 at Epoch 0.
+Highest Train: 46.20 at Epoch 900, Highest Valid: 4.53 at Epoch 0, Final Train: 8.30 at Epoch 0 Final Test: 9.97 at Epoch 0.
+Highest Train: 60.14 at Epoch 900, Highest Valid: 7.19 at Epoch 0, Final Train: 13.31 at Epoch 0 Final Test: 17.69 at Epoch 0.
+Highest Train: 99.00 at Epoch 900, Highest Valid: 66.06 at Epoch 0, Final Train: 91.58 at Epoch 0 Final Test: 68.07 at Epoch 0.
+Highest Train: 98.95 at Epoch 900, Highest Valid: 66.42 at Epoch 0, Final Train: 91.10 at Epoch 0 Final Test: 68.11 at Epoch 0.
+run id : 1, seed: 1, split_index: [0.8, 0.15, 0.05]
+Training time:  57038.61159825325
+Highest Train: 7.27 at Epoch 900, Highest Valid: 0.15 at Epoch 300, Final Train: 1.65 at Epoch 300 Final Test: 0.14 at Epoch 300.
+Highest Train: 10.18 at Epoch 800, Highest Valid: 0.26 at Epoch 100, Final Train: 1.89 at Epoch 100 Final Test: 0.72 at Epoch 100.
+Highest Train: 26.06 at Epoch 900, Highest Valid: 0.92 at Epoch 0, Final Train: 2.41 at Epoch 0 Final Test: 2.08 at Epoch 0.
+Highest Train: 30.90 at Epoch 800, Highest Valid: 1.84 at Epoch 0, Final Train: 4.61 at Epoch 0 Final Test: 5.37 at Epoch 0.
+Highest Train: 44.15 at Epoch 900, Highest Valid: 3.46 at Epoch 0, Final Train: 7.81 at Epoch 0 Final Test: 10.24 at Epoch 0.
+Highest Train: 55.32 at Epoch 900, Highest Valid: 5.73 at Epoch 0, Final Train: 13.02 at Epoch 0 Final Test: 15.79 at Epoch 0.
+Highest Train: 11.79 at Epoch 900, Highest Valid: 0.48 at Epoch 0, Final Train: 0.95 at Epoch 0 Final Test: 1.33 at Epoch 0.
+Highest Train: 7.27 at Epoch 900, Highest Valid: 0.15 at Epoch 300, Final Train: 1.65 at Epoch 300 Final Test: 0.14 at Epoch 300.
+Highest Train: 10.18 at Epoch 800, Highest Valid: 0.26 at Epoch 100, Final Train: 1.89 at Epoch 100 Final Test: 0.72 at Epoch 100.
+Highest Train: 26.06 at Epoch 900, Highest Valid: 0.92 at Epoch 0, Final Train: 2.41 at Epoch 0 Final Test: 2.08 at Epoch 0.
+Highest Train: 30.90 at Epoch 800, Highest Valid: 1.84 at Epoch 0, Final Train: 4.61 at Epoch 0 Final Test: 5.37 at Epoch 0.
+Highest Train: 44.15 at Epoch 900, Highest Valid: 3.46 at Epoch 0, Final Train: 7.81 at Epoch 0 Final Test: 10.24 at Epoch 0.
+Highest Train: 55.32 at Epoch 900, Highest Valid: 5.73 at Epoch 0, Final Train: 13.02 at Epoch 0 Final Test: 15.79 at Epoch 0.
+Highest Train: 99.03 at Epoch 900, Highest Valid: 66.15 at Epoch 0, Final Train: 91.91 at Epoch 0 Final Test: 67.65 at Epoch 0.
+Highest Train: 98.95 at Epoch 900, Highest Valid: 65.62 at Epoch 0, Final Train: 91.43 at Epoch 0 Final Test: 67.48 at Epoch 0.
+All runs:
+Hits@1
+Highest Train: 7.77 ± 0.71
+Highest Valid: 0.18 ± 0.04
+Train with the best valid: 1.90 ± 0.36
+Test with the best valid epoch: 0.07 ± 0.10
+Hits@3
+Highest Train: 12.78 ± 3.68
+Highest Valid: 0.39 ± 0.19
+Train with the best valid: 4.76 ± 4.05
+Test with the best valid epoch: 0.59 ± 0.19
+Hits@10
+Highest Train: 26.83 ± 1.08
+Highest Valid: 1.12 ± 0.28
+Train with the best valid: 2.22 ± 0.26
+Test with the best valid epoch: 2.39 ± 0.45
+Hits@20
+Highest Train: 32.49 ± 2.25
+Highest Valid: 1.96 ± 0.17
+Train with the best valid: 4.36 ± 0.35
+Test with the best valid epoch: 5.05 ± 0.45
+Hits@50
+Highest Train: 45.18 ± 1.45
+Highest Valid: 4.00 ± 0.76
+Train with the best valid: 8.06 ± 0.35
+Test with the best valid epoch: 10.10 ± 0.19
+Hits@100
+Highest Train: 57.73 ± 3.41
+Highest Valid: 6.46 ± 1.03
+Train with the best valid: 13.17 ± 0.21
+Test with the best valid epoch: 16.74 ± 1.34
+MRR
+Highest Train: 13.15 ± 1.92
+Highest Valid: 0.52 ± 0.06
+Train with the best valid: 0.93 ± 0.03
+Test with the best valid epoch: 1.41 ± 0.11
+mrr_hit1
+Highest Train: 7.77 ± 0.71
+Highest Valid: 0.18 ± 0.04
+Train with the best valid: 1.90 ± 0.36
+Test with the best valid epoch: 0.07 ± 0.10
+mrr_hit3
+Highest Train: 12.78 ± 3.68
+Highest Valid: 0.39 ± 0.19
+Train with the best valid: 4.76 ± 4.05
+Test with the best valid epoch: 0.59 ± 0.19
+mrr_hit10
+Highest Train: 26.83 ± 1.08
+Highest Valid: 1.12 ± 0.28
+Train with the best valid: 2.22 ± 0.26
+Test with the best valid epoch: 2.39 ± 0.45
+mrr_hit20
+Highest Train: 32.49 ± 2.25
+Highest Valid: 1.96 ± 0.17
+Train with the best valid: 4.36 ± 0.35
+Test with the best valid epoch: 5.05 ± 0.45
+mrr_hit50
+Highest Train: 45.18 ± 1.45
+Highest Valid: 4.00 ± 0.76
+Train with the best valid: 8.06 ± 0.35
+Test with the best valid epoch: 10.10 ± 0.19
+mrr_hit100
+Highest Train: 57.73 ± 3.41
+Highest Valid: 6.46 ± 1.03
+Train with the best valid: 13.17 ± 0.21
+Test with the best valid epoch: 16.74 ± 1.34
+AUC
+Highest Train: 99.01 ± 0.02
+Highest Valid: 66.10 ± 0.06
+Train with the best valid: 91.75 ± 0.23
+Test with the best valid epoch: 67.86 ± 0.30
+AP
+Highest Train: 98.95 ± 0.00
+Highest Valid: 66.02 ± 0.57
+Train with the best valid: 91.26 ± 0.23
+Test with the best valid epoch: 67.79 ± 0.45
+ACC
+result is saved to /hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/results/pubmed_lm_mrr.csv.
+result is saved to /hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/results/tfidf/pubmed_lm_mrr.csv.
+
+============================= JOB FEEDBACK =============================
+
+Job ID: 2579646
+Cluster: hk
+User/Group: cc7738/hk-project-test-p0021478
+Account: hk-project-test-p0022257
+State: FAILED (exit code 2)
+Partition: cpuonly
+Nodes: 1
+Cores per node: 152
+Nodelist: hkn0060
+CPU Utilized: 1-10:22:31
+CPU Efficiency: 0.75% of 190-20:43:52 core-walltime
+Job Wall-clock time: 1-06:08:11
+Starttime: Tue Aug  6 10:29:13 2024
+Endtime: Wed Aug  7 16:37:24 2024
+Memory Utilized: 17.64 GB
+Memory Efficiency: 7.43% of 237.50 GB
+Energy Consumed: 31318404 Joule / 8699.55666666667 Watthours
+Average node power draw: 288.672830004332 Watt
