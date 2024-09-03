@@ -17,7 +17,7 @@ lm:
     name: 'bert-base-uncased'
   train:
     att_dropout: 0.1
-    batch_size: 1
+    batch_size: 2
     cla_dropout: 0.4
     dropout: 0.3
     epochs: 1

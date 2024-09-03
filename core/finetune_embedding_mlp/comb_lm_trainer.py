@@ -245,11 +245,10 @@ class LMTrainer():
 
         # from IPython import embed;
         # embed()
-        predictions = torch.tensor(predictor_dict.predictions).view(-1, len(pos_mask))
-        pos_pred = predictions[:, pos_mask]
-        neg_pred = predictions[:, neg_mask]
-        pos_pred = torch.tensor(pos_pred, dtype=torch.float32).flatten()
-        neg_pred = torch.tensor(neg_pred, dtype=torch.float32).flatten()
+        pos_pred = predictor_dict.predictions[pos_mask]
+        neg_pred = predictor_dict.predictions[neg_mask]
+        pos_pred = torch.tensor(pos_pred, dtype=torch.float32)
+        neg_pred = torch.tensor(neg_pred, dtype=torch.float32)
         # embed()
         result_mrr = get_metric_score(self.evaluator_hit, self.evaluator_mrr, pos_pred, neg_pred)
         result_mrr.update({'ACC': 0.00})
@@ -270,7 +269,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--cfg', dest='cfg_file', type=str, required=False,
                         default='core/yamls/cora/comb/gcn_encoder.yaml',
                         help='The configuration file path.')
-    parser.add_argument('--repeat', type=int, default=5,
+    parser.add_argument('--repeat', type=int, default=1,
                         help='The number of repeated jobs.')
     parser.add_argument('--start_seed', type=int, default=0,
                         help='The number of starting seed.')

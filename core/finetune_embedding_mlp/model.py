@@ -178,60 +178,57 @@ class Co_LMGCN(PreTrainedModel):
                 labels=None,
                 return_dict=None,):
         # TODO
-        input = input_ids[:, 0, :]
-        attention_mask = attention_mask[:, 0, :]
-        node_id = node_id[0]
+        all_logits = []
+        for i in range(input_ids.shape[0]):
+            input = input_ids[i, 0, :].unsqueeze(0)
+            attention_m = attention_mask[i, 0, :].unsqueeze(0)
+            node_idx = node_id[i]
+            # embed()
+            outputs = self.llm_encoder(input_ids=input,
+                                    attention_mask=attention_m,
+                                    return_dict=return_dict)
 
-        outputs = self.llm_encoder(input_ids=input,
-                                attention_mask=attention_mask,
-                                return_dict=return_dict)
+            # print(self.mode)
+            emb = self.dropout(outputs['last_hidden_state'])
 
-        # print(self.mode)
-        emb = self.dropout(outputs['last_hidden_state'])
+            # Use CLS Emb as sentence emb.
+            text_emb = emb.permute(1, 0, 2)[0]
+            # text_emb = text_emb.to(torch.float32)
 
-        # Use CLS Emb as sentence emb.
-        text_emb = emb.permute(1, 0, 2)[0]
-        # text_emb = text_emb.to(torch.float32)
+            if self.feat_shrink:
+                text_emb = self.feat_shrink_layer(text_emb)
+            # TODO
+            # text_emb = text_emb.repeat(self.adj_t.size(0), 1)
+            # TODO in shape of (num_nodes, hidden_dim)
+            # print(text_emb.dtype)
+            # self.adj_t = self.adj_t.to(dtype=text_emb.dtype)
+            text_emb = text_emb.repeat(self.adj_t.size(0), 1)
+            # print("Before GNN:", text_emb.shape, text_emb.dtype, self.adj_t.sparse_sizes(), self.adj_t.dtype)
+            x = self.gnn(text_emb, self.adj_t)
 
-        if self.feat_shrink:
-            text_emb = self.feat_shrink_layer(text_emb)
-        # TODO
-        # text_emb = text_emb.repeat(self.adj_t.size(0), 1)
-        # TODO in shape of (num_nodes, hidden_dim)
-        # print(text_emb.dtype)
-        # self.adj_t = self.adj_t.to(dtype=text_emb.dtype)
-        text_emb = text_emb.repeat(self.adj_t.size(0), 1)
-        # print("Before GNN:", text_emb.shape, text_emb.dtype, self.adj_t.sparse_sizes(), self.adj_t.dtype)
-        x = self.gnn(text_emb, self.adj_t)
+            first_vector = x[node_idx[0]]#.repeat(text_emb.shape[1], 1).t()
+            second_vector = x[node_idx[1]]#.repeat(text_emb.shape[1], 1).t()
+            
+            logits = self.classifier(first_vector, second_vector)
+            all_logits.append(logits)
 
-        first_vector = x[node_id[0]]#.repeat(text_emb.shape[1], 1).t()
-        second_vector = x[node_id[1]]#.repeat(text_emb.shape[1], 1).t()
-        
-        logits = self.classifier(first_vector, second_vector)
+        all_logits = torch.cat(all_logits, dim=0)
         # embed()
-        # TODO 
-        if self.model_mode == 'inference':
-            logits = logits.squeeze(dim=1)
-            if torch.cuda.is_available():
-                print(f"Memory allocated: {torch.cuda.memory_allocated() / 1024 ** 2:.2f} MB")
-
-            self.emb = torch.stack((x[node_id[0]], x[node_id[1]]), dim=1).cpu().numpy().astype(np.float32)
-            self.pred = logits.cpu().numpy().astype(np.float32)
 
         if labels is not None and labels.shape[-1] == 1:
             labels = labels.squeeze()
 
         pos_mask = (labels == 1)
         neg_mask = (labels == 0)
-
-        pos_out = logits[pos_mask]
-        neg_out = logits[neg_mask]
-
+        # embed()
+        pos_out = all_logits[pos_mask]
+        neg_out = all_logits[neg_mask]
+        # embed()
         pos_loss = -torch.log(pos_out + 1e-15).mean() if pos_out.numel() > 0 else torch.tensor(0.0)
         neg_loss = -torch.log(1 - neg_out + 1e-15).mean() if neg_out.numel() > 0 else torch.tensor(0.0)
         # embed()
         loss = pos_loss + neg_loss
-        return TokenClassifierOutput(loss=loss, logits=logits)
+        return TokenClassifierOutput(loss=loss, logits=all_logits)
 
 class Co_LMGCNInf(PreTrainedModel):
     def __init__(self, model, cfg, GNN, 
@@ -269,50 +266,47 @@ class Co_LMGCNInf(PreTrainedModel):
                 labels=None,
                 return_dict=None,):
         # TODO
+        all_logits = []
+        all_embs = []
 
-        input = input_ids[:, 0, :]
-        attention_mask = attention_mask[:, 0, :]
-        node_id = node_id[0]
+        for i in range(input_ids.shape[0]):
+            input = input_ids[i, 0, :].unsqueeze(0)
+            attention_m = attention_mask[i, 0, :].unsqueeze(0)
+            node_idx = node_id[i]
 
-        outputs = self.llm_encoder.llm_encoder(input_ids=input,
-                                attention_mask=attention_mask,
-                                return_dict=return_dict)
+            outputs = self.llm_encoder.llm_encoder(input_ids=input,
+                                    attention_mask=attention_m,
+                                    return_dict=return_dict)
 
-        # print(self.mode)
-        emb = self.dropout(outputs['last_hidden_state'])
+            # print(self.mode)
+            emb = self.dropout(outputs['last_hidden_state'])
 
-        # Use CLS Emb as sentence emb.
-        text_emb = emb.permute(1, 0, 2)[0]
-        # text_emb = text_emb.to(torch.float32)
-        # if self.feat_shrink:
-        #     text_emb = self.feat_shrink_layer(text_emb)
-        # TODO
-        text_emb = text_emb.repeat(self.adj_t.size(0), 1)
-        
-        # TODO in shape of (num_nodes, hidden_dim)
-        
-        # embed()
-        x = self.gnn(text_emb, self.adj_t)
+            # Use CLS Emb as sentence emb.
+            text_emb = emb.permute(1, 0, 2)[0]
+            
+            # if self.feat_shrink:
+            #     text_emb = self.feat_shrink_layer(text_emb)
+            # TODO
+            text_emb = text_emb.repeat(self.adj_t.size(0), 1)
+            
+            # TODO in shape of (num_nodes, hidden_dim)
+            
+            # embed()
+            x = self.gnn(text_emb, self.adj_t)
 
-        first_vector = x[node_id[0]]#.repeat(text_emb.shape[1], 1).t()
-        second_vector = x[node_id[1]]#.repeat(text_emb.shape[1], 1).t()
-        # print(first_vector.shape)
-        # print(second_vector.shape)
+            first_vector = x[node_idx[0]]#.repeat(text_emb.shape[1], 1).t()
+            second_vector = x[node_idx[1]]#.repeat(text_emb.shape[1], 1).t()
 
-        logits = self.classifier(first_vector, second_vector)
+            logits = self.classifier(first_vector, second_vector)
+            # logits = logits.squeeze(dim=1)
+            all_logits.append(logits)
+            all_embs.append(torch.stack((x[node_idx[0]], x[node_idx[1]]), dim=1))
 
-        # TODO 
-        if self.model_mode == 'inference':
-            if logits.dim() > 1 and logits.shape[1] == 1:
-                logits = logits.squeeze(dim=1)
+        all_logits = torch.cat(all_logits, dim=0)
+        all_embs = torch.cat(all_embs, dim=0)
 
-            # Alternatively, you could always squeeze the last dimension if it exists
-            # logits = logits.squeeze(-1)
-            if torch.cuda.is_available():
-                print(f"Memory allocated: {torch.cuda.memory_allocated() / 1024 ** 2:.2f} MB")
-
-            self.emb = torch.stack((x[node_id[0]], x[node_id[1]]), dim=1).cpu().numpy().astype(np.float32)
-            self.pred = logits.cpu().numpy().astype(np.float32)
+        self.emb = all_embs.cpu().numpy().astype(np.float32)
+        self.pred = all_logits.cpu().numpy().astype(np.float32)
 
         if labels is not None and labels.shape[-1] == 1:
             labels = labels.squeeze()
@@ -320,12 +314,12 @@ class Co_LMGCNInf(PreTrainedModel):
         pos_mask = (labels == 1)
         neg_mask = (labels == 0)
         # embed()
-        pos_out = logits[pos_mask]
-        neg_out = logits[neg_mask]
+        pos_out = all_logits[pos_mask]
+        neg_out = all_logits[neg_mask]
 
         pos_loss = -torch.log(pos_out + 1e-15).mean() if pos_out.numel() > 0 else torch.tensor(0.0)
         neg_loss = -torch.log(1 - neg_out + 1e-15).mean() if neg_out.numel() > 0 else torch.tensor(0.0)
 
         loss = pos_loss + neg_loss
         # embed()
-        return TokenClassifierOutput(loss=loss, logits=logits)
+        return TokenClassifierOutput(loss=loss, logits=all_logits)

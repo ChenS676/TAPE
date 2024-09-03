@@ -573,21 +573,41 @@ def make_wandb_name(cfg):
     name = f"{dataset_name}.{model_name}.r{cfg.run_id}"
     return name
 
-
+# def parse_args() -> argparse.Namespace:
+#     """Parses the command line arguments."""
+#     parser = argparse.ArgumentParser(description='GraphGym')
+#     parser.add_argument('--cfg', type=str, required=False,
+#                         default='core/yamls/cora/embedding/node2vec.yaml',
+#                         help='The configuration file path.')
+#     parser.add_argument('--sweep', type=str, required=False,
+#                         default='core/yamls/cora/embedding/n2v_sweep3.yaml',
+#                         help='The configuration file path.')
+#     return parser.parse_args()
 def parse_args() -> argparse.Namespace:
     r"""Parses the command line arguments."""
     parser = argparse.ArgumentParser(description='GraphGym')
 
     parser.add_argument('--cfg', type=str, required=False,
-                        default='core/yamls/cora/gcns/gae.yaml',
+                        default='core/yamls/cora/embedding/node2vec.yaml',
                         help='The configuration file path.')
-    parser.add_argument('--sweep', dest='sweep_file', type=str, required=False,
-                        default='core/yamls/cora/gcns/gae_sp1.yaml',
+    parser.add_argument('--sweep', type=str, required=False,
+                        default='core/yamls/cora/embedding/n2v_sweep3.yaml',
                         help='The configuration file path.')
     parser.add_argument('--data', dest='data', type=str, required=False,
                         default='cora',
                         help='data name')
-        
+    parser.add_argument('--device', dest='device', type=str, required=False,
+                        default='cpu',
+                        help='processor')
+    parser.add_argument('--epochs', dest='epochs', type=str, required=False,
+                        default='cpu',
+                        help='processor')
+    parser.add_argument('--model', dest='model', type=str, required=False,
+                        default='cpu',
+                        help='processor')
+    parser.add_argument('--wandb', dest='wandb', type=str, required=False,
+                        default='cpu',
+                        help='processor')
     parser.add_argument('--repeat', type=int, default=5,
                         help='The number of repeated jobs.')
     parser.add_argument('--mark_done', action='store_true',

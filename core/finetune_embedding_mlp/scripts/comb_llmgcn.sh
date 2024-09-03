@@ -26,5 +26,7 @@ module load compiler/gnu/12
 
 export TOKENIZERS_PARALLELISM=false
 export CUDA_VISIBLE_DEVICES=0
+export CUDA_LAUNCH_BLOCKING=1
+
 # WANDB_DISABLED=True gdb --args python3 comb_lm_trainer.py --cfg core/yamls/cora/comb/gcn_encoder.yaml
 WANDB_DISABLED=True python3 comb_lm_trainer.py --cfg core/yamls/cora/comb/gcn_encoder.yaml
