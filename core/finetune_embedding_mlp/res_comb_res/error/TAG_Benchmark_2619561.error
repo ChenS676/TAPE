@@ -1,0 +1,147 @@
+/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+A parameter name that contains `beta` will be renamed internally to `bias`. Please use a different name to suppress this warning.
+A parameter name that contains `gamma` will be renamed internally to `weight`. Please use a different name to suppress this warning.
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/transformers/training_args.py:1525: FutureWarning: `evaluation_strategy` is deprecated and will be removed in version 4.46 of 🤗 Transformers. Use `eval_strategy` instead
+  warnings.warn(
+Using the `WANDB_DISABLED` environment variable is deprecated and will be removed in v5. Use the --report_to flag to control the integrations used for logging result (for instance --report_to none).
+Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+  0%|          | 0/8336 [00:00<?, ?it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+Traceback (most recent call last):
+  File "comb_lm_trainer.py", line 297, in <module>
+    trainer.train()
+  File "/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_gerrman/TAPE_emb/core/finetune_embedding_mlp/utils.py", line 310, in wrapper
+    ret = func(*args, **kw)
+  File "comb_lm_trainer.py", line 199, in train
+    self.trainer.train()
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/transformers/trainer.py", line 1948, in train
+    return inner_training_loop(
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/transformers/trainer.py", line 2246, in _inner_training_loop
+    for step, inputs in enumerate(epoch_iterator):
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/accelerate/data_loader.py", line 454, in __iter__
+    current_batch = next(dataloader_iter)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 677, in _next_data
+    data = _utils.pin_memory.pin_memory(data, self._pin_memory_device)
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/torch/utils/data/_utils/pin_memory.py", line 62, in pin_memory
+    return type(data)({k: pin_memory(sample, device) for k, sample in data.items()})  # type: ignore[call-arg]
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/torch/utils/data/_utils/pin_memory.py", line 62, in <dictcomp>
+    return type(data)({k: pin_memory(sample, device) for k, sample in data.items()})  # type: ignore[call-arg]
+  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/torch/utils/data/_utils/pin_memory.py", line 57, in pin_memory
+    return data.pin_memory(device)
+RuntimeError: cannot pin 'torch.cuda.LongTensor' only dense CPU tensors can be pinned
+  0%|          | 0/8336 [00:00<?, ?it/s]

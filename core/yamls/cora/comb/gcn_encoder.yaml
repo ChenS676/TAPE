@@ -1,0 +1,76 @@
+# line.yaml
+out_dir: results
+metric_best: acc
+cfg_dest: gcn_encoder.yaml
+print: file
+run_multiple_splits: None # Without this parapere I got error: "AttributeError: run_multiple_splits"
+seed: 0                   # Without this parapere I got error: "AttributeError: seed"
+device: 0
+
+lm:
+  model:
+    # names:
+    # 1. minilm  : sentence-transformers/all-MiniLM-L6-v2
+    # 2. e5-large: intfloat/e5-large-v2
+    # 3. llama   : meta-llama/Meta-Llama-3-8B
+    # 4. bert    : bert-base-uncased
+    name: 'bert-base-uncased'
+  train:
+    att_dropout: 0.1
+    batch_size: 1
+    cla_dropout: 0.4
+    dropout: 0.3
+    epochs: 1
+    eval_patience: 10000
+    grad_acc_steps: 1
+    lr: 0.0001
+    use_gpt: False
+    warmup_epochs: 0.6
+    weight_decay: 0.0
+    feat_shrink: 256
+
+run:
+  seed: 0
+  num_threads: 11
+  multiple_splits: None
+
+wandb:
+  use: True
+  project: gtblueprint
+  name_tag: gae-cora-origin
+
+train:
+  mode: custom
+  auto_resume: False      # Without this parapere I got error: "AttributeError: auto_resume"
+  batch_size: 32   
+  eval_period: 1
+  epochs: 2000
+  device: 0
+  auto_resume: False
+
+model:
+  type: GCN
+  in_channels: 1433 # equal the number of features
+  hidden_channels: 256
+  out_channels: 128
+  negative_slope: 0.2
+  dropout: 0
+  num_layers: 3
+
+num_threads: 11
+
+data:
+  name: cora
+  undirected: True
+  include_negatives: True
+  val_pct: 0.15
+  test_pct: 0.05
+  split_labels: True
+  device: 0
+  split_index: [0.8, 0.15, 0.05]
+  num_features:  1433
+
+optimizer:
+  type: adam
+  base_lr: 0.01
+  weight_decay: 0.0005

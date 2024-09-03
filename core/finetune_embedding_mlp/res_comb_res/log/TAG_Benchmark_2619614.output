@@ -1,0 +1,21 @@
+
+============================= JOB FEEDBACK =============================
+
+Job ID: 2619614
+Cluster: hk
+User/Group: cc7738/hk-project-test-p0021478
+Account: hk-project-pai00001
+State: FAILED (exit code 1)
+Partition: accelerated
+Nodes: 1
+Cores per node: 152
+Nodelist: hkn0615
+CPU Utilized: 00:00:07
+CPU Efficiency: 0.13% of 01:31:12 core-walltime
+Job Wall-clock time: 00:00:36
+Starttime: Mon Sep  2 14:48:00 2024
+Endtime: Mon Sep  2 14:48:36 2024
+Memory Utilized: 4.17 MB
+Memory Efficiency: 0.01% of 48.98 GB
+Energy Consumed: 8657 Joule / 2.40472222222222 Watthours
+Average node power draw: 240.472222222222 Watt

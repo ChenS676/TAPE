@@ -17,13 +17,6 @@ from graph_embed.ge.models import Struc2Vec
 from tune_utils import save_parameters
 from data_utils.load_data_lp import get_edge_split
 from data_utils.load import load_graph_lp as data_loader
-<<<<<<< HEAD
-from graphgps.utility.utils import set_cfg, get_git_repo_root_path, append_acc_to_excel, append_mrr_to_excel
-from heuristic.eval import get_metric_score
-
-# Set the file path for the project
-FILE_PATH = get_git_repo_root_path() + '/'
-=======
 from graphgps.utility.utils import (
     set_cfg,
     get_git_repo_root_path,
@@ -32,7 +25,6 @@ from graphgps.utility.utils import (
 )
 from ge.models.struc2vec import Struc2Vec
 from networkx import from_scipy_sparse_matrix as from_scipy_sparse_array
->>>>>>> 89ecc007765bc968264719cad8b571269a77729f
 
 def parse_args() -> argparse.Namespace:
     """Parses the command line arguments."""
@@ -70,17 +62,9 @@ def preprocess_data(cfg):
     full_edge_weight = torch.ones(full_edge_index.size(1))
     num_nodes = dataset.num_nodes
     
-<<<<<<< HEAD
-    full_A = ssp.csr_matrix((full_edge_weight.view(-1), 
-                             (full_edge_index[0], full_edge_index[1])), 
-                             shape=(num_nodes, num_nodes))
-    adj = full_A
-    G = nx.from_scipy_sparse_array(adj)
-=======
     full_A = ssp.csr_matrix((full_edge_weight.view(-1), (full_edge_index[0], full_edge_index[1])), shape=(num_nodes, num_nodes))
     adj = to_scipy_sparse_matrix(full_edge_index)
     G = from_scipy_sparse_array(adj)
->>>>>>> 89ecc007765bc968264719cad8b571269a77729f
     
     return dataset, splits, G, full_A
 
@@ -114,11 +98,12 @@ def evaluate_model(embed, splits, cfg, params):
     
     X_test_index, y_test = splits['test'].edge_label_index.T, splits['test'].edge_label
     X_test = np.multiply(embed[X_test_index[:, 1]], embed[X_test_index[:, 0]])
-    
-    start_eval = time.time()
+
     clf = MLPClassifier(hidden_layer_sizes=(100,), max_iter=200).fit(X_train, y_train)
-    end_eval = time.time()
+
+    start_eval = time.time()    
     y_pred = clf.predict_proba(X_test)
+    end_eval = time.time()
     acc = clf.score(X_test, y_test)
     
     root, model, start_train, end_train, epochs = params

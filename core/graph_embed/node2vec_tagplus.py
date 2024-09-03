@@ -6,12 +6,14 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import numba
 import csv
 import wandb
+import time
 import numpy as np
 import scipy.sparse as sp
 from gensim.models import Word2Vec
 from sklearn.linear_model import LogisticRegression
 from IPython import embed
 from joblib import Parallel, delayed
+from torch_geometric.utils import to_undirected, coalesce, remove_self_loops
 from torch.utils.tensorboard import SummaryWriter  # Импортируем TensorBoard
 
 # External module imports
@@ -37,6 +39,7 @@ from graphgps.utility.utils import (
     set_cfg,
     parse_args
 )
+from data_utils.lcc import use_lcc
 
 FILE_PATH = get_git_repo_root_path() + '/'
 
@@ -56,7 +59,14 @@ def partition_num(num, workers):
         return [num//workers]*workers
     else:
         return [num//workers]*workers + [num % workers]
-    
+
+def count_parameters(model):
+        total_params = 0
+        
+        total_params += sum(np.prod(p.shape) for p in model.wv.vectors)
+
+        return total_params
+
 def node2vec(workers, 
             adj, 
             embedding_dim, 
@@ -112,8 +122,8 @@ def node2vec(workers,
                     )  
 
     embedding = model.wv.vectors[np.fromiter(map(int, model.wv.index_to_key), np.int32).argsort()] 
-    
-    return embedding
+    num_params = count_parameters(model)
+    return embedding, num_params
 
     
 def sample_n2v_random_walks(adj, walk_length, walks_per_node, p, q):
@@ -236,19 +246,33 @@ def random_choice(arr: np.int64, p):
     """
     return arr[np.searchsorted(np.cumsum(p), np.random.random(), side="right")]
 
+def save_parameters(root, num_params, start_eval, end_eval, name):
+    file_path = root + f'/{name}'
+    file_exists = os.path.exists(file_path)
+    with open(file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(["Total num", "Time inference"])
+        writer.writerow([num_params, end_eval - start_eval])
+
 def eval_mrr_acc(cfg, writer=None) -> None:
     if cfg.data.name == 'cora':
-        dataset, _ = data_loader[cfg.data.name](cfg)
+        data, _ = data_loader[cfg.data.name](False)
     elif cfg.data.name == 'pubmed':
-        dataset = data_loader[cfg.data.name](cfg)
+        data = data_loader[cfg.data.name](False)
     elif cfg.data.name == 'arxiv_2023':
-        dataset = data_loader[cfg.data.name]()
+        data = data_loader[cfg.data.name]()
     
-    undirected = dataset.is_undirected()
-    splits = get_edge_split(dataset, undirected, cfg.data.device,
+    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
+    data.edge_index, _ = remove_self_loops(data.edge_index)
+
+    dataset, _, _ = use_lcc(data)
+    dataset.edge_index = dataset.edge_index.t()
+    undirected = data.is_undirected()
+    
+    splits = get_edge_split(data, undirected, cfg.data.device,
                             cfg.data.split_index[1], cfg.data.split_index[2],
                             cfg.data.include_negatives, cfg.data.split_labels)
-    
     # ust test edge_index as full_A
     full_edge_index = splits['test'].edge_index
     
@@ -274,7 +298,7 @@ def eval_mrr_acc(cfg, writer=None) -> None:
     # G = nx.from_scipy_sparse_matrix(full_A, create_using=nx.Graph())
     adj = to_scipy_sparse_matrix(full_edge_index)
 
-    embed = node2vec(workers, 
+    embed, num_params = node2vec(workers, 
                     adj, 
                     embedding_dim=embed_size, 
                     walk_length=walk_length,
@@ -312,7 +336,11 @@ def eval_mrr_acc(cfg, writer=None) -> None:
     clf = LogisticRegression(solver='lbfgs', max_iter=iter, multi_class='auto')
     clf.fit(X_train, y_train)
     
+    start_inf_time = time.time()
     y_pred = clf.predict_proba(X_test)
+    end_inf_time = time.time()
+
+    save_parameters(root, num_params, start_inf_time, end_inf_time, f"{cfg.data.name}_model_parameters.csv")
 
     acc = clf.score(X_test, y_test)
 
@@ -395,19 +423,19 @@ if __name__ == "__main__":
 
         writer.writerow(row)
     
-    # file_path = os.path.join(FILE_PATH, f'results/graph_emb/{cfg.data.name}/{cfg.model.type}/{cfg.data.name}_model_parameters.csv')
-    # with open(file_path, mode='r', newline='') as file:
-    #     reader = csv.reader(file)
-    #     header = next(reader)
+    file_path = os.path.join(FILE_PATH, f'results/graph_emb/{cfg.data.name}/{cfg.model.type}/{cfg.data.name}_model_parameters.csv')
+    with open(file_path, mode='r', newline='') as file:
+        reader = csv.reader(file)
+        header = next(reader)
 
-    #     data = []
-    #     for row in reader:
-    #         data.append([float(value) for value in row[1:]])
+        data = []
+        for row in reader:
+            data.append([float(value) for value in row[1:]])
 
-    #     rows = np.array(data)
+        rows = np.array(data)
 
-    # means = np.mean(rows, axis=0)
-    # mean_row = ['Mean'] + [f'{mean:.6f}' for mean in means]
-    # with open(file_path, mode='a', newline='') as file:
-    #     writer = csv.writer(file)
-    #     writer.writerow(mean_row)
+    means = np.mean(rows, axis=0)
+    mean_row = ['Mean'] + [f'{mean:.6f}' for mean in means]
+    with open(file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(mean_row)

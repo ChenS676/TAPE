@@ -1,8 +1,7 @@
 import os, sys
 from typing import Dict
-
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import argparse
 import time
 import torch
@@ -17,13 +16,19 @@ from data_utils.load import load_data_lp, load_graph_lp
 from graphgps.utility.utils import save_run_results_to_csv
 
 from transformers import AutoTokenizer, AutoModel, TrainingArguments, Trainer, IntervalStrategy
-from model import BertClassifier, BertClaInfModel
+from model import Co_LMGCN, Co_LMGCNInf
+from torch_sparse import SparseTensor
 from finetune_dataset import LinkPredictionDataset
 from utils import init_path, time_logger
 from ogb.linkproppred import Evaluator
 import numpy as np
 from heuristic.eval import get_metric_score
 from graphgps.utility.utils import config_device, Logger
+
+from graphgps.network.ncn import CNLinkPredictor as NCN
+from graphgps.network.ncn import IncompleteCN1Predictor as NCNC
+from graphgps.network.heart_gnn import SAGE_Variant as SAGE
+from graphgps.network.heart_gnn import GCN_Variant as GCN
 from torch.utils.tensorboard import SummaryWriter
 from graph_embed.tune_utils import mvari_str2csv, save_parmet_tune
 
@@ -40,7 +45,8 @@ def compute_metrics(p):
 
 class LMTrainer():
     def __init__(self, cfg):
-        self.dataset_name = 'cora'#cfg.dataset
+        self.cfg = cfg
+        self.dataset_name = cfg.data.name
         self.seed = cfg.seed
 
         self.model_name = cfg.lm.model.name
@@ -63,6 +69,8 @@ class LMTrainer():
 
         # Preprocess data
         splits, text, data = load_data_lp[cfg.data.name](cfg.data)
+        self.adj_t = SparseTensor.from_edge_index(edge_index=data.edge_index, sparse_sizes=(data.num_nodes, data.num_nodes))
+        self.adj_t = self.adj_t.to(self.device)
         splits = random_sampling(splits, args.downsampling)
 
         self.data = data.to(self.device)
@@ -76,6 +84,7 @@ class LMTrainer():
             X = tokenizer(text, padding=True, truncation=True, max_length=512)
         else:
             X = tokenizer(text, padding=True, truncation=True, max_length=512)
+
         dataset = LinkPredictionDataset(X, data.edge_index, torch.ones(data.edge_index.shape[1]))
         self.inf_dataset = dataset
 
@@ -88,11 +97,11 @@ class LMTrainer():
         self.test_dataset = LinkPredictionDataset(X, torch.cat(
             [splits['test'].pos_edge_label_index, splits['test'].neg_edge_label_index], dim=1), torch.cat(
             [splits['test'].pos_edge_label, splits['test'].neg_edge_label], dim=0))
-
+        
         # Define pretrained tokenizer and model
-        bert_model = AutoModel.from_pretrained(self.model_name, attn_implementation="eager",
-                                               device_map="auto", torch_dtype=torch.float16)
-        for name, param in bert_model.named_parameters():
+        llm_model = AutoModel.from_pretrained(self.model_name, attn_implementation="eager", torch_dtype=torch.float32)
+                                            #    device_map="auto", torch_dtype=torch.float32)
+        for name, param in llm_model.named_parameters():
             print(name)
             if 'encoder.layer.5' in name and 'MiniLM' in cfg.lm.model.name:
                 break
@@ -103,9 +112,31 @@ class LMTrainer():
             if 'encoder.layer.23' in name and 'e5-large' in cfg.lm.model.name:
                 break
             param.requires_grad = False
-        self.model = BertClassifier(bert_model,
-                                    cfg,
-                                    feat_shrink=self.feat_shrink).to(self.device)
+
+        if cfg.model.type == 'SAGE':
+            self.GNN = SAGE(llm_model.config.hidden_size, 
+                        cfg.model.hidden_channels, 
+                        cfg.model.out_channels, 
+                        cfg.model.num_layers,
+                        cfg.model.dropout
+                        )
+        elif cfg.model.type == 'GCN':
+            self.GNN = GCN(llm_model.config.hidden_size, 
+                        cfg.model.hidden_channels, 
+                        cfg.model.out_channels, 
+                        cfg.model.num_layers,
+                        cfg.model.dropout
+                        )
+        elif cfg.model.type == 'NCNC':
+            self.GNN = NCNC(llm_model.config.hidden_size, cfg.model.hidden_channels, 1, cfg.model.nnlayers,
+                           cfg.model.predp, cfg.model.preedp, cfg.model.lnnn)
+        elif cfg.model.type == 'NCN':
+            self.GNN = NCN(llm_model.config.hidden_size, cfg.model.hidden_channels, 1, cfg.model.nnlayers,
+                           cfg.model.predp, cfg.model.preedp, cfg.model.lnnn)
+        else:
+            raise('This method does not exist, check the model type in the yaml file!') 
+        self.model = Co_LMGCN(llm_model, cfg, self.GNN, adj_t=self.adj_t).to(self.device)
+        # from IPython import embed; embed()
 
         # prev_ckpt = f'prt_lm/{self.dataset_name}/{self.model_name}.ckpt'
         # if self.use_gpt_str and os.path.exists(prev_ckpt):
@@ -147,12 +178,12 @@ class LMTrainer():
             load_best_model_at_end=True,
             gradient_accumulation_steps=self.grad_acc_steps,
             per_device_train_batch_size=self.batch_size,
-            per_device_eval_batch_size=self.batch_size * 8,
+            per_device_eval_batch_size=self.batch_size * 1,
             warmup_steps=warmup_steps,
             num_train_epochs=self.epochs,
             dataloader_num_workers=0,
             dataloader_pin_memory=False,
-            fp16=False,
+            fp16=False,#torch.cuda.is_available(),
             dataloader_drop_last=True,
             max_grad_norm=10.0,
         )
@@ -173,39 +204,51 @@ class LMTrainer():
 
     @time_logger
     @torch.no_grad()
-    def eval_and_save(self, eval_data):
+    # what is eval_data
+    def eval_and_save(self, type_data):
         emb = np.memmap(init_path(f"{self.ckpt_dir}.emb"),
-                        dtype=np.float16,
+                        dtype=np.float32,
                         mode='w+',
                         shape=(self.num_nodes, self.feat_shrink if self.feat_shrink else 768))
         pred = np.memmap(init_path(f"{self.ckpt_dir}.pred"),
-                         dtype=np.float16,
+                         dtype=np.float32,
                          mode='w+',
                          shape=(self.num_nodes, self.n_labels))
 
-        inf_model = BertClaInfModel(
-            self.model, emb, pred, feat_shrink=self.feat_shrink)
+        inf_model = Co_LMGCNInf(self.model, self.cfg, self.GNN, emb=emb, pred=pred, feat_shrink=self.feat_shrink, model_mode='inference', adj_t=self.adj_t)
         inf_model.eval()
+
         inference_args = TrainingArguments(
             output_dir=self.output_dir,
             do_train=False,
             do_predict=True,
-            per_device_eval_batch_size=self.batch_size * 8,
-            dataloader_drop_last=False,
+            per_device_eval_batch_size=self.batch_size ,
+            dataloader_drop_last=True,
             dataloader_num_workers=0,
             dataloader_pin_memory=False,
-            fp16_full_eval=False,
+            fp16_full_eval=False,#torch.cuda.is_available(),
+            # fp16=torch.cuda.is_available()
         )
 
-        trainer = Trainer(model=inf_model, args=inference_args)
-        predictor_dict = trainer.predict(eval_data)
+        eval_trainer = Trainer(model=inf_model, 
+                          args=inference_args,)
+
+        if type_data == 'test':
+            predictor_dict = eval_trainer.predict(self.test_dataset)
+        elif type_data == 'val':
+            predictor_dict = eval_trainer.predict(self.val_dataset)
+        else:
+            predictor_dict = eval_trainer.predict(self.train_dataset)
         pos_mask = (predictor_dict.label_ids == 1)
         neg_mask = (predictor_dict.label_ids == 0)
 
-        pos_pred = predictor_dict.predictions[pos_mask]
-        neg_pred = predictor_dict.predictions[neg_mask]
-        pos_pred = torch.tensor(pos_pred, dtype=torch.float32)
-        neg_pred = torch.tensor(neg_pred, dtype=torch.float32)
+        # from IPython import embed;
+        # embed()
+        predictions = torch.tensor(predictor_dict.predictions).view(-1, len(pos_mask))
+        pos_pred = predictions[:, pos_mask]
+        neg_pred = predictions[:, neg_mask]
+        pos_pred = torch.tensor(pos_pred, dtype=torch.float32).flatten()
+        neg_pred = torch.tensor(neg_pred, dtype=torch.float32).flatten()
 
         result_mrr = get_metric_score(self.evaluator_hit, self.evaluator_mrr, pos_pred, neg_pred)
         result_mrr.update({'ACC': 0.00})
@@ -224,7 +267,7 @@ def parse_args() -> argparse.Namespace:
     r"""Parses the command line arguments."""
     parser = argparse.ArgumentParser(description='GraphGym')
     parser.add_argument('--cfg', dest='cfg_file', type=str, required=False,
-                        default='core/yamls/cora/lms/ft-llama.yaml',
+                        default='core/yamls/cora/comb/gcn_encoder.yaml',
                         help='The configuration file path.')
     parser.add_argument('--repeat', type=int, default=5,
                         help='The number of repeated jobs.')
@@ -251,7 +294,7 @@ if __name__ == '__main__':
     # cfg.data.device = args.device
     # cfg.model.device = args.device
     # cfg.device = args.device
-    torch.set_num_threads(cfg.num_threads)
+    torch.set_num_threads(1)#cfg.num_threads)
     best_acc = 0
     best_params = {}
     loggers = create_logger(args.repeat)
@@ -269,10 +312,10 @@ if __name__ == '__main__':
         trainer = LMTrainer(cfg)
         trainer.train()
         start_inf = time.time()
-        result_test = trainer.eval_and_save(trainer.test_dataset)
+        result_test = trainer.eval_and_save('test')
         eval_time = time.time() - start_inf
-        result_valid = trainer.eval_and_save(trainer.val_dataset)
-        result_train = trainer.eval_and_save(trainer.train_dataset)
+        result_valid = trainer.eval_and_save('val')
+        result_train = trainer.eval_and_save('train')
         result_all = {
             key: (result_train[key], result_valid[key], result_test[key])
             for key in result_test.keys()

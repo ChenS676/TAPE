@@ -1,0 +1,7 @@
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:03<00:10,  3.41s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:07<00:07,  3.60s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:10<00:03,  3.68s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:11<00:00,  2.32s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:11<00:00,  2.79s/it]
+Traceback (most recent call last):
+  File "comb_lm_trainer.py", line 297, in <module>
+    trainer = LMTrainer(cfg)
+  File "comb_lm_trainer.py", line 138, in __init__
+    self.model = Co_LMGCN(llm_model, cfg, self.GNN, adj_t=self.adj_t).to(self.device)
+AttributeError: 'LMTrainer' object has no attribute 'GNN'

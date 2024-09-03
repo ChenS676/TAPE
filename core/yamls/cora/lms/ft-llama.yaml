@@ -2,7 +2,7 @@ dataset: cora
 device: 0
 lm:
   model:
-    name: meta-llama/Meta-Llama-3-8B
+    name: microsoft/deberta-base
   train:
     att_dropout: 0.1
     batch_size: 1
@@ -52,7 +52,7 @@ train:
 
 model:
   device: 0
-  type: ft-MLP-llama
+  type: NCNC
   hidden_channels: 128 #
   num_layers: 3 #
   dropout: 0.1

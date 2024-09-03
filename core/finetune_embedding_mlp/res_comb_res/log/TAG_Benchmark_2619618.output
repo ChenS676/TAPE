@@ -1,0 +1,38 @@
+Number of available CUDA devices: 1
+Number of available CUDA devices: 1
+not loaded 0 papers.
+not loaded 0 paperid.
+create graph: 0.07368302345275879
+[2485]
+original num of nodes: 2485
+num of nodes after lcc: 2485
+num of edges after lcc: 10418
+num of texts in dataset: 2485
+train adj shape: 8336
+train: original length 4168
+train: downsampled length 4168
+valid: original length 781
+valid: downsampled length 781
+test: original length 260
+test: downsampled length 260
+
+============================= JOB FEEDBACK =============================
+
+Job ID: 2619618
+Cluster: hk
+User/Group: cc7738/hk-project-test-p0021478
+Account: hk-project-pai00001
+State: CANCELLED (exit code 0)
+Partition: accelerated
+Nodes: 1
+Cores per node: 152
+Nodelist: hkn0617
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 02:11:44 core-walltime
+Job Wall-clock time: 00:00:52
+Starttime: Mon Sep  2 14:49:13 2024
+Endtime: Mon Sep  2 14:50:05 2024
+Memory Utilized: 1.13 GB
+Memory Efficiency: 2.31% of 48.98 GB
+Energy Consumed: 17345 Joule / 4.81805555555556 Watthours
+Average node power draw: 333.557692307692 Watt
