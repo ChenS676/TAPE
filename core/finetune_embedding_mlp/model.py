@@ -142,7 +142,7 @@ class BertClaInfModel(PreTrainedModel):
         loss = pos_loss + neg_loss
         return TokenClassifierOutput(loss=loss, logits=logits)
 
-
+from IPython import embed;
 class Co_LMGCN(PreTrainedModel):
     def __init__(self, model, cfg, GNN, 
                 emb=None, pred=None, dropout=0.0, seed=0, cla_bias=True, feat_shrink='', model_mode='train',
@@ -155,7 +155,7 @@ class Co_LMGCN(PreTrainedModel):
         self.feat_shrink = feat_shrink
         self.model_mode = model_mode
         self.gnn = GNN  # GNN 
-        hidden_dim = GNN.in_channels
+        hidden_dim = GNN.out_channels
 
         if feat_shrink:
             self.feat_shrink_layer = nn.Linear(
@@ -172,7 +172,6 @@ class Co_LMGCN(PreTrainedModel):
             self.pred = pred
 
     def forward(self,
-                inputs=None,
                 input_ids=None,
                 attention_mask=None,
                 node_id=None,
@@ -193,19 +192,23 @@ class Co_LMGCN(PreTrainedModel):
         # Use CLS Emb as sentence emb.
         text_emb = emb.permute(1, 0, 2)[0]
         # text_emb = text_emb.to(torch.float32)
+
         if self.feat_shrink:
             text_emb = self.feat_shrink_layer(text_emb)
         # TODO
-        text_emb = text_emb.repeat(self.adj_t.size(0), 1)
+        # text_emb = text_emb.repeat(self.adj_t.size(0), 1)
         # TODO in shape of (num_nodes, hidden_dim)
-
+        # print(text_emb.dtype)
+        # self.adj_t = self.adj_t.to(dtype=text_emb.dtype)
+        text_emb = text_emb.repeat(self.adj_t.size(0), 1)
+        # print("Before GNN:", text_emb.shape, text_emb.dtype, self.adj_t.sparse_sizes(), self.adj_t.dtype)
         x = self.gnn(text_emb, self.adj_t)
 
-        first_vector = x[node_id[0]].repeat(text_emb.shape[1], 1).t()
-        second_vector = x[node_id[1]].repeat(text_emb.shape[1], 1).t()
-
+        first_vector = x[node_id[0]]#.repeat(text_emb.shape[1], 1).t()
+        second_vector = x[node_id[1]]#.repeat(text_emb.shape[1], 1).t()
+        
         logits = self.classifier(first_vector, second_vector)
-
+        # embed()
         # TODO 
         if self.model_mode == 'inference':
             logits = logits.squeeze(dim=1)
@@ -226,7 +229,7 @@ class Co_LMGCN(PreTrainedModel):
 
         pos_loss = -torch.log(pos_out + 1e-15).mean() if pos_out.numel() > 0 else torch.tensor(0.0)
         neg_loss = -torch.log(1 - neg_out + 1e-15).mean() if neg_out.numel() > 0 else torch.tensor(0.0)
-
+        # embed()
         loss = pos_loss + neg_loss
         return TokenClassifierOutput(loss=loss, logits=logits)
 
@@ -242,7 +245,7 @@ class Co_LMGCNInf(PreTrainedModel):
         self.feat_shrink = feat_shrink
         self.model_mode = model_mode
         self.gnn = GNN  # GNN 
-        hidden_dim = GNN.in_channels
+        hidden_dim = GNN.out_channels
 
         # if feat_shrink:
         #     self.feat_shrink_layer = nn.Linear(
@@ -287,12 +290,12 @@ class Co_LMGCNInf(PreTrainedModel):
         text_emb = text_emb.repeat(self.adj_t.size(0), 1)
         
         # TODO in shape of (num_nodes, hidden_dim)
-        # from IPython import embed;
+        
         # embed()
         x = self.gnn(text_emb, self.adj_t)
 
-        first_vector = x[node_id[0]].repeat(text_emb.shape[1], 1).t()
-        second_vector = x[node_id[1]].repeat(text_emb.shape[1], 1).t()
+        first_vector = x[node_id[0]]#.repeat(text_emb.shape[1], 1).t()
+        second_vector = x[node_id[1]]#.repeat(text_emb.shape[1], 1).t()
         # print(first_vector.shape)
         # print(second_vector.shape)
 
@@ -300,7 +303,11 @@ class Co_LMGCNInf(PreTrainedModel):
 
         # TODO 
         if self.model_mode == 'inference':
-            logits = logits.squeeze(dim=1)
+            if logits.dim() > 1 and logits.shape[1] == 1:
+                logits = logits.squeeze(dim=1)
+
+            # Alternatively, you could always squeeze the last dimension if it exists
+            # logits = logits.squeeze(-1)
             if torch.cuda.is_available():
                 print(f"Memory allocated: {torch.cuda.memory_allocated() / 1024 ** 2:.2f} MB")
 
@@ -312,7 +319,7 @@ class Co_LMGCNInf(PreTrainedModel):
 
         pos_mask = (labels == 1)
         neg_mask = (labels == 0)
-
+        # embed()
         pos_out = logits[pos_mask]
         neg_out = logits[neg_mask]
 
@@ -320,4 +327,5 @@ class Co_LMGCNInf(PreTrainedModel):
         neg_loss = -torch.log(1 - neg_out + 1e-15).mean() if neg_out.numel() > 0 else torch.tensor(0.0)
 
         loss = pos_loss + neg_loss
+        # embed()
         return TokenClassifierOutput(loss=loss, logits=logits)

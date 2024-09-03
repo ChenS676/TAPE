@@ -178,7 +178,7 @@ class LMTrainer():
             load_best_model_at_end=True,
             gradient_accumulation_steps=self.grad_acc_steps,
             per_device_train_batch_size=self.batch_size,
-            per_device_eval_batch_size=self.batch_size * 1,
+            per_device_eval_batch_size=self.batch_size,
             warmup_steps=warmup_steps,
             num_train_epochs=self.epochs,
             dataloader_num_workers=0,
@@ -222,7 +222,7 @@ class LMTrainer():
             output_dir=self.output_dir,
             do_train=False,
             do_predict=True,
-            per_device_eval_batch_size=self.batch_size ,
+            per_device_eval_batch_size=self.batch_size * 1,
             dataloader_drop_last=True,
             dataloader_num_workers=0,
             dataloader_pin_memory=False,
@@ -239,6 +239,7 @@ class LMTrainer():
             predictor_dict = eval_trainer.predict(self.val_dataset)
         else:
             predictor_dict = eval_trainer.predict(self.train_dataset)
+        
         pos_mask = (predictor_dict.label_ids == 1)
         neg_mask = (predictor_dict.label_ids == 0)
 
@@ -249,7 +250,7 @@ class LMTrainer():
         neg_pred = predictions[:, neg_mask]
         pos_pred = torch.tensor(pos_pred, dtype=torch.float32).flatten()
         neg_pred = torch.tensor(neg_pred, dtype=torch.float32).flatten()
-
+        # embed()
         result_mrr = get_metric_score(self.evaluator_hit, self.evaluator_mrr, pos_pred, neg_pred)
         result_mrr.update({'ACC': 0.00})
         return result_mrr

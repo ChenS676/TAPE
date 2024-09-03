@@ -29,6 +29,7 @@ class GCN_Variant(torch.nn.Module):
         super(GCN_Variant, self).__init__()
         self.in_channels = in_channels
         self.hidden_channels = hidden_channels
+        self.out_channels = out_channels
         self.convs = torch.nn.ModuleList()
         
         if data_name == 'ogbl-citation2':
