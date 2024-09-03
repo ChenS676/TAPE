@@ -35,12 +35,12 @@ from graph_embed.tune_utils import mvari_str2csv, save_parmet_tune
 writer = SummaryWriter()
 
 # todo
-def compute_metrics(p):
-    from sklearn.metrics import accuracy_score
-    pred, labels = p
-    pred = np.argmax(pred, axis=1)
-    accuracy = accuracy_score(y_true=labels, y_pred=pred)
-    return {"accuracy": accuracy}
+# def compute_metrics(p):
+#     from sklearn.metrics import accuracy_score
+#     pred, labels = p
+#     pred = np.argmax(pred, axis=-1)
+#     accuracy = accuracy_score(y_true=labels, y_pred=pred)
+#     return {"accuracy": accuracy}
 
 
 class LMTrainer():
@@ -192,7 +192,7 @@ class LMTrainer():
             args=args,
             train_dataset=self.train_dataset,
             eval_dataset=self.val_dataset,
-            compute_metrics=compute_metrics,
+            # compute_metrics=compute_metrics,
 
             # callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
         )
