@@ -27,9 +27,10 @@ class GCN_Variant(torch.nn.Module):
                  dropout, 
                  data_name=None):
         super(GCN_Variant, self).__init__()
-
+        self.in_channels = in_channels
+        self.hidden_channels = hidden_channels
         self.convs = torch.nn.ModuleList()
-
+        
         if data_name == 'ogbl-citation2':
             if num_layers == 1:
                 self.convs.append(GCNConv(in_channels, out_channels,normalize=False ))
@@ -69,7 +70,6 @@ class GCN_Variant(torch.nn.Module):
         if self.invest == 1:
             print('layers in gcn: ', len(self.convs))
             self.invest = 0
-            
         for conv in self.convs[:-1]:
             x = conv(x, adj_t)
             x = F.relu(x)
