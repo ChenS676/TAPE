@@ -6,7 +6,6 @@ import argparse
 import time
 import torch
 from graphgps.utility.utils import random_sampling
-from transformers import AdamW
 
 from torch_geometric import seed_everything
 from graphgps.utility.utils import set_cfg, get_git_repo_root_path, custom_set_run_dir, set_printing, run_loop_settings, \
@@ -15,9 +14,9 @@ from graphgps.utility.utils import set_cfg, get_git_repo_root_path, custom_set_r
 
 from data_utils.load import load_data_lp, load_graph_lp
 from graphgps.utility.utils import save_run_results_to_csv
-from IPython import embed
+
 from transformers import AutoTokenizer, AutoModel, TrainingArguments, Trainer, IntervalStrategy
-from model import Co_LMGCN, Co_LMGCNInf
+from model_debug import Co_LMGCN, Co_LMGCNInf
 from torch_sparse import SparseTensor
 from finetune_dataset import LinkPredictionDataset
 from utils import init_path, time_logger
@@ -36,12 +35,12 @@ from graph_embed.tune_utils import mvari_str2csv, save_parmet_tune
 writer = SummaryWriter()
 
 # todo
-# def compute_metrics(p):
-#     from sklearn.metrics import accuracy_score
-#     pred, labels = p
-#     pred = np.argmax(pred, axis=-1)
-#     accuracy = accuracy_score(y_true=labels, y_pred=pred)
-#     return {"accuracy": accuracy}
+def compute_metrics(p):
+    from sklearn.metrics import accuracy_score
+    pred, labels = p
+    pred = np.argmax(pred, axis=1)
+    accuracy = accuracy_score(y_true=labels, y_pred=pred)
+    return {"accuracy": accuracy}
 
 
 class LMTrainer():
@@ -57,7 +56,7 @@ class LMTrainer():
         self.dropout = cfg.lm.train.dropout
         self.att_dropout = cfg.lm.train.att_dropout
         self.batch_size = cfg.lm.train.batch_size
-        self.epochs = cfg.lm.train.epochs
+        self.epochs = 0.01
         self.warmup_epochs = cfg.lm.train.warmup_epochs
         self.eval_patience = cfg.lm.train.eval_patience
         self.grad_acc_steps = cfg.lm.train.grad_acc_steps
@@ -100,7 +99,8 @@ class LMTrainer():
             [splits['test'].pos_edge_label, splits['test'].neg_edge_label], dim=0))
         
         # Define pretrained tokenizer and model
-        llm_model = AutoModel.from_pretrained(self.model_name, attn_implementation="eager", torch_dtype=torch.float32) # device_map="auto",
+        llm_model = AutoModel.from_pretrained(self.model_name, attn_implementation="eager", torch_dtype=torch.float32)
+                                            #    device_map="auto", torch_dtype=torch.float32)
         for name, param in llm_model.named_parameters():
             print(name)
             if 'encoder.layer.5' in name and 'MiniLM' in cfg.lm.model.name:
@@ -113,37 +113,30 @@ class LMTrainer():
                 break
             param.requires_grad = False
 
-        if cfg.gnn.model.name == 'SAGE':
+        if cfg.model.type == 'SAGE':
             self.GNN = SAGE(llm_model.config.hidden_size, 
-                        cfg.gnn.train.hidden_channels, 
-                        cfg.gnn.train.out_channels, 
-                        cfg.gnn.train.num_layers,
-                        cfg.gnn.train.dropout
+                        cfg.model.hidden_channels, 
+                        cfg.model.out_channels, 
+                        cfg.model.num_layers,
+                        cfg.model.dropout
                         )
-        elif cfg.gnn.model.name == 'GCN':
+        elif cfg.model.type == 'GCN':
             self.GNN = GCN(llm_model.config.hidden_size, 
-                        cfg.gnn.train.hidden_channels, 
-                        cfg.gnn.train.out_channels, 
-                        cfg.gnn.train.num_layers,
-                        cfg.gnn.train.dropout
+                        cfg.model.hidden_channels, 
+                        cfg.model.out_channels, 
+                        cfg.model.num_layers,
+                        cfg.model.dropout
                         )
-        elif cfg.gnn.model.name == 'NCNC':
-            self.GNN = NCNC(llm_model.config.hidden_size, cfg.gnn.train.hidden_channels, 1, cfg.gnn.train.nnlayers,
-                           cfg.gnn.train.predp, cfg.gnn.train.preedp, cfg.gnn.train.lnnn)
-        elif cfg.gnn.model.name == 'NCN':
-            self.GNN = NCN(llm_model.config.hidden_size, cfg.gnn.train.hidden_channels, 1, cfg.gnn.train.nnlayers,
-                           cfg.gnn.train.predp, cfg.gnn.train.preedp, cfg.gnn.train.lnnn)
+        elif cfg.model.type == 'NCNC':
+            self.GNN = NCNC(llm_model.config.hidden_size, cfg.model.hidden_channels, 1, cfg.model.nnlayers,
+                           cfg.model.predp, cfg.model.preedp, cfg.model.lnnn)
+        elif cfg.model.type == 'NCN':
+            self.GNN = NCN(llm_model.config.hidden_size, cfg.model.hidden_channels, 1, cfg.model.nnlayers,
+                           cfg.model.predp, cfg.model.preedp, cfg.model.lnnn)
         else:
             raise('This method does not exist, check the model type in the yaml file!') 
         self.model = Co_LMGCN(llm_model, cfg, self.GNN, adj_t=self.adj_t).to(self.device)
-
-        self.optimizer = AdamW([
-            {'params': llm_model.parameters(), 'lr': cfg.lm.train.lr},  # lr for LLM
-            {'params': self.GNN.parameters(), 'lr': cfg.gnn.train.lr},  # lr for GNN
-        ], weight_decay=self.weight_decay)
-
-        # self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=1, gamma=0.95)
-        # embed()
+        # from IPython import embed; embed()
 
         # prev_ckpt = f'prt_lm/{self.dataset_name}/{self.model_name}.ckpt'
         # if self.use_gpt_str and os.path.exists(prev_ckpt):
@@ -160,7 +153,7 @@ class LMTrainer():
 
         self.trainable_params = sum(p.numel()
                                for p in self.model.parameters() if p.requires_grad)
-        self.name_tag = cfg.lm.model.name + '_' + cfg.gnn.model.name + cfg.data.name
+        self.name_tag = cfg.model.type + cfg.data.name
         self.FILE_PATH = f'{get_git_repo_root_path()}/'
 
     @time_logger
@@ -185,7 +178,7 @@ class LMTrainer():
             load_best_model_at_end=True,
             gradient_accumulation_steps=self.grad_acc_steps,
             per_device_train_batch_size=self.batch_size,
-            per_device_eval_batch_size=self.batch_size,
+            per_device_eval_batch_size=self.batch_size * 1,
             warmup_steps=warmup_steps,
             num_train_epochs=self.epochs,
             dataloader_num_workers=0,
@@ -199,7 +192,8 @@ class LMTrainer():
             args=args,
             train_dataset=self.train_dataset,
             eval_dataset=self.val_dataset,
-            optimizers=(self.optimizer, None)#self.scheduler),
+            compute_metrics=compute_metrics,
+
             # callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
         )
 
@@ -228,7 +222,7 @@ class LMTrainer():
             output_dir=self.output_dir,
             do_train=False,
             do_predict=True,
-            per_device_eval_batch_size=self.batch_size * 1,
+            per_device_eval_batch_size=self.batch_size ,
             dataloader_drop_last=True,
             dataloader_num_workers=0,
             dataloader_pin_memory=False,
@@ -245,17 +239,19 @@ class LMTrainer():
             predictor_dict = eval_trainer.predict(self.val_dataset)
         else:
             predictor_dict = eval_trainer.predict(self.train_dataset)
-        
         pos_mask = (predictor_dict.label_ids == 1)
         neg_mask = (predictor_dict.label_ids == 0)
 
         # from IPython import embed;
         # embed()
-        pos_pred = predictor_dict.predictions[pos_mask]
-        neg_pred = predictor_dict.predictions[neg_mask]
-        pos_pred = torch.tensor(pos_pred, dtype=torch.float32)
-        neg_pred = torch.tensor(neg_pred, dtype=torch.float32)
-        # embed()
+        print(predictor_dict)
+        predictions = torch.tensor(predictor_dict.predictions).view(-1, len(pos_mask))
+        pos_pred = predictions[:, pos_mask]
+        neg_pred = predictions[:, neg_mask]
+        print(pos_pred.device)
+        pos_pred = torch.tensor(pos_pred, dtype=torch.float32).flatten()
+        neg_pred = torch.tensor(neg_pred, dtype=torch.float32).flatten()
+        print(pos_pred.shape)
         result_mrr = get_metric_score(self.evaluator_hit, self.evaluator_mrr, pos_pred, neg_pred)
         result_mrr.update({'ACC': 0.00})
         return result_mrr
@@ -275,7 +271,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--cfg', dest='cfg_file', type=str, required=False,
                         default='core/yamls/cora/comb/gcn_encoder.yaml',
                         help='The configuration file path.')
-    parser.add_argument('--repeat', type=int, default=1,
+    parser.add_argument('--repeat', type=int, default=5,
                         help='The number of repeated jobs.')
     parser.add_argument('--start_seed', type=int, default=0,
                         help='The number of starting seed.')
@@ -300,7 +296,7 @@ if __name__ == '__main__':
     # cfg.data.device = args.device
     # cfg.model.device = args.device
     # cfg.device = args.device
-    torch.set_num_threads(cfg.num_threads)
+    torch.set_num_threads(1)#cfg.num_threads)
     best_acc = 0
     best_params = {}
     loggers = create_logger(args.repeat)

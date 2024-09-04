@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "comb_lm_trainer.py", line 294, in <module>
-    cfg = config_device(cfg)
-  File "/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_gerrman/TAPE_emb/core/graphgps/utility/utils.py", line 225, in config_device
-    if type(cfg.device) is int and cfg.device <= num_cuda_devices -1:
-  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/yacs/config.py", line 141, in __getattr__
-    raise AttributeError(name)
-AttributeError: device

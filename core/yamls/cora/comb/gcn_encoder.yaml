@@ -14,13 +14,13 @@ lm:
     # 2. e5-large: intfloat/e5-large-v2
     # 3. llama   : meta-llama/Meta-Llama-3-8B
     # 4. bert    : bert-base-uncased
-    name: 'bert-base-uncased'
+    name: 'sentence-transformers/all-MiniLM-L6-v2'
   train:
     att_dropout: 0.1
     batch_size: 2
     cla_dropout: 0.4
     dropout: 0.3
-    epochs: 1
+    epochs: 10
     eval_patience: 10000
     grad_acc_steps: 1
     lr: 0.0001
@@ -29,6 +29,21 @@ lm:
     weight_decay: 0.0
     feat_shrink: 256
 
+model:
+  type: GCN
+
+gnn:
+  model:
+    # names: GCN, SAGE, NCN, NCNC
+    name: GCN
+  train:
+    in_channels: 1433 # equal the number of features
+    hidden_channels: 256
+    out_channels: 128
+    negative_slope: 0.2
+    dropout: 0
+    num_layers: 3
+    lr: 0.0001
 run:
   seed: 0
   num_threads: 11
@@ -47,15 +62,6 @@ train:
   epochs: 2000
   device: 0
   auto_resume: False
-
-model:
-  type: GCN
-  in_channels: 1433 # equal the number of features
-  hidden_channels: 256
-  out_channels: 128
-  negative_slope: 0.2
-  dropout: 0
-  num_layers: 3
 
 num_threads: 11
 

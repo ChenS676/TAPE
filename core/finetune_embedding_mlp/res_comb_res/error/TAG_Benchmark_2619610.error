@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "comb_lm_trainer.py", line 277, in <module>
-    cfg.merge_from_list(args.opts)
-  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/yacs/config.py", line 223, in merge_from_list
-    _assert_with_logging(
-  File "/home/hk-project-test-p0021478/cc7738/anaconda3/envs/TAG-LP/lib/python3.8/site-packages/yacs/config.py", line 545, in _assert_with_logging
-    assert cond, msg
-AssertionError: Override list has odd length: ['c']; it must be a list of pairs
