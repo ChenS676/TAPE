@@ -168,7 +168,7 @@ class LMTrainer():
 
 
         # Define pretrained tokenizer and model
-        bert_model = AutoModel.from_pretrained(self.model_name, attn_implementation="eager")
+        bert_model = AutoModel.from_pretrained(self.model_name)#, attn_implementation="eager")
         bert_model.gradient_checkpointing_enable()
         hidden_size = bert_model.config.hidden_size
         current_size = self.data.x.size(1)
@@ -241,7 +241,8 @@ class LMTrainer():
             per_device_eval_batch_size=self.batch_size * 8,
             warmup_steps=warmup_steps,
             num_train_epochs=self.epochs,
-            dataloader_num_workers=1,
+            dataloader_num_workers=0, #1
+            dataloader_pin_memory=False,
             fp16=True,
             dataloader_drop_last=True,
             max_grad_norm=10.0,
@@ -290,7 +291,8 @@ class LMTrainer():
             do_predict=True,
             per_device_eval_batch_size=self.batch_size * 1,
             dataloader_drop_last=False,
-            dataloader_num_workers=1,
+            dataloader_num_workers=0, #1
+            dataloader_pin_memory=False,
             fp16_full_eval=False,
         )
 

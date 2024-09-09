@@ -80,11 +80,14 @@ class BertClassifier(PreTrainedModel):
 
 
 class BertClaInfModel(PreTrainedModel):
-    def __init__(self, model, emb, pred, feat_shrink=''):
+    def __init__(self, model, emb, pred, feat_shrink='', cla_bias=True):
         super().__init__(model.config)
         self.bert_classifier = model
         self.emb, self.pred = emb, pred
         self.feat_shrink = feat_shrink
+        if feat_shrink:
+            self.feat_shrink_layer = nn.Linear(
+                model.config.hidden_size, int(feat_shrink), bias=cla_bias)
 
     @torch.no_grad()
     def forward(self,
@@ -402,3 +405,178 @@ class GCNClaInfModel(PreTrainedModel):
         loss = self.bert_classifier.model.recon_loss(h, edge_pos, edge_neg)
         pred = self.bert_classifier.model.decoder(h[node_id.T[0]], h[node_id.T[1]])
         return TokenClassifierOutput(loss=loss, logits=pred)
+
+class Co_LMGCN(PreTrainedModel):
+    def __init__(self, model, cfg, GNN, classifier=None,
+                emb=None, pred=None, dropout=0.0, seed=0, cla_bias=True, feat_shrink='', model_mode='train',
+                adj_t: torch.tensor=None):
+        super().__init__(model.config)
+        self.adj_t=adj_t
+        self.cfg = cfg
+        self.llm_encoder = model  # LLM 
+        self.dropout = nn.Dropout(dropout)
+        self.feat_shrink = feat_shrink
+        self.model_mode = model_mode
+        self.gnn = GNN  # GNN 
+        hidden_dim = GNN.out_channels
+
+        # if feat_shrink:
+        #     self.feat_shrink_layer = nn.Linear(
+        #         hidden_dim, int(feat_shrink), bias=cla_bias)
+        #     hidden_dim = int(feat_shrink)
+
+        if classifier == None:
+            self.classifier = LinkPredictor(hidden_dim, cfg.gnn.train.hidden_channels, 1, cfg.gnn.train.num_layers,
+                                        cfg.gnn.train.dropout, 'dot')
+        else:
+            self.classifier = classifier
+
+        if model_mode == 'train':
+            init_random_state(seed)
+        elif model_mode == 'inference':
+            self.emb = emb
+            self.pred = pred
+
+    def forward(self,
+                input_ids=None,
+                attention_mask=None,
+                node_id=None,
+                labels=None,
+                return_dict=None,):
+        # TODO
+        all_logits = []
+        for i in range(input_ids.shape[0]):
+            input = input_ids[i, 0, :].unsqueeze(0)
+            attention_m = attention_mask[i, 0, :].unsqueeze(0)
+            node_idx = node_id[i]
+
+            outputs = self.llm_encoder(input_ids=input,
+                                    attention_mask=attention_m,
+                                    return_dict=return_dict)
+
+            # print(self.mode)
+            emb = self.dropout(outputs['last_hidden_state'])
+
+            # Use CLS Emb as sentence emb.
+            text_emb = emb.permute(1, 0, 2)[0]
+            # text_emb = text_emb.to(torch.float32)
+
+            text_emb = text_emb.repeat(self.adj_t.size(0), 1)
+            # print("Before GNN:", text_emb.shape, text_emb.dtype, self.adj_t.sparse_sizes(), self.adj_t.dtype)
+            # embed()
+            x = self.gnn(text_emb, self.adj_t)
+
+            first_vector = x[node_idx[0]]#.repeat(text_emb.shape[1], 1).t()
+            second_vector = x[node_idx[1]]#.repeat(text_emb.shape[1], 1).t()
+            
+            # if self.classifier == None:
+            logits = self.classifier(first_vector, second_vector)
+
+            all_logits.append(logits)
+
+        all_logits = torch.cat(all_logits, dim=0)
+
+        if labels is not None and labels.shape[-1] == 1:
+            labels = labels.squeeze()
+
+        pos_mask = (labels == 1)
+        neg_mask = (labels == 0)
+        # embed()
+        pos_out = all_logits[pos_mask]
+        neg_out = all_logits[neg_mask]
+        # embed()
+        pos_loss = -torch.log(pos_out + 1e-15).mean() if pos_out.numel() > 0 else torch.tensor(0.0)
+        neg_loss = -torch.log(1 - neg_out + 1e-15).mean() if neg_out.numel() > 0 else torch.tensor(0.0)
+        # embed()
+        loss = pos_loss + neg_loss
+        return TokenClassifierOutput(loss=loss, logits=all_logits)
+
+class Co_LMGCNInf(PreTrainedModel):
+    def __init__(self, model, cfg, GNN, 
+                emb=None, pred=None, dropout=0.0, seed=0, cla_bias=True, feat_shrink='', model_mode='train',
+                adj_t: torch.tensor=None):
+        super().__init__(model.config)
+        self.adj_t=adj_t
+        self.cfg = cfg
+        self.llm_encoder = model  # LLM 
+        self.dropout = nn.Dropout(dropout)
+        self.feat_shrink = feat_shrink
+        self.model_mode = model_mode
+        self.gnn = GNN  # GNN 
+        hidden_dim = GNN.out_channels
+
+        # if feat_shrink:
+        #     self.feat_shrink_layer = nn.Linear(
+        #         hidden_dim, int(feat_shrink), bias=cla_bias)
+        #     hidden_dim = int(feat_shrink)
+
+        self.classifier = LinkPredictor(hidden_dim, cfg.gnn.train.hidden_channels, 1, cfg.gnn.train.num_layers,
+                                        cfg.gnn.train.dropout, 'dot')
+
+        if model_mode == 'train':
+            init_random_state(seed)
+        elif model_mode == 'inference':
+            self.emb = emb
+            self.pred = pred
+
+    def forward(self,
+                input_ids=None,
+                attention_mask=None,
+                node_id=None,
+                labels=None,
+                return_dict=None,):
+        # TODO
+        all_logits = []
+        all_embs = []
+
+        for i in range(input_ids.shape[0]):
+            input = input_ids[i, 0, :].unsqueeze(0)
+            attention_m = attention_mask[i, 0, :].unsqueeze(0)
+            node_idx = node_id[i]
+
+            outputs = self.llm_encoder.llm_encoder(input_ids=input,
+                                    attention_mask=attention_m,
+                                    return_dict=return_dict)
+
+            # print(self.mode)
+            emb = self.dropout(outputs['last_hidden_state'])
+
+            # Use CLS Emb as sentence emb.
+            text_emb = emb.permute(1, 0, 2)[0]
+            
+            # if self.feat_shrink:
+            #     text_emb = self.feat_shrink_layer(text_emb)
+            # TODO
+            text_emb = text_emb.repeat(self.adj_t.size(0), 1)
+            
+            # TODO in shape of (num_nodes, hidden_dim)
+            
+            # embed()
+            x = self.gnn(text_emb, self.adj_t)
+
+            logits = self.classifier(x[node_idx[0]], x[node_idx[1]])
+            
+            all_logits.append(logits)
+            all_embs.append(torch.stack((x[node_idx[0]], x[node_idx[1]]), dim=1))
+
+        all_logits = torch.cat(all_logits, dim=0)
+        all_embs = torch.cat(all_embs, dim=0)
+
+        self.emb = all_embs.cpu().numpy().astype(np.float32)
+        self.pred = all_logits.cpu().numpy().astype(np.float32)
+
+        if labels is not None and labels.shape[-1] == 1:
+            labels = labels.squeeze()
+
+        pos_mask = (labels == 1)
+        neg_mask = (labels == 0)
+        # embed()
+        pos_out = all_logits[pos_mask]
+        neg_out = all_logits[neg_mask]
+
+        pos_loss = -torch.log(pos_out + 1e-15).mean() if pos_out.numel() > 0 else torch.tensor(0.0)
+        neg_loss = -torch.log(1 - neg_out + 1e-15).mean() if neg_out.numel() > 0 else torch.tensor(0.0)
+
+        loss = pos_loss + neg_loss
+        # embed()
+        return TokenClassifierOutput(loss=loss, logits=all_logits)
