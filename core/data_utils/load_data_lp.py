@@ -91,7 +91,9 @@ def load_taglp_cora(cfg: CN, if_lcc: bool=True, alg_name: str='', node_features=
     
     if node_features is not None:
         data.x = node_features
-    
+    # from IPython import embed;
+    # embed()
+    # coalesce return only one parameter
     edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
     edge_index = remove_self_loops(edge_index.T)[0]
     data.edge_index = edge_index
