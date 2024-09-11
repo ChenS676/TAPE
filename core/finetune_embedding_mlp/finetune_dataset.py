@@ -1,6 +1,6 @@
 import torch
 from torch.utils.data import Dataset as TorchDataset
-
+from IPython import embed
 # Create torch dataset
 class LinkPredictionDataset(torch.utils.data.Dataset):
     def __init__(self, encodings, edge_index, labels=None):

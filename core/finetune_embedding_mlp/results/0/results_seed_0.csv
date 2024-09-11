@@ -1,0 +1,2 @@
+model,seed,Hits@1,Hits@3,Hits@10,Hits@20,Hits@50,Hits@100,MRR,mrr_hit1,mrr_hit3,mrr_hit10,mrr_hit20,mrr_hit50,mrr_hit100,AUC,AP
+GCN_Variant,0,4.62,14.62,20.38,26.54,46.92,66.54,11.54,4.62,14.62,20.38,26.54,47.69,66.54,70.26,71.65

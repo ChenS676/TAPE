@@ -24,11 +24,12 @@ module load devel/cmake/3.18
 module load devel/cuda/11.8
 # module load compiler/gnu/10.2
 
-# export TOKENIZERS_PARALLELISM=false
-export CUDA_VISIBLE_DEVICES=1
+export TOKENIZERS_PARALLELISM=True
+# export CUDA_VISIBLE_DEVICES=1
 # export CUDA_LAUNCH_BLOCKING=1
 # export TORCH_USE_CUDA_DSA=0
 
 # WANDB_DISABLED=True gdb --args python3 comb_lm_trainer.py --cfg core/yamls/cora/comb/gcn_encoder.yaml
-WANDB_DISABLED=True python3 lm_trainer.py --cfg core/yamls/cora/lms/ft-minilm.yaml --repeat 1 --device cuda
+# WANDB_DISABLED=True python3 lm_trainer.py --cfg core/yamls/cora/lms/ft-minilm.yaml --repeat 1 --device cuda:0
+WANDB_DISABLED=True torchrun --nproc_per_node=4 lm_trainer.py --cfg core/yamls/cora/lms/ft-minilm.yaml --repeat 1
 # WANDB_DISABLED=True python3 comb_lm_trainer.py --cfg core/yamls/cora/comb/graphsage.yaml --repeat 5

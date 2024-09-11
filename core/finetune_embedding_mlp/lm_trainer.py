@@ -34,8 +34,11 @@ from graph_embed.tune_utils import mvari_str2csv, save_parmet_tune
 from graphgps.score.custom_score import mlp_score, InnerProduct
 from graphgps.network.heart_gnn import GAT_Variant, GAE_forall, GCN_Variant, \
                                 SAGE_Variant, GIN_Variant, DGCNN
-writer = SummaryWriter()
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.utils.data import DataLoader, DistributedSampler
+import torch.distributed as dist
 
+writer = SummaryWriter()
 # todo
 def compute_metrics(p):
     from sklearn.metrics import accuracy_score
@@ -112,6 +115,9 @@ def create_GAE_model(cfg_model: CN,
 
     return GAE_forall(encoder=encoder, decoder=decoder)
 
+def ddp_setup():
+    dist.init_process_group(backend="nccl")
+
 class LMTrainer():
     def __init__(self, cfg):
         self.dataset_name = cfg.dataset
@@ -131,7 +137,7 @@ class LMTrainer():
         self.grad_acc_steps = cfg.lm.train.grad_acc_steps
         self.lr = cfg.lm.train.lr
         self.device = config_device(cfg).device
-
+        print('DEVICE: ', self.device)
         self.use_gpt_str = "2" if cfg.lm.train.use_gpt else ""
         self.output_dir = f'output/{self.dataset_name}{self.use_gpt_str}/{self.model_name}-seed{self.seed}'
         self.ckpt_dir = f'prt_lm/{self.dataset_name}{self.use_gpt_str}/{self.model_name}-seed{self.seed}'
@@ -153,22 +159,26 @@ class LMTrainer():
             X = tokenizer(text, padding=True, truncation=True, max_length=512)
         else:
             X = tokenizer(text, padding=True, truncation=True, max_length=512)
+        print("Edge index:", data.edge_index)
         dataset = LinkPredictionDataset(X, data.edge_index, torch.ones(data.edge_index.shape[1]))
         self.inf_dataset = dataset
 
         self.train_dataset = LinkPredictionDataset(X, torch.cat(
             [splits['train'].pos_edge_label_index, splits['train'].neg_edge_label_index], dim=1), torch.cat(
             [splits['train'].pos_edge_label, splits['train'].neg_edge_label], dim=0))
+        
         self.val_dataset = LinkPredictionDataset(X, torch.cat(
             [splits['valid'].pos_edge_label_index, splits['valid'].neg_edge_label_index], dim=1), torch.cat(
             [splits['valid'].pos_edge_label, splits['valid'].neg_edge_label], dim=0))
         self.test_dataset = LinkPredictionDataset(X, torch.cat(
             [splits['test'].pos_edge_label_index, splits['test'].neg_edge_label_index], dim=1), torch.cat(
             [splits['test'].pos_edge_label, splits['test'].neg_edge_label], dim=0))
-
+        
+        # embed()
 
         # Define pretrained tokenizer and model
-        bert_model = AutoModel.from_pretrained(self.model_name)#, attn_implementation="eager")
+        bert_model = AutoModel.from_pretrained(self.model_name, attn_implementation="eager", torch_dtype=torch.float16)
+        
         bert_model.gradient_checkpointing_enable()
         hidden_size = bert_model.config.hidden_size
         current_size = self.data.x.size(1)
@@ -189,7 +199,13 @@ class LMTrainer():
                 break
             param.requires_grad = False
             print(f'{name} is frozen.')
-            
+        
+        # for name, param in bert_model.named_parameters():
+        #     status = "Trainable" if param.requires_grad else "Frozen"
+        #     num_params = param.numel()
+        #     print(f"{name}: {status}, Number of parameters: {num_params}")
+        
+        
         if self.decoder.model.type == 'MLP':
             self.model = BertClassifier(bert_model,cfg,feat_shrink=self.feat_shrink).to(self.device)
         elif self.decoder.model.type == 'NCN' or self.decoder.model.type == 'NCNC':
@@ -201,6 +217,8 @@ class LMTrainer():
             cfg_model.in_channels = hidden_size
             self.model = GCNClassifier(bert_model, cfg, self.data, self.data.edge_index,
                                        create_GAE_model(cfg_model, cfg_score, args.model)).to(self.device)
+            
+        
         self.evaluator_hit = Evaluator(name='ogbl-collab')
         self.evaluator_mrr = Evaluator(name='ogbl-citation2')
         self.tensorboard_writer = writer
@@ -245,6 +263,7 @@ class LMTrainer():
             dataloader_pin_memory=False,
             fp16=True,
             dataloader_drop_last=True,
+            ddp_find_unused_parameters=True,
             max_grad_norm=10.0,
             remove_unused_columns = False if self.decoder.model.type != 'MLP' else True
         )
@@ -345,7 +364,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--model', type=str, required=False)
     return parser.parse_args()
 
-
+from IPython import embed
 if __name__ == '__main__':
     FILE_PATH = f'{get_git_repo_root_path()}/'
 
@@ -361,10 +380,14 @@ if __name__ == '__main__':
         cfg.decoder.model.type = 'MLP'
     cfg.merge_from_list(args.opts)
 
-    cfg.data.device = args.device
-    cfg.model.device = args.device
-    cfg.device = args.device
-    torch.set_num_threads(cfg.num_threads)
+    ddp_setup()
+    # device = int(os.environ["LOCAL_RANK"])
+    # dev = f'cuda:{device}'
+    # cfg.data.device =device #args.device
+    # cfg.model.device =device #args.device
+    # cfg.device =device #args.device
+    # embed()
+    # torch.set_num_threads(cfg.num_threads)
     best_acc = 0
     best_params = {}
     loggers = create_logger(args.repeat)
@@ -419,4 +442,6 @@ if __name__ == '__main__':
     print_logger.info(f"Results for: {cfg.model.type}")
     print_logger.info(f"Model Params: {trainer.trainable_params}")
     print_logger.info(f"Inference time: {eval_time}")
+    
+    dist.destroy_process_group()
 
