@@ -33,7 +33,7 @@ from data_utils.load_data_nc import load_tag_cora, load_tag_pubmed, \
     load_text_product, load_text_citeseer, load_text_citationv8, \
     load_graph_citeseer, load_graph_citationv8, load_graph_pwc_large, load_text_pwc_large, \
     load_graph_pwc_medium, load_text_pwc_medium, load_text_pwc_small,  load_graph_pwc_small, \
-    load_embedded_citationv8, load_pyg_citationv8
+    load_embedded_citationv8, load_pyg_citationv8, load_graph_ogbn_papers100M
 from graphgps.utility.utils import get_git_repo_root_path, config_device, init_cfg_test
 from data_utils.lcc import find_scc_direc, use_lcc_direc, use_lcc
 
@@ -117,7 +117,6 @@ def load_taglp_cora(cfg: CN, if_lcc: bool=True, alg_name: str='', node_features=
         
         return splits, text, data
 
-
 def load_taglp_ogbn_arxiv(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
     # add one default argument
 
@@ -142,6 +141,52 @@ def load_taglp_ogbn_arxiv(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
     print(f"num of edges after lcc: {data.edge_index.shape[1]}")
     print(f"num of texts in dataset: {len(text)}")
     return splits, text, data
+
+def load_taglp_pwc_large(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
+    # add one default argument
+
+    data = load_graph_pwc_large(cfg.method)
+    text = load_text_pwc_large()
+    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
+    data.edge_index, _ = remove_self_loops(data.edge_index)
+    undirected = data.is_undirected()
+
+    cfg = config_device(cfg)
+
+    splits = get_edge_split(data,
+                            undirected,
+                            cfg.device,
+                            cfg.split_index[1],
+                            cfg.split_index[2],
+                            cfg.include_negatives,
+                            cfg.split_labels
+                            )
+    return splits, text, data
+
+def load_taglp_ogbn_papers100M(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
+    # add one default argument
+
+    data = load_graph_ogbn_papers100M(False)
+    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
+    data.edge_index, _ = remove_self_loops(data.edge_index)
+    # text = load_text_ogbn_arxiv()
+    undirected = data.is_undirected()
+
+    print(f"original num of nodes: {data.num_nodes}")
+    cfg = config_device(cfg)
+
+    splits = get_edge_split(data,
+                            undirected,
+                            cfg.device,
+                            cfg.split_index[1],
+                            cfg.split_index[2],
+                            cfg.include_negatives,
+                            cfg.split_labels
+                            )
+    print(f"num of nodes after lcc: {data.num_nodes}")
+    print(f"num of edges after lcc: {data.edge_index.shape[1]}")
+    # print(f"num of texts in dataset: {len(text)}")
+    return splits, None, data
 
 def load_taglp_pwc_large(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
     # add one default argument

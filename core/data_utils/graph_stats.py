@@ -11,7 +11,7 @@ from torch_geometric.utils import to_torch_coo_tensor
 from torch_sparse import SparseTensor
 import matplotlib.pyplot as plt
 from scipy.sparse import coo_matrix
-import matspy as spy  # https://github.com/alugowski/matspy
+# import matspy as spy  # https://github.com/alugowski/matspy
 import math
 import argparse
 import os.path as osp
@@ -32,8 +32,8 @@ from graphgps.utility.utils import get_git_repo_root_path, config_device, init_c
 from data_utils.load import load_data_lp
 from data_utils.load_data_lp import load_taglp_citationv8, load_graph_citationv8
 from data_utils.lcc import use_lcc, get_largest_connected_component
-import networkx 
-if networkx.__version__ == '2.6.3':
+import networkx as nx
+if nx.__version__ == '2.6.3':
     from networkx import from_scipy_sparse_matrix as from_scipy_sparse_array
 else:
     from networkx import from_scipy_sparse_array
@@ -427,7 +427,7 @@ if __name__ == '__main__':
     graph_metrics = True
     
     gc = []
-    for name in ['pwc_medium']:  # 'arxiv_2023', 'pwc_medium', 'ogbn-arxiv', 'pwc_large', 'citationv8', 
+    for name in ['ogbn-papers100M']:  # 'arxiv_2023', 'pwc_medium', 'ogbn-arxiv', 'pwc_large', 'citationv8', 
         print(f"------ Dataset {name}------")
         
         splits, text, data = load_data_lp[name](cfg.data, False)

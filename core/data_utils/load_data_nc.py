@@ -391,7 +391,54 @@ def load_text_ogbn_arxiv():
         for ti, ab in zip(df['title'], df['abs'])
     ]
 
+from torch_sparse import SparseTensor
+def load_graph_ogbn_papers100M(use_mask):
+    dataset = PygNodePropPredDataset(root='./generated_dataset',
+                                     name='ogbn-papers100M', transform=T.ToSparseTensor())
+    print('Dataset Downloaded')
+    from IPython import embed;
+    embed()
+    data = dataset[0]
+    if data.adj_t.is_symmetric():
+        is_symmetric = True
+    else:
+        # edge_index = data.adj_t.to_symmetric()
+        data.adj_t = data.adj_t.to_symmetric()
+    print('Start')
+    edge_index = data.adj_t.coo()  # Convert PyG SparseTensor to COO format
+    row, col, _ = edge_index
+    edge_index = SparseTensor(row=row, col=col, sparse_sizes=(data.num_nodes, data.num_nodes))
+    print('SparseTensor Created')
+    x = torch.tensor(data.x).float()
+    # edge_index = torch.LongTensor(edge_index.to_torch_sparse_coo_tensor().coalesce().indices()).long()
+    num_nodes = data.num_nodes
 
+    if use_mask:
+        y = torch.tensor(data.y).long()
+        train_mask, val_mask, test_mask = get_node_mask_ogb(data.num_nodes, dataset.get_idx_split())
+        
+        return Data(x=x,
+                    edge_index=edge_index,
+                    y=y,
+                    num_nodes=num_nodes,
+                    train_mask=train_mask,
+                    test_mask=test_mask,
+                    val_mask=val_mask,
+                    node_attrs=x,
+                    edge_attrs=None,
+                    graph_attrs=None
+                    )
+
+    else:
+        print('Data here')
+        return Data(x=x,
+                    edge_index=edge_index,
+                    num_nodes=num_nodes,
+                    node_attrs=x,
+                    edge_attrs=None,
+                    graph_attrs=None
+                    )
+        
 def load_graph_ogbn_arxiv(use_mask):
     dataset = PygNodePropPredDataset(root='./generated_dataset',
                                      name='ogbn-arxiv', transform=T.ToSparseTensor())

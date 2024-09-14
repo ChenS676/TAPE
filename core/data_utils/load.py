@@ -20,7 +20,8 @@ from data_utils.load_data_lp import (load_taglp_arxiv2023,
                                      load_taglp_citationv8,
                                      load_taglp_pwc_small,
                                      load_taglp_pwc_large,
-                                     load_taglp_pwc_medium,)
+                                     load_taglp_pwc_medium,
+                                     load_taglp_ogbn_papers100M)
 from data_utils.load_data_lp import (load_graph_cora, 
                                      load_graph_arxiv23,
                                      load_graph_ogbn_arxiv,
@@ -47,6 +48,7 @@ load_data_lp = {
     'pubmed': load_taglp_pubmed,
     'arxiv_2023': load_taglp_arxiv2023,
     'ogbn-arxiv': load_taglp_ogbn_arxiv,
+    'ogbn-papers100M':load_taglp_ogbn_papers100M,
     'ogbn_products': load_taglp_product,
     'citeseer': load_taglp_citeseer,
     'citationv8': load_taglp_citationv8,
