@@ -1,0 +1,563 @@
+Type Heuristic:RWR, Dataset: arxiv_2023, Norm function: gcn_norm
+All runs:
+Hits@1
+Highest Train: 91.86 ± 7.90
+Highest Valid: 85.67 ± 6.34
+  Final Train: 91.84 ± 7.89
+   Final Test: 32.55 ± 15.19
+
+All runs:
+Hits@3
+Highest Train: 97.97 ± 3.48
+Highest Valid: 93.20 ± 2.91
+  Final Train: 97.97 ± 3.48
+   Final Test: 74.91 ± 6.41
+
+All runs:
+Hits@10
+Highest Train: 99.71 ± 0.82
+Highest Valid: 96.85 ± 1.14
+  Final Train: 99.66 ± 0.82
+   Final Test: 92.91 ± 3.08
+
+All runs:
+Hits@20
+Highest Train: 99.95 ± 0.15
+Highest Valid: 98.43 ± 0.53
+  Final Train: 99.93 ± 0.19
+   Final Test: 96.81 ± 1.31
+
+All runs:
+Hits@50
+Highest Train: 100.00 ± 0.00
+Highest Valid: 99.57 ± 0.12
+  Final Train: 100.00 ± 0.00
+   Final Test: 99.04 ± 0.19
+
+All runs:
+Hits@100
+Highest Train: 100.00 ± 0.00
+Highest Valid: 99.84 ± 0.06
+  Final Train: 100.00 ± 0.00
+   Final Test: 99.59 ± 0.08
+
+All runs:
+MRR
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 46.79 ± 9.72
+
+All runs:
+mrr_hit1
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 25.45 ± 11.44
+
+All runs:
+mrr_hit3
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 68.08 ± 16.11
+
+All runs:
+mrr_hit10
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 91.99 ± 8.89
+
+All runs:
+mrr_hit20
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 96.08 ± 6.37
+
+All runs:
+mrr_hit50
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 98.37 ± 3.36
+
+All runs:
+mrr_hit100
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 99.20 ± 1.72
+
+All runs:
+AUC
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 99.79 ± 0.22
+
+All runs:
+AP
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 99.77 ± 0.24
+
+All runs:
+ACC
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 98.06 ± 1.25
+
+Type Heuristic:RWR, Dataset: cora, Norm function: gcn_norm
+All runs:
+Hits@1
+Highest Train: 50.81 ± 9.37
+Highest Valid: 52.89 ± 9.41
+  Final Train: 50.57 ± 9.38
+   Final Test: 19.62 ± 5.32
+
+All runs:
+Hits@3
+Highest Train: 65.16 ± 12.26
+Highest Valid: 65.89 ± 11.07
+  Final Train: 64.57 ± 12.28
+   Final Test: 31.88 ± 7.95
+
+All runs:
+Hits@10
+Highest Train: 87.41 ± 4.58
+Highest Valid: 85.61 ± 3.85
+  Final Train: 87.09 ± 4.44
+   Final Test: 67.59 ± 9.89
+
+All runs:
+Hits@20
+Highest Train: 95.49 ± 4.18
+Highest Valid: 94.39 ± 3.93
+  Final Train: 95.26 ± 4.06
+   Final Test: 84.33 ± 7.45
+
+All runs:
+Hits@50
+Highest Train: 99.65 ± 0.40
+Highest Valid: 99.72 ± 0.33
+  Final Train: 99.49 ± 0.45
+   Final Test: 96.05 ± 1.92
+
+All runs:
+Hits@100
+Highest Train: 100.00 ± 0.01
+Highest Valid: 99.96 ± 0.12
+  Final Train: 99.98 ± 0.04
+   Final Test: 98.85 ± 1.16
+
+All runs:
+MRR
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 36.54 ± 2.64
+
+All runs:
+mrr_hit1
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 21.33 ± 1.74
+
+All runs:
+mrr_hit3
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 38.92 ± 3.71
+
+All runs:
+mrr_hit10
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 71.16 ± 4.98
+
+All runs:
+mrr_hit20
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 89.67 ± 2.37
+
+All runs:
+mrr_hit50
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 98.50 ± 0.58
+
+All runs:
+mrr_hit100
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 99.91 ± 0.10
+
+All runs:
+AUC
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 98.45 ± 0.29
+
+All runs:
+AP
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 98.02 ± 0.40
+
+All runs:
+ACC
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 89.60 ± 12.59
+
+Type Heuristic:KI, Dataset: pubmed, Norm function: gcn_norm
+All runs:
+Hits@1
+Highest Train: 22.37 ± 8.87
+Highest Valid: 22.11 ± 8.38
+  Final Train: 22.16 ± 8.83
+   Final Test: 7.78 ± 3.68
+
+All runs:
+Hits@3
+Highest Train: 47.51 ± 6.74
+Highest Valid: 47.24 ± 6.91
+  Final Train: 47.50 ± 6.73
+   Final Test: 28.26 ± 3.89
+
+All runs:
+Hits@10
+Highest Train: 72.00 ± 3.16
+Highest Valid: 72.34 ± 3.10
+  Final Train: 71.95 ± 3.19
+   Final Test: 42.12 ± 1.89
+
+All runs:
+Hits@20
+Highest Train: 84.44 ± 1.84
+Highest Valid: 84.90 ± 1.72
+  Final Train: 84.40 ± 1.86
+   Final Test: 64.60 ± 3.70
+
+All runs:
+Hits@50
+Highest Train: 95.69 ± 1.04
+Highest Valid: 95.58 ± 0.78
+  Final Train: 95.67 ± 1.05
+   Final Test: 82.35 ± 0.88
+
+All runs:
+Hits@100
+Highest Train: 98.62 ± 0.46
+Highest Valid: 98.08 ± 0.35
+  Final Train: 98.59 ± 0.45
+   Final Test: 93.20 ± 0.90
+
+All runs:
+MRR
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 20.47 ± 4.47
+
+All runs:
+mrr_hit1
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 9.83 ± 2.40
+
+All runs:
+mrr_hit3
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 23.34 ± 6.92
+
+All runs:
+mrr_hit10
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 39.00 ± 8.62
+
+All runs:
+mrr_hit20
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 55.67 ± 10.87
+
+All runs:
+mrr_hit50
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 77.08 ± 10.46
+
+All runs:
+mrr_hit100
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 88.80 ± 7.34
+
+All runs:
+AUC
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 98.86 ± 0.72
+
+All runs:
+AP
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 98.67 ± 0.75
+
+All runs:
+ACC
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 93.63 ± 5.36
+
+All runs:
+Hits@1
+Highest Train: 18.38 ± nan
+Highest Valid: 18.97 ± nan
+  Final Train: 18.38 ± nan
+   Final Test: 1.38 ± nan
+
+All runs:
+Hits@3
+Highest Train: 22.20 ± nan
+Highest Valid: 24.90 ± nan
+  Final Train: 22.20 ± nan
+   Final Test: 14.03 ± nan
+
+All runs:
+Hits@10
+Highest Train: 34.13 ± nan
+Highest Valid: 37.94 ± nan
+  Final Train: 34.13 ± nan
+   Final Test: 24.51 ± nan
+
+All runs:
+Hits@20
+Highest Train: 43.97 ± nan
+Highest Valid: 47.04 ± nan
+  Final Train: 42.71 ± nan
+   Final Test: 33.20 ± nan
+
+All runs:
+Hits@50
+Highest Train: 74.29 ± nan
+Highest Valid: 71.94 ± nan
+  Final Train: 74.08 ± nan
+   Final Test: 54.55 ± nan
+
+All runs:
+Hits@100
+Highest Train: 90.84 ± nan
+Highest Valid: 87.35 ± nan
+  Final Train: 90.32 ± nan
+   Final Test: 73.72 ± nan
+
+All runs:
+MRR
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 10.30 ± 0.11
+
+All runs:
+mrr_hit1
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 1.29 ± 0.16
+
+All runs:
+mrr_hit3
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 14.62 ± 0.52
+
+All runs:
+mrr_hit10
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 22.11 ± 1.11
+
+All runs:
+mrr_hit20
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 31.55 ± 1.24
+
+All runs:
+mrr_hit50
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 51.86 ± 1.62
+
+All runs:
+mrr_hit100
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 71.39 ± 1.15
+
+All runs:
+AUC
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 83.65 ± 0.68
+
+All runs:
+AP
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 83.10 ± 0.53
+
+All runs:
+ACC
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 63.08 ± 10.00
+
+All runs:
+Hits@1
+Highest Train: 43.69 ± nan
+Highest Valid: 44.66 ± nan
+  Final Train: 43.69 ± nan
+   Final Test: 21.94 ± nan
+
+All runs:
+Hits@3
+Highest Train: 48.33 ± nan
+Highest Valid: 48.62 ± nan
+  Final Train: 48.33 ± nan
+   Final Test: 24.51 ± nan
+
+All runs:
+Hits@10
+Highest Train: 67.84 ± nan
+Highest Valid: 70.75 ± nan
+  Final Train: 67.73 ± nan
+   Final Test: 50.00 ± nan
+
+All runs:
+Hits@20
+Highest Train: 81.16 ± nan
+Highest Valid: 81.42 ± nan
+  Final Train: 81.16 ± nan
+   Final Test: 71.34 ± nan
+
+All runs:
+Hits@50
+Highest Train: 98.54 ± nan
+Highest Valid: 98.81 ± nan
+  Final Train: 98.54 ± nan
+   Final Test: 88.74 ± nan
+
+All runs:
+Hits@100
+Highest Train: 99.98 ± nan
+Highest Valid: 100.00 ± nan
+  Final Train: 99.91 ± nan
+   Final Test: 98.02 ± nan
+
+All runs:
+MRR
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 15.13 ± 5.71
+
+All runs:
+mrr_hit1
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 5.71 ± 5.87
+
+All runs:
+mrr_hit3
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 15.61 ± 3.02
+
+All runs:
+mrr_hit10
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 33.58 ± 10.86
+
+All runs:
+mrr_hit20
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 45.89 ± 15.60
+
+All runs:
+mrr_hit50
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 67.81 ± 16.11
+
+All runs:
+mrr_hit100
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 83.38 ± 11.01
+
+All runs:
+AUC
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 89.08 ± 5.47
+
+All runs:
+AP
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 88.33 ± 5.19
+
+All runs:
+ACC
+Highest Train: nan ± nan
+Highest Valid: nan ± nan
+  Final Train: nan ± nan
+   Final Test: 75.68 ± 14.24
+
