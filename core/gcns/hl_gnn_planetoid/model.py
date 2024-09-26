@@ -1,10 +1,13 @@
-from torch_sparse import matmul
+
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
     
 import torch
+import numpy as np
 import torch.nn.functional as F
 from torch.nn import Parameter, Linear
-import numpy as np
+from torch_geometric.typing import SparseTensor
+
+from hl_gnn_planetoid.utils import *
 
 class HLGNN(torch.nn.Module):
     def __init__(self, data, args):
@@ -54,7 +57,7 @@ class HLGNN(torch.nn.Module):
     def forward(self, x, adj_t, edge_weight):
         x = F.dropout(x, p=self.dropout, training=self.training)
         x = self.lin1(x)
-        adj_t = self.norm_func(adj_t, edge_weight, adj_t.size(0), dtype=torch.float)
+        adj_t = self.norm_func(adj_t, edge_weight=edge_weight, dtype=torch.float32)
 
         hidden = x * self.temp[0]
         for k in range(self.K):
@@ -64,8 +67,15 @@ class HLGNN(torch.nn.Module):
         return hidden
 
     def propagate(self, adj_t, x, edge_weight=None):
-        return matmul(adj_t, x)
-
+        if isinstance(adj_t, SparseTensor):
+            adj_t = adj_t.to_torch_sparse_coo_tensor()
+        
+        if edge_weight is not None:
+            values = adj_t._values() * edge_weight
+            adj_t = torch.sparse_coo_tensor(adj_t._indices(), values, adj_t.size()).coalesce()
+            return torch.sparse.mm(adj_t, x)
+        else:
+            return torch.sparse.mm(adj_t, x)
 
 class GCNLayer(torch.nn.Module):
     def __init__(self, in_channels, out_channels):
@@ -73,7 +83,7 @@ class GCNLayer(torch.nn.Module):
         self.lin = Linear(in_channels, out_channels)
 
     def forward(self, x, adj):
-        out = torch.matmul(adj, x)
+        out = torch.sparse.mm(adj, x)
         out = self.lin(out)
         return out
 
@@ -108,7 +118,7 @@ class SAGELayer(torch.nn.Module):
         self.lin = Linear(in_channels, out_channels)
 
     def forward(self, x, adj):
-        out = torch.matmul(adj, x)
+        out = torch.sparse.mm(adj, x)
         out = self.lin(out)
         return out
 
