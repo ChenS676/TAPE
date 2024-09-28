@@ -392,25 +392,37 @@ def load_text_ogbn_arxiv():
     ]
 
 from torch_sparse import SparseTensor
+from unzip_dataset import print_cpu_memory
 def load_graph_ogbn_papers100M(use_mask):
     dataset = PygNodePropPredDataset(root='./generated_dataset',
                                      name='ogbn-papers100M', transform=T.ToSparseTensor())
     print('Dataset Downloaded')
-    from IPython import embed;
-    embed()
+    print_cpu_memory()
+    # from IPython import embed;
+    # embed()
     data = dataset[0]
+    print('Dataset[0]')
+    print_cpu_memory()
     if data.adj_t.is_symmetric():
         is_symmetric = True
     else:
+        print('Adj')
         # edge_index = data.adj_t.to_symmetric()
         data.adj_t = data.adj_t.to_symmetric()
+        print_cpu_memory()
     print('Start')
-    edge_index = data.adj_t.coo()  # Convert PyG SparseTensor to COO format
-    row, col, _ = edge_index
-    edge_index = SparseTensor(row=row, col=col, sparse_sizes=(data.num_nodes, data.num_nodes))
-    print('SparseTensor Created')
+    
     x = torch.tensor(data.x).float()
-    # edge_index = torch.LongTensor(edge_index.to_torch_sparse_coo_tensor().coalesce().indices()).long()
+    print_cpu_memory()
+    print('X prepared')
+    
+    edge_index_coo = data.adj_t.coo()  # Convert PyG SparseTensor to COO format
+    row, col, _ = edge_index_coo
+    edge_index_coo = SparseTensor(row=row, col=col, sparse_sizes=(data.num_nodes, data.num_nodes))
+    edge_index = torch.stack([edge_index_coo.storage.row(), edge_index_coo.storage.col()], dim=0)
+    print_cpu_memory()
+    # edge_index = edge_index_coo.coalesce()#.indices()#torch.LongTensor(edge_index.to_torch_sparse_coo_tensor().coalesce().indices()).long()
+    print('SparseTensor Created')
     num_nodes = data.num_nodes
 
     if use_mask:

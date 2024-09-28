@@ -163,30 +163,35 @@ def load_taglp_pwc_large(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
                             )
     return splits, text, data
 
+from unzip_dataset import print_cpu_memory
 def load_taglp_ogbn_papers100M(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
     # add one default argument
 
     data = load_graph_ogbn_papers100M(False)
+    print('Finished Data load')
+    print_cpu_memory()
     data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
     data.edge_index, _ = remove_self_loops(data.edge_index)
+    print('Edge index')
+    print_cpu_memory()
     # text = load_text_ogbn_arxiv()
-    undirected = data.is_undirected()
+    # undirected = data.is_undirected()
 
     print(f"original num of nodes: {data.num_nodes}")
     cfg = config_device(cfg)
 
-    splits = get_edge_split(data,
-                            undirected,
-                            cfg.device,
-                            cfg.split_index[1],
-                            cfg.split_index[2],
-                            cfg.include_negatives,
-                            cfg.split_labels
-                            )
+    # splits = get_edge_split(data,
+    #                         undirected,
+    #                         cfg.device,
+    #                         cfg.split_index[1],
+    #                         cfg.split_index[2],
+    #                         cfg.include_negatives,
+    #                         cfg.split_labels
+    #                         )
     print(f"num of nodes after lcc: {data.num_nodes}")
     print(f"num of edges after lcc: {data.edge_index.shape[1]}")
     # print(f"num of texts in dataset: {len(text)}")
-    return splits, None, data
+    return None, None, data
 
 def load_taglp_pwc_large(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
     # add one default argument

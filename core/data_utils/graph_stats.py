@@ -165,29 +165,38 @@ def plot_pos_neg_adj(m_pos: coo_matrix, m_neg: coo_matrix, name: str):
     return ax
 
 # @time_function
-def construct_sparse_adj(edge_index) -> coo_matrix:
-    """
-    Construct a sparse adjacency matrix from an edge index.
+def construct_sparse_adj(edge_index, num_nodes) -> coo_matrix:
+     """
+     Construct a sparse adjacency matrix from an edge index.
 
-    Parameters:
-    - edge_index: np.array or tuple, edge index
-    """
-    # Resource: https://stackoverflow.com/questions/22961541/python-matplotlib-plot-sparse-matrix-pattern
+     Parameters:
+     - edge_index: np.array or tuple, edge index
+     """
+     # Resource: https://stackoverflow.com/questions/22961541/python-matplotlib-plot-sparse-matrix-pattern
 
-    if type(edge_index) == tuple:
-        edge_index = np.concatenate([[edge_index[0].numpy()],
-                                     [edge_index[1].numpy()]], axis=0)
-    elif type(edge_index) != np.ndarray:
-        edge_index.numpy()
+     # Ensure edge_index is of the form [2, num_edges]
+     if edge_index.shape[0] > edge_index.shape[1]:
+         edge_index = edge_index.T
 
-    if edge_index.shape[0] > edge_index.shape[1]:
-        edge_index = edge_index.T
+     rows, cols = edge_index[0, :], edge_index[1, :]
+     print(rows, cols)
+     # Create a mapping from old indices to new indices
+     unique_nodes = np.unique(np.concatenate([rows, cols]))
+     node_mapping = {old_idx: new_idx for new_idx, old_idx in enumerate(unique_nodes)}
 
-    rows, cols = edge_index[0, :], edge_index[1, :]
-    vals = np.ones_like(rows)
-    shape = (edge_index.max() + 1, edge_index.max() + 1)
-    m = coo_matrix((vals, (rows, cols)), shape=shape)
-    return m
+     # Reindex the rows and cols using the mapping
+     rows_mapped = np.array([node_mapping[node] for node in rows])
+     cols_mapped = np.array([node_mapping[node] for node in cols])
+
+     # print(f"Reindexed rows max: {rows_mapped.max()}, cols max: {cols_mapped.max()}")
+
+     vals = np.ones_like(rows_mapped)
+     shape = (num_nodes, num_nodes)
+     print(vals, rows_mapped, cols_mapped)
+    # Create the COO matrix
+     m = coo_matrix((vals, (rows_mapped, cols_mapped)), shape=shape)
+
+     return m
 
 
 def _gini_coefficient(array: np.ndarray) -> float:
@@ -357,42 +366,42 @@ def graph_metrics_nx(graph: nx.Graph, name: str, use_lcc: bool) -> Dict[str, flo
         dict from metric names to metric values.
     """
     result = {'name': f"{name}_{use_lcc}"}
-    result.update(_counts(graph))
-    degrees = _degrees(graph)
-    result['degree_gini'] = _gini_coefficient(degrees)
+    # result.update(_counts(graph))
+    # degrees = _degrees(graph)
+    # result['degree_gini'] = _gini_coefficient(degrees)
     
-    avg_degree_G, avg_degree_dict = _avg_degree(G)
-    avg_degree_G2 = _avg_degree2(graph, avg_degree_dict)
-    result['avg_deg'] = avg_degree_G
-    result['avg_deg2'] = avg_degree_G2
+    # avg_degree_G, avg_degree_dict = _avg_degree(G)
+    # avg_degree_G2 = _avg_degree2(graph, avg_degree_dict)
+    # result['avg_deg'] = avg_degree_G
+    # result['avg_deg2'] = avg_degree_G2
 
-    result['deg_heterogeneity'] = _degree_heterogeneity(graph)
+    # result['deg_heterogeneity'] = _degree_heterogeneity(graph)
     result['avg_shortest_path'] = _avg_shortest_path(graph, name, 1000) if nx.is_connected(G) else np.inf
     
-    if name in ['pubmed', 'pwc_medium', 'ogbn_arxiv', 'pwc_large', 'ogbn-arxiv', 'citationv8']:
-        print(name)
-        result['approximate_diameter'] = np.inf 
-    else:
-        result['approximate_diameter'] = _diameter(graph)
-        result['num_triangles'] = float(
-        np.sum(list(nx.triangles(graph).values())) / 3.0)
+    # if name in ['ogbn-papers100M', 'pubmed', 'pwc_medium', 'ogbn_arxiv', 'pwc_large', 'ogbn-arxiv', 'citationv8']:
+    #     print(name)
+    #     result['approximate_diameter'] = np.inf 
+    # else:
+    #     result['approximate_diameter'] = _diameter(graph)
+    #     result['num_triangles'] = float(
+    #     np.sum(list(nx.triangles(graph).values())) / 3.0)
         
-    if graph.number_of_nodes() == 0:  # avoid np.mean of empty slice
-        result['avg_degree'] = 0.0
-        return result
+    # if graph.number_of_nodes() == 0:  # avoid np.mean of empty slice
+    #     result['avg_degree'] = 0.0
+    #     return result
     
-    result['avg_degree'] = float(np.mean(degrees))
-    core_numbers = np.array(list(nx.core_number(graph).values()))
-    result['coreness_eq_1'] = float(np.mean(core_numbers == 1))
-    result['coreness_geq_2'] = float(np.mean(core_numbers >= 2))
-    result['coreness_geq_5'] = float(np.mean(core_numbers >= 5))
-    result['coreness_geq_10'] = float(np.mean(core_numbers >= 10))
-    result['coreness_gini'] = float(_gini_coefficient(core_numbers))
+    # result['avg_degree'] = float(np.mean(degrees))
+    # core_numbers = np.array(list(nx.core_number(graph).values()))
+    # result['coreness_eq_1'] = float(np.mean(core_numbers == 1))
+    # result['coreness_geq_2'] = float(np.mean(core_numbers >= 2))
+    # result['coreness_geq_5'] = float(np.mean(core_numbers >= 5))
+    # result['coreness_geq_10'] = float(np.mean(core_numbers >= 10))
+    # result['coreness_gini'] = float(_gini_coefficient(core_numbers))
     result['avg_cc'] = float(np.mean(list(nx.clustering(graph).values())))
-    result['transitivity'] = float(nx.transitivity(graph))
+    # result['transitivity'] = float(nx.transitivity(graph))
     
-    result['cc_size'] = float(_largest_connected_component_size(graph))
-    result['power_law_estimate'] = _power_law_estimate(degrees)
+    # result['cc_size'] = float(_largest_connected_component_size(graph))
+    # result['power_law_estimate'] = _power_law_estimate(degrees)
     return result
 
 
@@ -409,60 +418,109 @@ def plot_all_cc_dist(G, name):
         print(f"Graph {name} is connected.")
     plot_cc_dist(G, f"original_{name}")
 
+# Function to parallelize data loading
+from unzip_dataset import print_cpu_memory
+
+def load_dataset_parallel(name, cfg, use_mask):
+    start_time = time.time()
+    splits, text, data = load_data_lp[name](cfg.data, use_mask)
+    print_cpu_memory()
+    print("Finish Data")
+    edge_index = data.edge_index.numpy()
+    m = construct_sparse_adj(edge_index, data.num_nodes)
+    print_cpu_memory()
+    print("Finish m")
+    G = nx.from_scipy_sparse_matrix(m)
+    print_cpu_memory()
+    print("Finish G")
+    print(f"Time taken to load and construct graph {name}: {time.time() - start_time} seconds")
+    
+    return G, name
     
 if __name__ == '__main__':
-
-    cfg = init_cfg_test()
-    cfg.device = 'cpu'
-    cfg = config_device(cfg)
-
-    parser = argparse.ArgumentParser(description='GraphGym')
-    parser.add_argument('--scale', dest='scale', type=int, required=False,
-                        help='data name')
-    args = parser.parse_args()
-    scale = 100
-    scale = args.scale 
-
-    plot_cc = False
-    graph_metrics = True
     
-    gc = []
-    for name in ['ogbn-papers100M']:  # 'arxiv_2023', 'pwc_medium', 'ogbn-arxiv', 'pwc_large', 'citationv8', 
-        print(f"------ Dataset {name}------")
-        
-        splits, text, data = load_data_lp[name](cfg.data, False)
-        
-        start_time = time.time()
-        m = construct_sparse_adj(data.edge_index.numpy())
-        G = from_scipy_sparse_array(m)
-        print(f"Time taken to create graph: {time.time() - start_time} s")
-        
-        if  plot_cc:
-            plot_all_cc_dist(G, name)
-        
-        if graph_metrics:
-            gc.append(graph_metrics_nx(G, name, False))
-            print(gc)
-            
-            gc = pd.DataFrame(gc)
-            gc.to_csv(f'{name}_all_graph_metric_False.csv', index=False)
-        
-        gc = []
-        if name in ['cora', 'arxiv_2023', 'citationv8']:
-            
-            splits, text, data = load_data_lp[name](cfg.data, True)
-            
-            start_time = time.time()
-            m = construct_sparse_adj(data.edge_index.numpy())
-            G = from_scipy_sparse_array(m)
-            print(f"Time taken to create graph: {time.time() - start_time} s")
-            
-            if  plot_cc:
-                plot_all_cc_dist(G, name)
-            
-            if graph_metrics:
-                gc.append(graph_metrics_nx(G, name, False))
-                print(gc)
+    # Initialize configuration and devices
+    cfg = init_cfg_test()
+    cfg.device = 'cpu'  # Or specify 'cuda' if using GPU
+    cfg = config_device(cfg)
+    print(cfg.device)
+    # Argument parser
+    parser = argparse.ArgumentParser(description='Parallel Data Loading for Graphs')
+    parser.add_argument('--scale', dest='scale', type=int, required=False, help='Data name')
+    args = parser.parse_args()
 
+    # List of datasets
+    # dataset_names = ['ogbn-arxiv']#'ogbn-papers100M']#, 'arxiv_2023', 'pwc_medium', 'ogbn-arxiv', 'pwc_large']
+
+    G, name = load_dataset_parallel('ogbn-papers100M', cfg, False)
+    gc = []
+    print(f"Processing dataset {name}")
+    
+    gc.append(graph_metrics_nx(G, name, False))
+    print(gc)
+    
     gc = pd.DataFrame(gc)
-    gc.to_csv(f'{name}_all_graph_metric_True.csv', index=False)
+    gc.to_csv(f'{name}_all_graph_metric_False.csv', index=False)
+    # graph_metrics = {'num_nodes': G.number_of_nodes(), 'num_edges': G.number_of_edges()}
+    # graph_metrics_df = pd.DataFrame([graph_metrics])
+    # graph_metrics_df.to_csv(f'{name}_graph_metrics.csv', index=False)
+
+    print("Parallel data loading and processing completed.")
+# if __name__ == '__main__':
+
+#     cfg = init_cfg_test()
+#     cfg.device = 'cpu'
+#     cfg = config_device(cfg)
+
+#     parser = argparse.ArgumentParser(description='GraphGym')
+#     parser.add_argument('--scale', dest='scale', type=int, required=False,
+#                         help='data name')
+#     args = parser.parse_args()
+#     scale = 100
+#     scale = args.scale 
+
+#     plot_cc = False
+#     graph_metrics = True
+    
+#     gc = []
+#     for name in ['ogbn-papers100M']:  # 'arxiv_2023', 'pwc_medium', 'ogbn-arxiv', 'pwc_large', 'citationv8', 
+#         print(f"------ Dataset {name}------")
+        
+#         # splits, text, data = load_data_lp[name](cfg.data, False)
+#         with Pool(processes=90) as pool:  # Use all available 90 CPUs
+#             results = pool.starmap(load_data_lp, (name, cfg.data, False))
+        
+#         start_time = time.time()
+#         m = construct_sparse_adj(data.edge_index.numpy())
+#         G = from_scipy_sparse_array(m)
+#         print(f"Time taken to create graph: {time.time() - start_time} s")
+        
+#         if  plot_cc:
+#             plot_all_cc_dist(G, name)
+        
+#         if graph_metrics:
+#             gc.append(graph_metrics_nx(G, name, False))
+#             print(gc)
+            
+#             gc = pd.DataFrame(gc)
+#             gc.to_csv(f'{name}_all_graph_metric_False.csv', index=False)
+        
+#         gc = []
+#         if name in ['cora', 'arxiv_2023', 'citationv8']:
+            
+#             splits, text, data = load_data_lp[name](cfg.data, True)
+            
+#             start_time = time.time()
+#             m = construct_sparse_adj(data.edge_index.numpy())
+#             G = from_scipy_sparse_array(m)
+#             print(f"Time taken to create graph: {time.time() - start_time} s")
+            
+#             if  plot_cc:
+#                 plot_all_cc_dist(G, name)
+            
+#             if graph_metrics:
+#                 gc.append(graph_metrics_nx(G, name, False))
+#                 print(gc)
+
+#     gc = pd.DataFrame(gc)
+#     gc.to_csv(f'{name}_all_graph_metric_True.csv', index=False)
