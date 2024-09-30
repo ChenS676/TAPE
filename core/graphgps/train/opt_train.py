@@ -202,12 +202,16 @@ class Trainer():
     def merge_result_rank(self):
         result_test = self.evaluate_func[self.model_name](self.test_data)
         result_valid = self.evaluate_func[self.model_name](self.valid_data)
-        result_train = self.evaluate_func[self.model_name](self.train_data)
-
+        #Turn back after experiments
+        # result_train = self.evaluate_func[self.model_name](self.train_data)
         return {
-            key: (result_train[key], result_valid[key], result_test[key])
+            key: (result_valid[key], result_test[key])
             for key in result_test.keys()
         }
+        # return {
+        #     key: (result_train[key], result_valid[key], result_test[key])
+        #     for key in result_test.keys()
+        # }
     
     
     def train(self):  

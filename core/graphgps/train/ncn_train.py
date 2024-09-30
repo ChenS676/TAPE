@@ -28,7 +28,7 @@ from graphgps.utility.utils import config_device, Logger
 from typing import Dict, Tuple
 from graphgps.train.opt_train import (Trainer)
 from graphgps.utility.ncn import PermIterator
-from metrics_analysis.remap_and_visualize import visualize_weighted_adjacency_matrix
+# from metrics_analysis.remap_and_visualize import visualize_weighted_adjacency_matrix
 
 from torch.utils.tensorboard import SummaryWriter
 writer = SummaryWriter()
@@ -136,14 +136,21 @@ class Trainer_NCN(Trainer):
 
                 for key, result in self.results_rank.items():
                     self.loggers[key].add_result(self.run, result)
-                    self.tensorboard_writer.add_scalar(f"Metrics/Train/{key}", result[0], epoch)
-                    self.tensorboard_writer.add_scalar(f"Metrics/Valid/{key}", result[1], epoch)
-                    self.tensorboard_writer.add_scalar(f"Metrics/Test/{key}", result[2], epoch)
+                    self.tensorboard_writer.add_scalar(f"Metrics/Valid/{key}", result[0], epoch)
+                    self.tensorboard_writer.add_scalar(f"Metrics/Test/{key}", result[1], epoch)
+                    # self.tensorboard_writer.add_scalar(f"Metrics/Train/{key}", result[0], epoch)
+                    # self.tensorboard_writer.add_scalar(f"Metrics/Valid/{key}", result[1], epoch)
+                    # self.tensorboard_writer.add_scalar(f"Metrics/Test/{key}", result[2], epoch)
 
-                    train_hits, valid_hits, test_hits = result
+                    # train_hits, valid_hits, test_hits = result
+                    # self.print_logger.info(
+                    # f'Run: {self.run + 1:02d}, Key: {key}, '
+                    # f'Epoch: {epoch:02d}, Loss: {loss:.4f}, Train: {100 * train_hits:.2f}, Valid: {100 * valid_hits:.2f}, Test: {100 * test_hits:.2f}%')
+                    valid_hits, test_hits = result
                     self.print_logger.info(
                         f'Run: {self.run + 1:02d}, Key: {key}, '
-                        f'Epoch: {epoch:02d}, Loss: {loss:.4f}, Train: {100 * train_hits:.2f}, Valid: {100 * valid_hits:.2f}, Test: {100 * test_hits:.2f}%')
+                        f'Epoch: {epoch:02d}, Loss: {loss:.4f}, Valid: {100 * valid_hits:.2f}, Test: {100 * test_hits:.2f}%')
+                    
 
                 self.print_logger.info('---')
 

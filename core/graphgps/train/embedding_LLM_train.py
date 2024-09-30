@@ -7,7 +7,7 @@ import pandas as pd
 from torch.nn import BCEWithLogitsLoss
 
 sys.path.insert(0, abspath(join(dirname(dirname(__file__)))))
-from metrics_analysis.remap_and_visualize import visualize_weighted_adjacency_matrix
+# from metrics_analysis.remap_and_visualize import visualize_weighted_adjacency_matrix
 
 import torch
 import wandb
