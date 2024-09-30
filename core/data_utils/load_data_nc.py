@@ -392,7 +392,7 @@ def load_text_ogbn_arxiv():
     ]
 
 from torch_sparse import SparseTensor
-from unzip_dataset import print_cpu_memory
+from data_utils.unzip_dataset import print_cpu_memory
 def load_graph_ogbn_papers100M(use_mask):
     dataset = PygNodePropPredDataset(root='./generated_dataset',
                                      name='ogbn-papers100M', transform=T.ToSparseTensor())

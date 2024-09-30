@@ -117,7 +117,7 @@ def load_taglp_cora(cfg: CN, if_lcc: bool=True, alg_name: str='', node_features=
         
         return splits, text, data
 
-def load_taglp_ogbn_arxiv(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
+def load_taglp_ogbn_arxiv(cfg: CN, if_lcc:bool = True) -> Tuple[Dict[str, Data], List[str]]:
     # add one default argument
 
     data = load_graph_ogbn_arxiv(False)
@@ -163,7 +163,7 @@ def load_taglp_pwc_large(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
                             )
     return splits, text, data
 
-from unzip_dataset import print_cpu_memory
+from data_utils.unzip_dataset import print_cpu_memory
 def load_taglp_ogbn_papers100M(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
     # add one default argument
 
@@ -338,7 +338,7 @@ def load_taglp_citationv8(cfg: CN, lcc_bool: bool=True) -> Tuple[Dict[str, Data]
     if lcc_bool:
         data, lcc, _ = use_lcc(data)
         text = [text[i] for i in lcc]
-    
+    data.edge_index = data.edge_index.t()
     splits = get_edge_split(data,
                             undirected,
                             cfg.device,
@@ -384,7 +384,7 @@ def load_taglp_pwc_large(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
     return splits, df, data
 
 
-def load_taglp_pwc_medium(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
+def load_taglp_pwc_medium(cfg: CN, if_lcc:bool = True) -> Tuple[Dict[str, Data], List[str]]:
     if hasattr(cfg, 'method'):
         pass
     else:
