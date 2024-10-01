@@ -332,8 +332,9 @@ class Logger(object):
     
     
     def add_result(self, run, result):
-        assert len(result) == 3
-        assert run >= 0 and run < len(self.results)
+        # Turn back after experiments
+        # assert len(result) == 3
+        # assert run >= 0 and run < len(self.results)
         self.results[run].append(result)
 
 
@@ -342,7 +343,8 @@ class Logger(object):
                        print_mode:bool =True) -> Tuple[float, float, float, float]:
         result = 100 * torch.tensor(self.results[run])
         best_valid_epoch = result[:, 1].argmax().item()
-        best_train_valid, _, best_test_valid = result[best_valid_epoch]
+        best_train_valid, best_test_valid = result[best_valid_epoch]
+        # best_train_valid, _, best_test_valid = result[best_valid_epoch]
 
         if print_mode:
             print(f'Highest Train: {result[:, 0].max().item():.2f} at Epoch {100*result[:, 0].argmax().item()}, Highest Valid: {result[:, 1].max().item():.2f} at Epoch {100*best_valid_epoch}, Final Train: {best_train_valid:.2f} at Epoch {100*best_valid_epoch} Final Test: {best_test_valid:.2f} at Epoch {100*best_valid_epoch}.')
@@ -1114,17 +1116,19 @@ def save_run_results_to_csv(cfg, loggers, seed, run_id):
 
 def random_sampling(splits, scale: int):
     print(f"train adj shape: {splits['train'].edge_index.shape[1]}")
-    
-    for k, data in splits.items():
-        print(f"{k}: original length {data.pos_edge_label_index.shape[1]}")
-        num_samples = int(data.neg_edge_label_index.shape[1] * scale)
-        sampled_indices = np.random.choice(data.neg_edge_label_index.shape[1], num_samples, replace=False)
-        data.pos_edge_label_index = data.pos_edge_label_index[:, sampled_indices]
-        data.neg_edge_label_index = data.neg_edge_label_index[:, sampled_indices]
-        print(f"{k}: downsampled length {data.pos_edge_label_index.shape[1]}")
-        
-    return splits
 
+    for k, data in splits.items():
+        if k!='train':
+            print(f"{k}: original length {data.pos_edge_label_index.shape[1]}")
+            num_samples = int(data.neg_edge_label_index.shape[1] * scale)
+            sampled_indices = np.random.choice(data.neg_edge_label_index.shape[1], num_samples, replace=False)
+            data.pos_edge_label_index = data.pos_edge_label_index[:, sampled_indices]
+            data.neg_edge_label_index = data.neg_edge_label_index[:, sampled_indices]
+            data.neg_edge_label = data.neg_edge_label[sampled_indices]
+            data.pos_edge_label = data.pos_edge_label[sampled_indices]
+            print(f"{k}: downsampled length {data.pos_edge_label_index.shape[1]}")
+
+    return splits
 
 def preprocess(text):
     text = re.sub(r'\W+', ' ', text)
