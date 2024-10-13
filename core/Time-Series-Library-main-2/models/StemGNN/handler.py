@@ -130,6 +130,8 @@ def train(train_data, valid_data, args, result_file):
         my_optim = torch.optim.Adam(params=model.parameters(), lr=args.lr, betas=(0.9, 0.999))
     my_lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=my_optim, gamma=args.decay_rate)
     
+    args.data_train = train_data
+    args.data_val = valid_data
     train_data, train_loader = data_provider(args, 'train')
     valid_data, valid_loader = data_provider(args, 'val')
 
@@ -199,6 +201,7 @@ def test(test_data, args, result_train_file, result_test_file):
         normalize_statistic = json.load(f)
     model = load_model(result_train_file)
     node_cnt = test_data.shape[1]
+    args.data_test = test_data
     test_data, test_loader = data_provider(args, 'test')
     performance_metrics = validate(model, test_loader, args.device, args.norm_method, normalize_statistic,
                       node_cnt, args.window_size, args.horizon,

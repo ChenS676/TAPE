@@ -75,8 +75,6 @@ df_numeric = df_numeric.dropna(axis=1)
 
 # Преобразуем DataFrame в numpy массив
 data = df_numeric.values
-# data = pd.read_csv(data_file).values
-print(data)
 args.data_update = data
 
 # split data
@@ -106,4 +104,4 @@ if __name__ == '__main__':
     print('done')
     
 
-# python3 main.py --train True --evaluate True --dataset PeMS07 --window_size 12 --horizon 3 --norm_method z_score --train_length 7 --valid_length 2 --test_length 1 --root_path /pfs/work7/workspace/scratch/cc7738-subgraph_train/TAPE_gerrman/TAPE/core/Time-Series-Library-main-2/StemGNN/dataset --device cuda:0 --data custom --task_name forecasting --data_path  PeMS07.csv --target "Day-ahead Price [EUR/MWh]"
+# python3 stem_gnn.py --train True --evaluate True --dataset PeMS07 --window_size 12 --horizon 3 --norm_method z_score --train_length 7 --valid_length 2 --test_length 1 --root_path /pfs/work7/workspace/scratch/cc7738-subgraph_train/TAPE_gerrman/TAPE/core/Time-Series-Library-main-2/datasets --device cuda:0 --data custom --task_name forecasting --data_path  PeMS07.csv --target "Day-ahead Price [EUR/MWh]"

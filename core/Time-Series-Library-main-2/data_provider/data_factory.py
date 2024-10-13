@@ -8,6 +8,7 @@ import os
 from data_provider.uea import collate_fn
 from torch.utils.data import DataLoader
 from data_provider.forecast_dataloader import *
+from data_provider.dataset import STAGNN_stamp_Dataset
 
 
 data_dict = {
@@ -64,8 +65,13 @@ def data_provider(args, flag):
         )
         print(flag, len(data_set))
         print(f"Classification: flag={flag}, len(data_set)={len(data_set)}")
-    elif args.task_name == 'forecasting':
-        df = args.data_update
+    elif args.task_name == 'forecasting': # For StemGNN
+        if flag == 'train':
+            df = args.data_train
+        elif flag == 'val':
+            df = args.data_val
+        else:
+            df = args.data_test
         
         data_set = ForecastDataset(
             df,
