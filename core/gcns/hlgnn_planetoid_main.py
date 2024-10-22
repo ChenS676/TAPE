@@ -1,10 +1,11 @@
 import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import argparse
+
 import torch
 import time
 import os.path as osp
-from hl_gnn_planetoid.logger import Logger
+from HLGNN.Planetoid.logger import Logger
 import torch_geometric.transforms as T
 from ogb.linkproppred import Evaluator
 from torch.utils.data import DataLoader
@@ -23,11 +24,11 @@ from graphgps.utility.utils import (
     save_run_results_to_csv
 )
 
-from hl_gnn_planetoid.utils import *
+from HLGNN.Planetoid.utils import *
 from data_utils.lcc import *
-from hl_gnn_planetoid.model import *
-from hl_gnn_planetoid.metrics import do_csv
-from hl_gnn_planetoid.visualization import visualization_geom_fig, visualization_beta, visualization, \
+from HLGNN.Planetoid.model import *
+from HLGNN.Planetoid.metrics import do_csv
+from HLGNN.Planetoid.visualization import visualization_geom_fig, visualization_beta, visualization, \
                                         visualization_epochs
 from torch.utils.tensorboard import SummaryWriter
 
@@ -102,11 +103,11 @@ def eval_mrr(y_pred_pos, y_pred_neg):
 
 def evaluate_mrr(pos_val_pred, neg_val_pred):
                  
-    neg_val_pred = neg_val_pred.view(pos_val_pred.shape[0], -1)
+    # neg_val_pred = neg_val_pred.view(pos_val_pred.shape[0], -1)
     
     mrr_output =  eval_mrr(pos_val_pred, neg_val_pred)
 
-    valid_mrr =mrr_output['mrr_list'].mean().item()
+    valid_mrr=mrr_output['mrr_list'].mean().item()
     valid_mrr_hit1 = mrr_output['hits@1_list'].mean().item()
     valid_mrr_hit3 = mrr_output['hits@3_list'].mean().item()
     valid_mrr_hit10 = mrr_output['hits@10_list'].mean().item()
@@ -114,7 +115,6 @@ def evaluate_mrr(pos_val_pred, neg_val_pred):
     valid_mrr_hit20 = mrr_output['hits@20_list'].mean().item()
     valid_mrr_hit50 = mrr_output['hits@50_list'].mean().item()
     valid_mrr_hit100 = mrr_output['hits@100_list'].mean().item()
-
 
     valid_mrr = round(valid_mrr, 4)
     valid_mrr_hit1 = round(valid_mrr_hit1, 4)
@@ -247,7 +247,10 @@ def test(model, predictor, data, split_edge, evaluator, batch_size, writer, epoc
         writer.add_scalar(f'Accuracy/Valid_Hits@{K}', valid_hits, epoch)
         writer.add_scalar(f'Accuracy/Test_Hits@{K}', test_hits, epoch)
     
-    result_mrr_test = evaluate_mrr(pos_test_pred, neg_test_pred.repeat(pos_test_pred.size(0), 1))  
+    print(f"Shape of pos_val_pred: {pos_test_pred.shape}")
+    print(f"Shape of neg_val_pred: {neg_test_pred.shape}")
+
+    result_mrr_test = evaluate_mrr(pos_test_pred, neg_test_pred)  
     
     for name in ['MRR', 'mrr_hit1', 'mrr_hit3', 'mrr_hit10', 'mrr_hit20', 'mrr_hit50', 'mrr_hit100']:
         results[name] = (result_mrr_test[name])
@@ -273,7 +276,7 @@ def main():
     
     parser = argparse.ArgumentParser(description='OGBL-COLLAB (GNN)')
     parser.add_argument('--device', type=int, default=0)
-    parser.add_argument('--emb_type', type=str, default='llama')
+    parser.add_argument('--emb_type', type=str, default='')
     parser.add_argument('--log_steps', type=int, default=1)
     parser.add_argument('--use_valedges_as_input', action='store_true')
     parser.add_argument('--mlp_num_layers', type=int, default=3)
@@ -299,23 +302,20 @@ def main():
     _, _, data = load_data_lp[args.dataset](args.dataset, if_lcc=True, alg_name='HL-GNN')
     
     split_edge = do_edge_split(data, True)
+    name = args.emb_type
     # print(data)
     if args.emb_type == 'llama':
-        llama_node_features = torch.load(f'hl_gnn_planetoid/node_features/llama_{args.dataset}_saved_node_features.pt')#, map_location=torch.device('cpu'))
+        llama_node_features = torch.load(f'HLGNN/Planetoid/node_features/llama_{args.dataset}_saved_node_features.pt')#, map_location=torch.device('cpu'))
         data.x = llama_node_features
-        name = 'llama'
     elif args.emb_type == 'bert':
-        bert_node_features = torch.load(f'hl_gnn_planetoid/node_features/bert{args.dataset}saved_node_features.pt')#, map_location=torch.device('cpu'))
+        bert_node_features = torch.load(f'HLGNN/Planetoid/node_features/bert{args.dataset}saved_node_features.pt')#, map_location=torch.device('cpu'))
         data.x = bert_node_features
-        name = 'bert'
     elif args.emb_type == 'e5':
-        e5_node_features = torch.load(f'hl_gnn_planetoid/node_features/e5-large{args.dataset}saved_node_features.pt')#, map_location=torch.device('cpu'))
+        e5_node_features = torch.load(f'HLGNN/Planetoid/node_features/e5-large{args.dataset}saved_node_features.pt')#, map_location=torch.device('cpu'))
         data.x = torch.Tensor(e5_node_features)
-        name = 'e5'
     elif args.emb_type == 'minilm':
-        minilm_node_features = torch.load(f'hl_gnn_planetoid/node_features/minilm{args.dataset}saved_node_features.pt')#, map_location=torch.device('cpu'))
+        minilm_node_features = torch.load(f'HLGNN/Planetoid/node_features/minilm{args.dataset}saved_node_features.pt')#, map_location=torch.device('cpu'))
         data.x = torch.Tensor(minilm_node_features)
-        name = 'minilm'
     
     data = T.ToSparseTensor(remove_edge_index=False)(data)
     data = data.to(device)
@@ -360,14 +360,14 @@ def main():
         for epoch in range(1, 1 + args.epochs):
             loss = train(model, predictor, data, split_edge, optimizer, args.batch_size, writer, epoch)
             
-            # Save beta values along with their layer indices on the last epoch
-            if epoch % 300 == 0:
-                beta_values_epoch = [(epoch, layer, value.item()) for layer, value in enumerate(model.temp.detach().cpu())]
-                # Save beta values to a file
-                with open(f'hl_gnn_planetoid/metrics_and_weights/beta_values{name}.txt', 'a') as f:
-                    f.write(f"hl_gnn_planetoid/Type Heuristic:{args.init}, Dataset: {args.dataset}\n")
-                    for epoch, layer, value in beta_values_epoch:
-                        f.write(f'{epoch}\t{layer}\t{value}\n')
+            # # Save beta values along with their layer indices on the last epoch
+            # if epoch % 300 == 0:
+            #     beta_values_epoch = [(epoch, layer, value.item()) for layer, value in enumerate(model.temp.detach().cpu())]
+            #     # Save beta values to a file
+            #     with open(f'HLGNN/Planetoid/metrics_and_weights/beta_values{name}.txt', 'a') as f:
+            #         f.write(f"HLGNN/Planetoid/Type Heuristic:{args.init}, Dataset: {args.dataset}\n")
+            #         for epoch, layer, value in beta_values_epoch:
+            #             f.write(f'{epoch}\t{layer}\t{value}\n')
 
             if epoch % args.eval_steps == 0:
                 results = test(model, predictor, data, split_edge, evaluator, args.batch_size, writer, epoch)
@@ -410,19 +410,19 @@ def main():
             else:
                 loggers[key].print_statistics_others(run)
     
-    with open(f'hl_gnn_planetoid/metrics_and_weights/results_{name}_ft.txt', 'a') as f:
+    
+    with open(f'HLGNN/Planetoid/metrics_and_weights/results_.txt', 'a') as f:
         f.write(f"Type Heuristic:{args.init}, Dataset: {args.dataset}, Norm function: {args.norm_func}\n")
 
     for key in loggers.keys():
         if key in ['Hits@1', 'Hits@3','Hits@10', 'Hits@20', 'Hits@50','Hits@100']:
-            
             loggers[key].print_statistics(key=key, emb_name=name)
         else:
             loggers[key].print_statistics_others(key=key, emb_name=name)
     
     
     # visualization_epochs(beta_values, args.dataset)
-    do_csv(f'hl_gnn_planetoid/metrics_and_weights/results_{name}_ft.txt', name)
+    do_csv(f'HLGNN/Planetoid/metrics_and_weights/results_.txt', name)
     writer.close()
     
 if __name__ == "__main__":

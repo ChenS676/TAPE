@@ -10,8 +10,8 @@ import torch_geometric.transforms as T
 from torch_geometric.nn import MessagePassing, APPNP
 from torch_geometric.nn import GCNConv, SAGEConv, GATConv
 from ogb.linkproppred import PygLinkPropPredDataset, Evaluator
-from hl_gnn_planetoid.utils import *
-from hl_gnn_planetoid.logger import Logger
+from HLGNN.Planetoid.utils import *
+from HLGNN.Planetoid.logger import Logger
 import os.path as osp
 from torch_geometric.datasets import Planetoid
 from torch_geometric.utils import add_remaining_self_loops

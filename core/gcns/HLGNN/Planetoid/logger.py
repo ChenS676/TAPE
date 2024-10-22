@@ -50,7 +50,7 @@ class Logger(object):
             print(f'   Final Test: {r.mean():.2f} ± {r.std():.2f}')
             output.append(f'   Final Test: {r.mean():.2f} ± {r.std():.2f}')
 
-            with open(f'hl_gnn_planetoid/metrics_and_weights/results_{emb_name}_ft.txt', 'a') as f:
+            with open(f'HLGNN/Planetoid/metrics_and_weights/results_{emb_name}.txt', 'a') as f:
                 for line in output:
                     print(line)
                     f.write(line + '\n')
@@ -83,7 +83,7 @@ class Logger(object):
             print(f'   Final Test: {r.mean():.2f} ± {r.std():.2f}')
             output.append(f'   Final Test: {r.mean():.2f} ± {r.std():.2f}')
 
-            with open(f'hl_gnn_planetoid/metrics_and_weights/results_{emb_name}_ft.txt', 'a') as f:
+            with open(f'HLGNN/Planetoid/metrics_and_weights/results_{emb_name}.txt', 'a') as f:
                 for line in output:
                     print(line)
                     f.write(line + '\n')
