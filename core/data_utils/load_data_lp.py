@@ -49,9 +49,6 @@ FILE_PATH = get_git_repo_root_path() + '/'
 def load_taglp_arxiv2023(cfg: CN, if_lcc: bool=True, alg_name: str='', node_features=None) -> Tuple[Dict[str, Data], List[str]]:
 
     data, text = load_tag_arxiv23()
-    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
-    data.edge_index, _ = remove_self_loops(data.edge_index)
-    print(f"original num of nodes: {data.num_nodes}")
     
     if if_lcc:
         data, lcc, _ = use_lcc(data)
@@ -64,6 +61,9 @@ def load_taglp_arxiv2023(cfg: CN, if_lcc: bool=True, alg_name: str='', node_feat
         data.edge_index = to_undirected(data.edge_index)
         undirected = True
     
+    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
+    data.edge_index, _ = remove_self_loops(data.edge_index)
+    print(f"original num of nodes: {data.num_nodes}")
     if alg_name.lower() == 'hl-gnn':
         return [], [], data
     else:
@@ -231,15 +231,15 @@ def load_taglp_pubmed(cfg: CN, if_lcc: bool=True, alg_name: str='', node_feature
     
     if node_features is not None:
         data.x = node_features
-           
+    
+    data.edge_index = to_undirected(data.edge_index)
+    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
+    data.edge_index, _ = remove_self_loops(data.edge_index)  
+    
     if alg_name.lower() == 'hl-gnn':
         return [], [], data
     else:
-        data.edge_index = to_undirected(data.edge_index)
-        data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
-        data.edge_index, _ = remove_self_loops(data.edge_index)
         undirected = data.is_undirected()
-
         splits = get_edge_split(data,
                                 undirected,
                                 cfg.device,
@@ -251,24 +251,35 @@ def load_taglp_pubmed(cfg: CN, if_lcc: bool=True, alg_name: str='', node_feature
         return splits, text, data
         
 
-def load_taglp_citeseer(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
+def load_taglp_citeseer(cfg: CN, if_lcc: bool=True, alg_name: str='', node_features=None) -> Tuple[Dict[str, Data], List[str]]:
     # add one default argument
 
     data = load_graph_citeseer()
     text = load_text_citeseer()
+    if if_lcc: 
+        data, lcc, _ = use_lcc(data)
+        if alg_name.lower() != 'hl-gnn':
+            text = [text[i] for i in lcc]
+    
+    if node_features is not None:
+        data.x = node_features
+    
     data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
-    data.edge_index, _ = remove_self_loops(data.edge_index)
-    undirected = data.is_undirected()
-
-    splits = get_edge_split(data,
-                            undirected,
-                            cfg.device,
-                            cfg.split_index[1],
-                            cfg.split_index[2],
-                            cfg.include_negatives,
-                            cfg.split_labels
-                            )
-    return splits, text, data
+    data.edge_index, _ = remove_self_loops(data.edge_index)       
+    
+    if alg_name.lower() == 'hl-gnn':
+        return [], [], data
+    else:
+        undirected = data.is_undirected()
+        splits = get_edge_split(data,
+                                undirected,
+                                cfg.device,
+                                cfg.split_index[1],
+                                cfg.split_index[2],
+                                cfg.include_negatives,
+                                cfg.split_labels
+                                )
+        return splits, text, data
 
 def load_taglp_citationv8(cfg: CN, lcc_bool: bool=True) -> Tuple[Dict[str, Data], List[str]]:
     # add one default argument
@@ -333,7 +344,6 @@ def load_taglp_pwc_large(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
                             )
     return splits, df, data
 
-
 def load_taglp_pwc_medium(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
     if hasattr(cfg, 'method'):
         pass
@@ -365,17 +375,23 @@ def load_taglp_pwc_medium(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
     return splits, text, data
 
 
-def load_taglp_pwc_small(cfg: CN, if_lcc = True) -> Tuple[Dict[str, Data], List[str]]:
+def load_taglp_pwc_small(cfg: CN, if_lcc: bool=True, alg_name: str='', node_features=None) -> Tuple[Dict[str, Data], List[str]]:
     if hasattr(cfg, 'method'):
         pass
     else:
         cfg.method = 'w2v'
     data = load_graph_pwc_small(cfg.method)
+    if if_lcc: 
+        data, lcc, _ = use_lcc(data)
+        if alg_name.lower() != 'hl-gnn':
+            text = [text[i] for i in lcc]
     data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
     data.edge_index, _ = remove_self_loops(data.edge_index)
     
     print(f"original num of nodes: {data.num_nodes}")
-    text = load_text_pwc_small(cfg.method)
+    if alg_name.lower() != 'hl-gnn':
+        text = load_text_pwc_small(cfg.method)
+        
     data.edge_index, _ = remove_self_loops(data.edge_index)
 
     if data.is_directed() is True:
@@ -384,19 +400,21 @@ def load_taglp_pwc_small(cfg: CN, if_lcc = True) -> Tuple[Dict[str, Data], List[
     else:
         undirected = data.is_undirected()
     
-
-    splits = get_edge_split(data,
-                            undirected,
-                            cfg.device,
-                            cfg.split_index[1],
-                            cfg.split_index[2],
-                            cfg.include_negatives,
-                            cfg.split_labels
-                            )
-    print(f"num of nodes after lcc: {data.num_nodes}")
-    print(f"num of edges after lcc: {data.edge_index.shape[1]}")
-    print(f"num of texts in dataset: {len(text)}")
-    return splits, text, data
+    if alg_name.lower() == 'hl-gnn':
+        return [], [], data
+    else:    
+        splits = get_edge_split(data,
+                                undirected,
+                                cfg.device,
+                                cfg.split_index[1],
+                                cfg.split_index[2],
+                                cfg.include_negatives,
+                                cfg.split_labels
+                                )
+        print(f"num of nodes after lcc: {data.num_nodes}")
+        print(f"num of edges after lcc: {data.edge_index.shape[1]}")
+        print(f"num of texts in dataset: {len(text)}")
+        return splits, text, data
 
 
 def preprocess(text):

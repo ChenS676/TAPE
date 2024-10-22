@@ -4,7 +4,7 @@ import argparse
 import torch
 import time
 import os.path as osp
-from hl_gnn_planetoid.logger import Logger
+from HLGNN.Planetoid.logger import Logger
 import torch_geometric.transforms as T
 from ogb.linkproppred import Evaluator
 from torch.utils.data import DataLoader
@@ -24,11 +24,11 @@ from graphgps.utility.utils import (
     save_run_results_to_csv
 )
 
-from hl_gnn_planetoid.utils import *
+from HLGNN.Planetoid.utils import *
 from data_utils.lcc import *
-from hl_gnn_planetoid.model import *
-from hl_gnn_planetoid.metrics import do_csv
-from hl_gnn_planetoid.visualization import visualization_geom_fig, visualization_beta, visualization, \
+from HLGNN.Planetoid.model import *
+from HLGNN.Planetoid.metrics import do_csv
+from HLGNN.Planetoid.visualization import visualization_geom_fig, visualization_beta, visualization, \
                                         visualization_epochs
 from torch.utils.tensorboard import SummaryWriter
 
@@ -303,12 +303,21 @@ def main():
     # }
     
     # PUBMED
+    # param_grid = {
+    #     'lr': [0.0001],#, 0.0005, 0.001, 0.005, 0.01, 0.05],
+    #     'dropout': [0.6],#[0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
+    #     'hidden_channels': [512],#[128, 256, 512, 1024, 2048],#, 4096, 8192],
+    #     'mlp_num_layers': [5],#[2, 3, 4, 5, 6, 7],
+    #     'alpha': [0.2]#[0.1, 0.2, 0.3, 0.4, 0.5]
+    # }
+    # PWC_Small
     param_grid = {
-        'lr': [0.0001],#, 0.0005, 0.001, 0.005, 0.01, 0.05],
-        'dropout': [0.6],#[0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
-        'hidden_channels': [512],#[128, 256, 512, 1024, 2048],#, 4096, 8192],
-        'mlp_num_layers': [5],#[2, 3, 4, 5, 6, 7],
-        'alpha': [0.2]#[0.1, 0.2, 0.3, 0.4, 0.5]
+        'lr': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05],
+        'hidden_channels': [128, 256, 512, 1024, 2048],#, 4096, 8192],
+        'mlp_num_layers': [2, 3, 4, 5, 6, 7],
+        'alpha': [0.1, 0.2, 0.3, 0.4, 0.5],
+        'init': ['RWR', 'KI'],
+        'dropout': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
     }
     
     grid = ParameterGrid(param_grid)
@@ -319,14 +328,17 @@ def main():
         device = f'cuda:{args.device}' if torch.cuda.is_available() else 'cpu'
         device = torch.device(device)
         
-        _, _, data = load_data_lp[args.dataset](args.dataset, if_lcc=True, alg_name='HL-GNN')
+        if args.dataset == 'pwc_small':
+            _, _, data = load_data_lp[args.dataset](args, if_lcc=True, alg_name='HL-GNN')
+        else:
+            _, _, data = load_data_lp[args.dataset](args.dataset, if_lcc=True, alg_name='HL-GNN')
         
         split_edge = do_edge_split(data, True)
         
-        llama_node_features = torch.load(f'hl_gnn_planetoid/node_features/llama_{args.dataset}_saved_node_features.pt', map_location=torch.device('cpu'))
-        data.x = llama_node_features
-        name = 'llama'
-        
+        # llama_node_features = torch.load(f'hl_gnn_planetoid/node_features/llama_{args.dataset}_saved_node_features.pt', map_location=torch.device('cpu'))
+        # data.x = llama_node_features
+        # name = 'llama'
+        name = ''
         # bert_node_features = torch.load(f'hl_gnn_planetoid/node_features/bert{args.dataset}saved_node_features.pt')#, map_location=torch.device('cpu'))
         # data.x = bert_node_features
         # name = 'bert'
@@ -343,6 +355,7 @@ def main():
         data = data.to(device)
         print(data)
         args.lr = params['lr']
+        args.init = params['init']
         args.alpha = params['alpha']
         model = HLGNN(data, args).to(device)
         
@@ -432,7 +445,7 @@ def main():
                 else:
                     loggers[key].print_statistics_others(run)
         
-        with open(f'hl_gnn_planetoid/metrics_and_weights/results_{name}.txt', 'a') as f:
+        with open(f'HLGNN/Planetoid/metrics_and_weights/results_{name}.txt', 'a') as f:
             f.write(f"Type Heuristic:{args.init}, Dataset: {args.dataset}, Norm function: {args.norm_func}\n")
 
         for key in loggers.keys():
