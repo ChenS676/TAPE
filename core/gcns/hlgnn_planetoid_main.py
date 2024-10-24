@@ -271,9 +271,18 @@ def test(model, predictor, data, split_edge, evaluator, batch_size, writer, epoc
     
     return results
 
-def main():
-    # FILE_PATH = f'{get_git_repo_root_path()}/'
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
     
+def main():
+        
     parser = argparse.ArgumentParser(description='OGBL-COLLAB (GNN)')
     parser.add_argument('--device', type=int, default=0)
     parser.add_argument('--emb_type', type=str, default='')
@@ -292,6 +301,7 @@ def main():
     parser.add_argument('--init', type=str, choices=['SGC', 'RWR', 'KI', 'Random', 'WS', 'Null'], default='KI')
     parser.add_argument('--dataset', type=str, default='cora')
     parser.add_argument('--norm_func', type=str, choices=['gcn_norm', 'col_stochastic_matrix', 'row_stochastic_matrix'], required=True)
+    parser.add_argument('--use_lcc', type=str2bool, default=False)
     
     args = parser.parse_args()
     print(args)
@@ -299,7 +309,10 @@ def main():
     device = f'cuda:{args.device}' if torch.cuda.is_available() else 'cpu'
     device = torch.device(device)
     
-    _, _, data = load_data_lp[args.dataset](args.dataset, if_lcc=True, alg_name='HL-GNN')
+    if args.dataset in ['pwc_small', 'pwc_medium']:
+        _, _, data = load_data_lp[args.dataset](args, if_lcc=args.use_lcc, alg_name='HL-GNN')
+    else:
+        _, _, data = load_data_lp[args.dataset](args.dataset, if_lcc=args.use_lcc, alg_name='HL-GNN')
     
     split_edge = do_edge_split(data, True)
     name = args.emb_type

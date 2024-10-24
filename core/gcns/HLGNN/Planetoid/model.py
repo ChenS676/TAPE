@@ -73,14 +73,16 @@ class HLGNN(MessagePassing):
 
 
     def forward(self, x, adj_t, edge_weight):
+        
         x = F.dropout(x, p=self.dropout, training=self.training)
         x = self.lin1(x)
         # adj_t = gcn_norm(adj_t, edge_weight, adj_t.size(0), dtype=torch.float)
         adj_t = self.norm_func(adj_t, edge_weight, adj_t.size(0), dtype=torch.float)
         # edge_index, row_n = row_norm(raw_edge_index, edge_weight, num_nodes, dtype=torch.float)
         # edge_index, column_n = column_norm(raw_edge_index, edge_weight, num_nodes, dtype=torch.float)
-        
+
         hidden = x * self.temp[0]
+        
         for k in range(self.K):
             x = self.propagate(adj_t, x=x, edge_weight=edge_weight, size=None)
             gamma = self.temp[k+1]

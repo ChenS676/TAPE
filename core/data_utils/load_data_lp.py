@@ -344,35 +344,47 @@ def load_taglp_pwc_large(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
                             )
     return splits, df, data
 
-def load_taglp_pwc_medium(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
+def load_taglp_pwc_medium(cfg: CN, if_lcc: bool=True, alg_name: str='', node_features=None) -> Tuple[Dict[str, Data], List[str]]:
     if hasattr(cfg, 'method'):
         pass
     else:
         cfg.method = 'w2v'
     data = load_graph_pwc_medium(cfg.method)
+    if if_lcc: 
+        data, lcc, _ = use_lcc(data)
+        if alg_name.lower() != 'hl-gnn':
+            text = [text[i] for i in lcc]
     data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
     data.edge_index, _ = remove_self_loops(data.edge_index)
-    text = load_text_pwc_medium(cfg.method)
-    print(f"original num of nodes: {data.num_nodes}")
     
+    print(f"original num of nodes: {data.num_nodes}")
+    if alg_name.lower() != 'hl-gnn':
+        text = load_text_pwc_medium(cfg.method)
+        
+    data.edge_index, _ = remove_self_loops(data.edge_index)
+
     if data.is_directed() is True:
         data.edge_index  = to_undirected(data.edge_index)
         undirected  = True 
     else:
         undirected = data.is_undirected()
     
-    splits = get_edge_split(data,
-                            undirected,
-                            cfg.device,
-                            cfg.split_index[1],
-                            cfg.split_index[2],
-                            cfg.include_negatives,
-                            cfg.split_labels
-                            )
-    print(f"num of nodes after lcc: {data.num_nodes}")
-    print(f"num of edges after lcc: {data.edge_index.shape[1]}")
-    print(f"num of texts in dataset: {len(text)}")
-    return splits, text, data
+    if alg_name.lower() == 'hl-gnn':
+        return [], [], data
+    else:    
+        splits = get_edge_split(data,
+                                undirected,
+                                cfg.device,
+                                cfg.split_index[1],
+                                cfg.split_index[2],
+                                cfg.include_negatives,
+                                cfg.split_labels
+                                )
+        print(f"num of nodes after lcc: {data.num_nodes}")
+        print(f"num of edges after lcc: {data.edge_index.shape[1]}")
+        print(f"num of texts in dataset: {len(text)}")
+        return splits, text, data
+
 
 
 def load_taglp_pwc_small(cfg: CN, if_lcc: bool=True, alg_name: str='', node_features=None) -> Tuple[Dict[str, Data], List[str]]:

@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import math
+import torch
 from torch.utils.data import DataLoader
 from HLGNN.OGB.layer import *
 from HLGNN.OGB.loss import *
 from HLGNN.OGB.utils import *
+from torch.utils.data import DataLoader, DistributedSampler
+from torch.nn.parallel import DistributedDataParallel as DDP
 
-
-class BaseModel(object):
+class BaseModel(torch.nn.Module):
     """
         Parameters
         ----------
@@ -45,7 +47,8 @@ class BaseModel(object):
     def __init__(self, lr, dropout, grad_clip_norm, gnn_num_layers, mlp_num_layers, emb_hidden_channels,
                  gnn_hidden_channels, mlp_hidden_channels, num_nodes, num_node_feats, gnn_encoder_name,
                  predictor_name, loss_func, optimizer_name, device, use_node_feats, train_node_emb,
-                 pretrain_emb, alpha, init):
+                 pretrain_emb, alpha, init, flag_ddp=False):
+        super(BaseModel, self).__init__()
         self.loss_func_name = loss_func
         self.num_nodes = num_nodes
         self.num_node_feats = num_node_feats
@@ -53,7 +56,7 @@ class BaseModel(object):
         self.train_node_emb = train_node_emb
         self.clip_norm = grad_clip_norm
         self.device = device
-
+        self.flag_ddp = flag_ddp
         # Input Layer
         self.input_channels, self.emb = create_input_layer(num_nodes=num_nodes,
                                                            num_node_feats=num_node_feats,
@@ -71,13 +74,16 @@ class BaseModel(object):
                                         dropout=dropout,
                                         encoder_name=gnn_encoder_name,
                                         alpha=alpha, init=init).to(device)
-
+        if flag_ddp:
+            self.encoder = DDP(self.encoder, device_ids=[device])
         # Predict Layer
         self.predictor = create_predictor_layer(hidden_channels=mlp_hidden_channels,
                                                 num_layers=mlp_num_layers,
                                                 dropout=dropout,
                                                 predictor_name=predictor_name).to(device)
 
+        if flag_ddp and any(p.requires_grad for p in self.predictor.parameters()):
+            self.predictor = DDP(self.predictor, device_ids=[device])
         # Parameters and Optimizer
         self.para_list = list(self.encoder.parameters()) + list(self.predictor.parameters())
         if self.emb is not None:
@@ -91,8 +97,11 @@ class BaseModel(object):
             self.optimizer = torch.optim.Adam(self.para_list, lr=lr)
 
     def param_init(self):
-        self.encoder.reset_parameters()
-        self.predictor.reset_parameters()
+        self.encoder.module.reset_parameters()
+        if self.flag_ddp and any(p.requires_grad for p in self.predictor.parameters()):
+            self.predictor.module.reset_parameters()
+        else:
+            self.predictor.reset_parameters()
         if self.emb is not None:
             torch.nn.init.xavier_uniform_(self.emb.weight)
 
@@ -137,7 +146,12 @@ class BaseModel(object):
                                                            num_neg=num_neg)
 
         pos_train_edge, neg_train_edge = pos_train_edge.to(self.device), neg_train_edge.to(self.device)
-
+        if self.flag_ddp:
+            sampler = DistributedSampler(pos_train_edge)
+            dataloader = DataLoader(range(pos_train_edge.size(0)), sampler=sampler, batch_size=batch_size)
+        else:
+            dataloader = DataLoader(range(pos_train_edge.size(0)), batch_size=batch_size, shuffle=True)
+                
         if 'weight' in split_edge['train']:
             edge_weight_margin = split_edge['train']['weight'].to(self.device)
         else:
@@ -145,7 +159,7 @@ class BaseModel(object):
 
         total_loss = total_examples = 0
 
-        for perm in DataLoader(range(pos_train_edge.size(0)), batch_size, shuffle=True):
+        for perm in dataloader:
             self.optimizer.zero_grad()
 
             input_feat = self.create_input_feat(data)
@@ -176,7 +190,11 @@ class BaseModel(object):
     @torch.no_grad()
     def batch_predict(self, h, edges, batch_size):
         preds = []
-        for perm in DataLoader(range(edges.size(0)), batch_size):
+        if self.flag_ddp:
+            dataloader = DataLoader(range(edges.size(0)), sampler = DistributedSampler(edges),batch_size=batch_size)
+        else:
+            dataloader = DataLoader(range(edges.size(0)),batch_size=batch_size)
+        for perm in dataloader:
             edge = edges[perm].t()
             preds += [self.predictor(h[edge[0]], h[edge[1]]).squeeze().cpu()]
         pred = torch.cat(preds, dim=0)
