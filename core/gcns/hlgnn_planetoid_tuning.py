@@ -4,13 +4,14 @@ import argparse
 import torch
 import time
 import os.path as osp
-from hl_gnn_planetoid.logger import Logger
+from HLGNN.Planetoid.logger import Logger
 import torch_geometric.transforms as T
 from ogb.linkproppred import Evaluator
 from torch.utils.data import DataLoader
 from data_utils.load import load_data_lp
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import average_precision_score
+from sklearn.model_selection import ParameterGrid
 
 from graphgps.utility.utils import (
     set_cfg, 
@@ -23,11 +24,11 @@ from graphgps.utility.utils import (
     save_run_results_to_csv
 )
 
-from hl_gnn_planetoid.utils import *
+from HLGNN.Planetoid.utils import *
 from data_utils.lcc import *
-from hl_gnn_planetoid.model import *
-from hl_gnn_planetoid.metrics import do_csv
-from hl_gnn_planetoid.visualization import visualization_geom_fig, visualization_beta, visualization, \
+from HLGNN.Planetoid.model import *
+from HLGNN.Planetoid.metrics import do_csv
+from HLGNN.Planetoid.visualization import visualization_geom_fig, visualization_beta, visualization, \
                                         visualization_epochs
 from torch.utils.tensorboard import SummaryWriter
 
@@ -273,7 +274,6 @@ def main():
     
     parser = argparse.ArgumentParser(description='OGBL-COLLAB (GNN)')
     parser.add_argument('--device', type=int, default=0)
-    parser.add_argument('--emb_type', type=str, default='llama')
     parser.add_argument('--log_steps', type=int, default=1)
     parser.add_argument('--use_valedges_as_input', action='store_true')
     parser.add_argument('--mlp_num_layers', type=int, default=3)
@@ -293,137 +293,190 @@ def main():
     args = parser.parse_args()
     print(args)
 
-    device = f'cuda:{args.device}' if torch.cuda.is_available() else 'cpu'
-    device = torch.device(device)
+    # CORA
+    # param_grid = {
+    #     'lr': [0.0001],#[0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05],
+    #     'dropout': [0.4], #[0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
+    #     'hidden_channels': [128, 256, 512, 1024, 2048, 4096, 8192],
+    #     'mlp_num_layers': [5],#[2, 3, 4, 5, 6],
+    #     'alpha': [0.4]#[0.1, 0.2, 0.3, 0.4, 0.5]
+    # }
     
-    _, _, data = load_data_lp[args.dataset](args.dataset, if_lcc=True, alg_name='HL-GNN')
+    # PUBMED
+    # param_grid = {
+    #     'lr': [0.0001],#, 0.0005, 0.001, 0.005, 0.01, 0.05],
+    #     'dropout': [0.6],#[0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
+    #     'hidden_channels': [512],#[128, 256, 512, 1024, 2048],#, 4096, 8192],
+    #     'mlp_num_layers': [5],#[2, 3, 4, 5, 6, 7],
+    #     'alpha': [0.2]#[0.1, 0.2, 0.3, 0.4, 0.5]
+    # }
     
-    split_edge = do_edge_split(data, True)
-    # print(data)
-    if args.emb_type == 'llama':
-        llama_node_features = torch.load(f'hl_gnn_planetoid/node_features/llama_{args.dataset}_saved_node_features.pt')#, map_location=torch.device('cpu'))
-        data.x = llama_node_features
-        name = 'llama'
-    elif args.emb_type == 'bert':
-        bert_node_features = torch.load(f'hl_gnn_planetoid/node_features/bert{args.dataset}saved_node_features.pt')#, map_location=torch.device('cpu'))
-        data.x = bert_node_features
-        name = 'bert'
-    elif args.emb_type == 'e5':
-        e5_node_features = torch.load(f'hl_gnn_planetoid/node_features/e5-large{args.dataset}saved_node_features.pt')#, map_location=torch.device('cpu'))
-        data.x = torch.Tensor(e5_node_features)
-        name = 'e5'
-    elif args.emb_type == 'minilm':
-        minilm_node_features = torch.load(f'hl_gnn_planetoid/node_features/minilm{args.dataset}saved_node_features.pt')#, map_location=torch.device('cpu'))
-        data.x = torch.Tensor(minilm_node_features)
-        name = 'minilm'
+    # PWC_Small
+    # param_grid = {
+    #     'lr': [0.005], #[0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05],
+    #     'hidden_channels': [256],#[128, 256, 512, 1024, 2048, 4096, 8192],
+    #     'alpha': [0.1],#, 0.2, 0.3, 0.4, 0.5],
+    #     'init': ['RWR'],#, 'KI'],
+    #     'mlp_num_layers': [4], #[1, 2, 3, 4, 5, 6, 7],
+    #     'dropout': [0.4],#[0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
+    # }
     
-    data = T.ToSparseTensor(remove_edge_index=False)(data)
-    data = data.to(device)
-    print(data)
-    
-    model = HLGNN(data, args).to(device)
-    
-    predictor = LinkPredictor(data.num_features, args.hidden_channels, 1, args.mlp_num_layers, args.dropout).to(device)
-    para_list = list(model.parameters()) + list(predictor.parameters())
-    total_params = sum(p.numel() for param in para_list for p in param)
-    total_params_print = f'Total number of model parameters is {total_params}'
-    print(total_params_print)
-    
-    evaluator = Evaluator(name='ogbl-collab')
-    
-    loggers = {
-        'Hits@1': Logger(args.runs, args),
-        'Hits@3': Logger(args.runs, args),
-        'Hits@10': Logger(args.runs, args),
-        'Hits@20': Logger(args.runs, args),
-        'Hits@50': Logger(args.runs, args),
-        'Hits@100': Logger(args.runs, args),
-        'MRR': Logger(args.runs, args),
-        'mrr_hit1': Logger(args.runs, args),
-        'mrr_hit3': Logger(args.runs, args), 
-        'mrr_hit10': Logger(args.runs, args),
-        'mrr_hit20': Logger(args.runs, args),
-        'mrr_hit50': Logger(args.runs, args),
-        'mrr_hit100': Logger(args.runs, args),
-        'AUC': Logger(args.runs, args),
-        'AP': Logger(args.runs, args),
-        'ACC': Logger(args.runs, args)
+    # # PWC_Medium
+    param_grid = {
+        'lr': [0.001],#[0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05],
+        'hidden_channels': [512],#[128, 256, 512, 1024, 2048, 4096],# 8192],
+        'alpha': [0.5],#[0.1, 0.2, 0.3, 0.4, 0.5], 
+        'init': ['KI'],#['RWR', 'KI'],
+        'mlp_num_layers': [5],#[2, 3, 4, 5, 6, 7],
+        'dropout': [0.6]#[0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
     }
-    writer = SummaryWriter()
-    beta_values = []
-    for run in range(args.runs):
-        model.reset_parameters()
-        predictor.reset_parameters()
-        optimizer = torch.optim.Adam(list(predictor.parameters()) + list(model.parameters()), lr=args.lr)
+    
+    grid = ParameterGrid(param_grid)
+    best_result = None
+    best_params = None
+    for params in grid:
+        print('PARAMETERS: ', params)
+        device = f'cuda:{args.device}' if torch.cuda.is_available() else 'cpu'
+        device = torch.device(device)
         
-        start_time = time.time()
-        for epoch in range(1, 1 + args.epochs):
-            loss = train(model, predictor, data, split_edge, optimizer, args.batch_size, writer, epoch)
+        if args.dataset in ['pwc_small', 'pwc_medium']:
+            _, _, data = load_data_lp[args.dataset](args, if_lcc=True, alg_name='HL-GNN')
+        else:
+            _, _, data = load_data_lp[args.dataset](args.dataset, if_lcc=True, alg_name='HL-GNN')
+        
+        split_edge = do_edge_split(data, True)
+        
+        # llama_node_features = torch.load(f'hl_gnn_planetoid/node_features/llama_{args.dataset}_saved_node_features.pt', map_location=torch.device('cpu'))
+        # data.x = llama_node_features
+        # name = 'llama'
+        name = ''
+        # bert_node_features = torch.load(f'hl_gnn_planetoid/node_features/bert{args.dataset}saved_node_features.pt')#, map_location=torch.device('cpu'))
+        # data.x = bert_node_features
+        # name = 'bert'
+        
+        # e5_node_features = torch.load(f'hl_gnn_planetoid/node_features/e5-large{args.dataset}saved_node_features.pt')#, map_location=torch.device('cpu'))
+        # data.x = torch.Tensor(e5_node_features)
+        # name = 'e5'
+        
+        # minilm_node_features = torch.load(f'hl_gnn_planetoid/node_features/minilm{args.dataset}saved_node_features.pt')#, map_location=torch.device('cpu'))
+        # data.x = torch.Tensor(minilm_node_features)
+        # name = 'minilm'
+        
+        data = T.ToSparseTensor(remove_edge_index=False)(data)
+        data = data.to(device)
+        print(data)
+        args.lr = params['lr']
+        args.init = params['init']
+        args.alpha = params['alpha']
+        model = HLGNN(data, args).to(device)
+        
+        predictor = LinkPredictor(data.num_features, params['hidden_channels'], 1, params['mlp_num_layers'], params['dropout']).to(device)
+        para_list = list(model.parameters()) + list(predictor.parameters())
+        total_params = sum(p.numel() for param in para_list for p in param)
+        total_params_print = f'Total number of model parameters is {total_params}'
+        print(total_params_print)
+        
+        evaluator = Evaluator(name='ogbl-collab')
+        
+        loggers = {
+            'Hits@1': Logger(args.runs, args),
+            'Hits@3': Logger(args.runs, args),
+            'Hits@10': Logger(args.runs, args),
+            'Hits@20': Logger(args.runs, args),
+            'Hits@50': Logger(args.runs, args),
+            'Hits@100': Logger(args.runs, args),
+            'MRR': Logger(args.runs, args),
+            'mrr_hit1': Logger(args.runs, args),
+            'mrr_hit3': Logger(args.runs, args), 
+            'mrr_hit10': Logger(args.runs, args),
+            'mrr_hit20': Logger(args.runs, args),
+            'mrr_hit50': Logger(args.runs, args),
+            'mrr_hit100': Logger(args.runs, args),
+            'AUC': Logger(args.runs, args),
+            'AP': Logger(args.runs, args),
+            'ACC': Logger(args.runs, args)
+        }
+        writer = SummaryWriter()
+        beta_values = []
+        for run in range(args.runs):
+            model.reset_parameters()
+            predictor.reset_parameters()
+            optimizer = torch.optim.Adam(list(predictor.parameters()) + list(model.parameters()), lr=args.lr)
             
-            # Save beta values along with their layer indices on the last epoch
-            if epoch % 300 == 0:
-                beta_values_epoch = [(epoch, layer, value.item()) for layer, value in enumerate(model.temp.detach().cpu())]
-                # Save beta values to a file
-                with open(f'hl_gnn_planetoid/metrics_and_weights/beta_values{name}.txt', 'a') as f:
-                    f.write(f"hl_gnn_planetoid/Type Heuristic:{args.init}, Dataset: {args.dataset}\n")
-                    for epoch, layer, value in beta_values_epoch:
-                        f.write(f'{epoch}\t{layer}\t{value}\n')
+            start_time = time.time()
+            for epoch in range(1, 1 + args.epochs):
+                loss = train(model, predictor, data, split_edge, optimizer, args.batch_size, writer, epoch)
+                
+                # Save beta values along with their layer indices on the last epoch
+                if epoch % 100 == 0:
+                    beta_values_epoch = [(epoch, layer, value.item()) for layer, value in enumerate(model.temp.detach().cpu())]
+                    # Save beta values to a file
+                    # with open(f'hl_gnn_planetoid/metrics_and_weights/beta_values{name}.txt', 'a') as f:
+                    #     f.write(f"hl_gnn_planetoid/Type Heuristic:{args.init}, Dataset: {args.dataset}\n")
+                    #     for epoch, layer, value in beta_values_epoch:
+                    #         f.write(f'{epoch}\t{layer}\t{value}\n')
 
-            if epoch % args.eval_steps == 0:
-                results = test(model, predictor, data, split_edge, evaluator, args.batch_size, writer, epoch)
-                for key, result in results.items():
-                    loggers[key].add_result(run, result)
-
-                if epoch % args.log_steps == 0:
-                    spent_time = time.time() - start_time
-                    print(results)
+                if epoch % args.eval_steps == 0:
+                    results = test(model, predictor, data, split_edge, evaluator, args.batch_size, writer, epoch)
                     for key, result in results.items():
-                        if key in ['Hits@1', 'Hits@3',
-                                   'Hits@10', 'Hits@20', 'Hits@50',
-                                   'Hits@100']:
-                            train_hits, valid_hits, test_hits = result
-                            print(f'Run: {run + 1:02d}, '
-                              f'Epoch: {epoch:02d}, '
-                              f'Loss: {loss:.4f}, '
-                              f'Train: {100 * train_hits:.2f}%, '
-                              f'Valid: {100 * valid_hits:.2f}%, '
-                              f'Test: {100 * test_hits:.2f}%')
-                            writer.add_scalar(f'{key}/Train', train_hits, epoch)
-                            writer.add_scalar(f'{key}/Valid', valid_hits, epoch)
-                            writer.add_scalar(f'{key}/Test', test_hits, epoch)
-                        else:
-                            test_hits = result
-                            print(f'Run: {run + 1:02d}, '
-                              f'Epoch: {epoch:02d}, '
-                              f'Loss: {loss:.4f}, '
-                              f'Test: {100 * test_hits:.2f}%')
-                            writer.add_scalar(f'{key}/Test', test_hits, epoch)
-                    print('---')
-                    print(f'Training Time Per Epoch: {spent_time / args.eval_steps: .4f} s')
-                    print('---')
-                    start_time = time.time()
+                        loggers[key].add_result(run, result)
 
+                    if epoch % args.log_steps == 0:
+                        spent_time = time.time() - start_time
+                        for key, result in results.items():
+                            if key in ['Hits@1', 'Hits@3',
+                                    'Hits@10', 'Hits@20', 'Hits@50',
+                                    'Hits@100']:
+                                train_hits, valid_hits, test_hits = result
+                                print(f'Run: {run + 1:02d}, '
+                                f'Epoch: {epoch:02d}, '
+                                f'Loss: {loss:.4f}, '
+                                f'Train: {100 * train_hits:.2f}%, '
+                                f'Valid: {100 * valid_hits:.2f}%, '
+                                f'Test: {100 * test_hits:.2f}%')
+                                writer.add_scalar(f'{key}/Train', train_hits, epoch)
+                                writer.add_scalar(f'{key}/Valid', valid_hits, epoch)
+                                writer.add_scalar(f'{key}/Test', test_hits, epoch)
+                            else:
+                                test_hits = result
+                                print(f'Run: {run + 1:02d}, '
+                                f'Epoch: {epoch:02d}, '
+                                f'Loss: {loss:.4f}, '
+                                f'Test: {100 * test_hits:.2f}%')
+                                writer.add_scalar(f'{key}/Test', test_hits, epoch)
+                        print('---')
+                        print(f'Training Time Per Epoch: {spent_time / args.eval_steps: .4f} s')
+                        print('---')
+                        start_time = time.time()
+
+
+            for key in loggers.keys():
+                if key in ['Hits@1', 'Hits@3','Hits@10', 'Hits@20', 'Hits@50','Hits@100']:
+                    loggers[key].print_statistics(run)
+                else:
+                    loggers[key].print_statistics_others(run)
+        
+        with open(f'HLGNN/Planetoid/metrics_and_weights/results_{name}.txt', 'a') as f:
+            f.write(f"Type Heuristic:{args.init}, Dataset: {args.dataset}, Norm function: {args.norm_func}\n")
 
         for key in loggers.keys():
             if key in ['Hits@1', 'Hits@3','Hits@10', 'Hits@20', 'Hits@50','Hits@100']:
-                loggers[key].print_statistics(run)
+                
+                loggers[key].print_statistics(key=key, emb_name=name)
             else:
-                loggers[key].print_statistics_others(run)
-    
-    with open(f'hl_gnn_planetoid/metrics_and_weights/results_{name}_ft.txt', 'a') as f:
-        f.write(f"Type Heuristic:{args.init}, Dataset: {args.dataset}, Norm function: {args.norm_func}\n")
+                loggers[key].print_statistics_others(key=key, emb_name=name)
+        
+        
+        # visualization_epochs(beta_values, args.dataset)
+        # do_csv(f'hl_gnn_planetoid/metrics_and_weights/results_{name}.txt', name)
+        writer.close()
+        # Update best result if current result is better
+        current_result = loggers['MRR'].results[0]  # Assuming 'MRR' is the primary metric
+        if best_result is None or current_result > best_result:
+            best_result = current_result
+            best_params = params
 
-    for key in loggers.keys():
-        if key in ['Hits@1', 'Hits@3','Hits@10', 'Hits@20', 'Hits@50','Hits@100']:
-            
-            loggers[key].print_statistics(key=key, emb_name=name)
-        else:
-            loggers[key].print_statistics_others(key=key, emb_name=name)
-    
-    
-    # visualization_epochs(beta_values, args.dataset)
-    do_csv(f'hl_gnn_planetoid/metrics_and_weights/results_{name}_ft.txt', name)
-    writer.close()
+    print(f'Best result: {best_result} with params: {best_params}')
     
 if __name__ == "__main__":
     main()
