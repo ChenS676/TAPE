@@ -29,14 +29,14 @@ from tqdm import tqdm
 import time
 from data_utils.dataset import CustomLinkDataset
 from data_utils.load_data_nc import load_tag_cora, load_tag_pubmed, \
-    load_tag_product, load_tag_ogbn_arxiv, load_tag_product, \
+    load_tag_computers, load_tag_photo, load_tag_product, load_tag_ogbn_arxiv, load_tag_product, \
     load_tag_arxiv23, load_graph_cora, load_graph_pubmed, \
     load_graph_arxiv23, load_graph_ogbn_arxiv, load_text_cora, \
     load_text_pubmed, load_text_arxiv23, load_text_ogbn_arxiv, \
     load_text_product, load_text_citeseer, load_text_citationv8, \
     load_graph_citeseer, load_graph_citationv8, load_graph_pwc_large, load_text_pwc_large, \
     load_graph_pwc_medium, load_text_pwc_medium, load_text_pwc_small,  load_graph_pwc_small, \
-    load_embedded_citationv8, load_pyg_citationv8
+    load_embedded_citationv8, load_pyg_citationv8, load_text_photo, load_text_computers
 from graphgps.utility.utils import get_git_repo_root_path, config_device, init_cfg_test
 from data_utils.lcc import find_scc_direc, use_lcc_direc, use_lcc
 
@@ -118,19 +118,22 @@ def load_taglp_cora(cfg: CN, if_lcc: bool=True, alg_name: str='', node_features=
         return splits, text, data
 
 
-def load_taglp_ogbn_arxiv(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
+def load_taglp_ogbn_arxiv(cfg: CN, if_lcc: bool=False, alg_name: str='') -> Tuple[Dict[str, Data], List[str]]:
     # add one default argument
 
     data = load_graph_ogbn_arxiv(False)
     data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
     data.edge_index, _ = remove_self_loops(data.edge_index)
-    text = load_text_ogbn_arxiv()
-    undirected = data.is_undirected()
 
-    print(f"original num of nodes: {data.num_nodes}")
-    cfg = config_device(cfg)
+    if alg_name.lower() == 'hl-gnn':
+        return [], [], data
+    else:
+        text = load_text_ogbn_arxiv()
+        undirected = data.is_undirected()
 
-    splits = get_edge_split(data,
+        print(f"original num of nodes: {data.num_nodes}")
+        cfg = config_device(cfg)
+        splits = get_edge_split(data,
                             undirected,
                             cfg.device,
                             cfg.split_index[1],
@@ -138,10 +141,11 @@ def load_taglp_ogbn_arxiv(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
                             cfg.include_negatives,
                             cfg.split_labels
                             )
-    print(f"num of nodes after lcc: {data.num_nodes}")
-    print(f"num of edges after lcc: {data.edge_index.shape[1]}")
-    print(f"num of texts in dataset: {len(text)}")
-    return splits, text, data
+        print(f"num of nodes after lcc: {data.num_nodes}")
+        print(f"num of edges after lcc: {data.edge_index.shape[1]}")
+        print(f"num of texts in dataset: {len(text)}")
+        return splits, text, data
+
 
 def load_taglp_pwc_large(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
     # add one default argument
@@ -280,6 +284,76 @@ def load_taglp_citeseer(cfg: CN, if_lcc: bool=True, alg_name: str='', node_featu
                                 cfg.split_labels
                                 )
         return splits, text, data
+
+def load_taglp_computers(cfg: CN, lcc_bool: bool = True) -> Tuple[Dict[str, Data], List[str]]:
+    # add one default argument
+
+    data, text = load_tag_computers()
+
+    print(f"original num of nodes: {data.num_nodes}")
+    print(data)
+    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
+    data.edge_index, _ = remove_self_loops(data.edge_index)
+    if data.is_directed() is True:
+        data.edge_index = to_undirected(data.edge_index)
+        undirected = True
+    else:
+        undirected = data.is_undirected()
+
+    if lcc_bool:
+        data, lcc, _ = use_lcc(data)
+        text = [text[i] for i in lcc]
+
+    splits = get_edge_split(data,
+                            undirected,
+                            cfg.device,
+                            cfg.split_index[1],
+                            cfg.split_index[2],
+                            cfg.include_negatives,
+                            cfg.split_labels
+                            )
+    print(f"num of nodes after lcc: {data.num_nodes}")
+    print(f"num of edges after lcc: {data.edge_index.shape[1]}")
+    print(f"num of texts in dataset: {len(text)}")
+    print(f"split_train edges: {splits['train'].edge_index.max().tolist() + 1}")
+    print(f"split_valid edges: {splits['valid'].edge_index.max().tolist() + 1}")
+    print(f"split_test edges: {splits['test'].edge_index.max().tolist() + 1}")
+    return splits, text, data
+
+def load_taglp_photo(cfg: CN, lcc_bool: bool = True) -> Tuple[Dict[str, Data], List[str]]:
+    # add one default argument
+
+    data, text = load_tag_photo()
+
+    print(f"original num of nodes: {data.num_nodes}")
+    print(data)
+    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
+    data.edge_index, _ = remove_self_loops(data.edge_index)
+    if data.is_directed() is True:
+        data.edge_index = to_undirected(data.edge_index)
+        undirected = True
+    else:
+        undirected = data.is_undirected()
+
+    if lcc_bool:
+        data, lcc, _ = use_lcc(data)
+        text = [text[i] for i in lcc]
+
+    splits = get_edge_split(data,
+                            undirected,
+                            cfg.device,
+                            cfg.split_index[1],
+                            cfg.split_index[2],
+                            cfg.include_negatives,
+                            cfg.split_labels
+                            )
+    print(f"num of nodes after lcc: {data.num_nodes}")
+    print(f"num of edges after lcc: {data.edge_index.shape[1]}")
+    print(f"num of texts in dataset: {len(text)}")
+    print(f"split_train edges: {splits['train'].edge_index.max().tolist() + 1}")
+    print(f"split_valid edges: {splits['valid'].edge_index.max().tolist() + 1}")
+    print(f"split_test edges: {splits['test'].edge_index.max().tolist() + 1}")
+    return splits, text, data
 
 def load_taglp_citationv8(cfg: CN, lcc_bool: bool=True) -> Tuple[Dict[str, Data], List[str]]:
     # add one default argument
@@ -465,45 +539,57 @@ def load_text_benchmark(data_name: str) -> pd.DataFrame:
         df = load_text_citationv8()
     if data_name == 'pwc_large':
         df = load_text_pwc_large()
+    if data_name == 'photo':
+        df = load_text_photo()
+    if data_name == 'computers':
+        df = load_text_computers()
+
     if type(df) is list:
         df = pd.DataFrame(df, columns=['text'])
         return df
 
 
-def token_statistic(datasets):
-    all_stats_df = []
+def token_statistic(datasets, log):
+    import nltk
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from nltk.tokenize import word_tokenize
     
+    all_stats_df = []
+
     for data_name in datasets:
         # Load dataset
         df = load_text_benchmark(data_name)
-        
+
         # Ensure nltk tokenizers are downloaded
         nltk.download('punkt')
-        
-        # If df is a list, convert it to a DataFrame^
+
+        # If df is a list, convert it to a DataFrame
         if isinstance(df, list):
             df = pd.DataFrame(df, columns=['text'])
-        
+
         # Tokenize the node features
         df['tokens'] = df['text'].apply(word_tokenize)
         df['size_in_bytes'] = df['text'].apply(lambda x: len(x.encode('utf-8')))
         total_size_in_bytes = df['size_in_bytes'].sum()
         total_size_in_megabytes = total_size_in_bytes / (1024 * 1024)
-        
-        
+
         # Count the number of tokens for each node
         df['num_tokens'] = df['tokens'].apply(len)
-        
+
         # Provide statistical analysis
         total_tokens = df['num_tokens'].sum()
         average_tokens_per_node = df['num_tokens'].mean()
         token_count_distribution = df['num_tokens'].describe()
-        
-        print(f"Total tokens: {total_tokens}")
-        print(f"Average tokens per node: {average_tokens_per_node}")
-        print("Token count distribution:")
-        print(token_count_distribution)
-        
+
+        # Write statistics to the log file
+        log.write(f"\nStatistics for {data_name}:\n")
+        log.write(f"Total tokens: {total_tokens}\n")
+        log.write(f"Average tokens per node: {average_tokens_per_node}\n")
+        log.write(f"Token count distribution:\n{token_count_distribution}\n")
+        log.write(f"Data size (MB): {total_size_in_megabytes:.2f}\n")
+
         # Create a dictionary to store the statistics
         stats = {
             'data_name': data_name,
@@ -519,189 +605,208 @@ def token_statistic(datasets):
             'max': token_count_distribution['max'],
             'data size': total_size_in_megabytes
         }
-        
+
         # Append the statistics to the all_stats_df DataFrame
         all_stats_df.append(stats)
-        
+
         # Plot the distribution of token counts
         plt.figure(figsize=(10, 6))
         sns.histplot(df['num_tokens'], kde=True, bins=30)
         plt.title(f'Distribution of Token Counts for {data_name}')
         plt.xlabel('Number of Tokens')
         plt.ylabel('Frequency')
-        plt.savefig(f'{data_name}.png')
+        plt.savefig(f'{data_name}_token_distribution.png')
 
     # Save the all_stats_df DataFrame to a CSV file
     all_stats_df = pd.DataFrame(all_stats_df)
     all_stats_df.to_csv('all_datasets_statistics.csv', index=False)
 
-    print("All statistics have been saved to 'all_datasets_statistics.csv'")
+    log.write("All statistics have been saved to 'all_datasets_statistics.csv'\n")
+
 
 
 # TEST CODE
 if __name__ == '__main__':
     
     args = init_cfg_test()
-    args = config_device(args)
+    # args = config_device(args)
 
     # List of datasets to process
-    datasets = ['pwc_small', 'cora', 'pubmed', 'arxiv_2023', 'pwc_medium', 'pwc_large']
-
+    # datasets = ['pwc_small', 'cora', 'pubmed', 'arxiv_2023', 'pwc_medium', 'pwc_large']
+    datasets = ['computers', 'photo']
     token_statistic(datasets)
-    exit(-1)
-    from pdb import set_trace as st; st()
-    data = load_embedded_citationv8(args.data.method)
-    print(data)
+    # exit(-1)
+    # from pdb import set_trace as st; st()
+    # data = load_embedded_citationv8(args.data.method)
+    # print(data)
     
-    preprocessed_texts = [preprocess(t[0]) for t in tqdm(text)]
-    print(len(preprocessed_texts))
-    # Train a Word2Vec model
+    # preprocessed_texts = [preprocess(t[0]) for t in tqdm(text)]
+    # print(len(preprocessed_texts))
+    # # Train a Word2Vec model
     
-    model = Word2Vec(sentences=preprocessed_texts, vector_size=128, window=5, min_count=1, workers=10)
+    # model = Word2Vec(sentences=preprocessed_texts, vector_size=128, window=5, min_count=1, workers=10)
 
-    w2v_nodefeat = np.array([get_average_embedding(t[0], model) for t in text])
+    # w2v_nodefeat = np.array([get_average_embedding(t[0], model) for t in text])
     
-    x = torch.tensor(w2v_nodefeat, dtype=torch.float)
+    # x = torch.tensor(w2v_nodefeat, dtype=torch.float)
     
-    data.x = x
-    torch.save(data, f'citationv8_{args.data.method}.pt')
-    exit(-1)
-    vectorizer = TfidfVectorizer(max_features=128)
-    tfidf_matrix = vectorizer.fit_transform(preprocessed_texts)
-    from pdb import set_trace as st; st()
-    x = torch.tensor(tfidf_matrix.toarray(), dtype=torch.float)
+    # data.x = x
+    # torch.save(data, f'citationv8_{args.data.method}.pt')
+    # exit(-1)
+    # vectorizer = TfidfVectorizer(max_features=128)
+    # tfidf_matrix = vectorizer.fit_transform(preprocessed_texts)
+    # from pdb import set_trace as st; st()
+    # x = torch.tensor(tfidf_matrix.toarray(), dtype=torch.float)
     
-    data.x = x
-    torch.save(data, f'citationv8_{args.data.method}.pt')
-    exit(-1)
-    from core.data_utils.lcc import use_lcc
-    splits, text, data = load_taglp_pwc_small(args.data)
-    print(splits)
-    print(text.iloc[0])
-    print(data)
-    splits, text, data = load_taglp_pwc_medium(args.data)
-    print(splits)
-    print(text.iloc[0])
-    print(data)
-    splits, text, data = load_taglp_pwc_large(args.data)
-    print(splits)
-    print(text.iloc[0])
-    print(data)
-    exit(-1)
-    # return the largest connected components with text attrs
-    graph = torch.load(FILE_PATH+f'core/dataset/pwc_large/pwc_{method}_large_undirec.pt')
-    df, text = load_text_pwc_large()
+    # data.x = x
+    # torch.save(data, f'citationv8_{args.data.method}.pt')
+    # exit(-1)
+    # from core.data_utils.lcc import use_lcc
+    # splits, text, data = load_taglp_pwc_small(args.data)
+    # print(splits)
+    # print(text.iloc[0])
+    # print(data)
+    # splits, text, data = load_taglp_pwc_medium(args.data)
+    # print(splits)
+    # print(text.iloc[0])
+    # print(data)
+    # splits, text, data = load_taglp_pwc_large(args.data)
+    # print(splits)
+    # print(text.iloc[0])
+    # print(data)
+    # exit(-1)
+    # # return the largest connected components with text attrs
+    # graph = torch.load(FILE_PATH+f'core/dataset/pwc_large/pwc_{method}_large_undirec.pt')
+    # df, text = load_text_pwc_large()
     
-    data_lcc, lcc = use_lcc(graph)
-    root = '/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/'
-    torch.save(data_lcc, root+f'core/dataset/pwc_medium/pwc_{method}_medium_undirec.pt')
-    df_lcc = df.iloc[lcc.tolist()]
-    df_lcc.to_csv(root+f'core/dataset/pwc_medium/pwc_{method}_medium_text.csv')
+    # data_lcc, lcc = use_lcc(graph)
+    # root = '/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/'
+    # torch.save(data_lcc, root+f'core/dataset/pwc_medium/pwc_{method}_medium_undirec.pt')
+    # df_lcc = df.iloc[lcc.tolist()]
+    # df_lcc.to_csv(root+f'core/dataset/pwc_medium/pwc_{method}_medium_text.csv')
 
-    graph = torch.load(FILE_PATH + f'core/dataset/pwc_large/pwc_{method}_large_direc.pt')
+    # graph = torch.load(FILE_PATH + f'core/dataset/pwc_large/pwc_{method}_large_direc.pt')
     
-    largest_scc = find_scc_direc(graph)
-    lcc = list(largest_scc)
-    print("Nodes in the largest strongly connected component:", len(lcc))
-    df_lcc_direc = df.iloc[lcc]
-    df_lcc_direc.to_csv(root+f'core/dataset/pwc_small/pwc_{method}_small_text.csv')
-    subgraph = use_lcc_direc(graph, largest_scc)
-    torch.save(subgraph, root+f'core/dataset/pwc_small/pwc_{method}_small_undirec.pt')
-    exit(-1)
+    # largest_scc = find_scc_direc(graph)
+    # lcc = list(largest_scc)
+    # print("Nodes in the largest strongly connected component:", len(lcc))
+    # df_lcc_direc = df.iloc[lcc]
+    # df_lcc_direc.to_csv(root+f'core/dataset/pwc_small/pwc_{method}_small_text.csv')
+    # subgraph = use_lcc_direc(graph, largest_scc)
+    # torch.save(subgraph, root+f'core/dataset/pwc_small/pwc_{method}_small_undirec.pt')
+    # exit(-1)
 
-    print('pwc_large')
-    print(args.data)
-    splits, text, data = load_taglp_pwc_large(args.data)
-    print(f'directed: {data.is_directed()}')
-    print(data)
-    print(text[0])
-    print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
-    print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
-    print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
+    # print('pwc_large')
+    # print(args.data)
+    # splits, text, data = load_taglp_pwc_large(args.data)
+    # print(f'directed: {data.is_directed()}')
+    # print(data)
+    # print(text[0])
+    # print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
 
-    root = '/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/'
-    path_large_tfidf_undir = root + 'core/dataset/pwc_large/pwc_tfidf_large_undirec.pt'
-    path_large_tfidf_dir = root + 'core/dataset/pwc_large/pwc_tfidf_large_direc.pt'
+    # root = '/hkfs/work/workspace/scratch/cc7738-benchmark_tag/TAPE_chen/'
+    # path_large_tfidf_undir = root + 'core/dataset/pwc_large/pwc_tfidf_large_undirec.pt'
+    # path_large_tfidf_dir = root + 'core/dataset/pwc_large/pwc_tfidf_large_direc.pt'
 
-    path_large_w2v_undir = root + 'core/dataset/pwc_large/pwc_w2v_large_undirec.pt'
-    path_large_w2v_dir = root + 'core/dataset/pwc_large/pwc_w2v_large_direc.pt'
+    # path_large_w2v_undir = root + 'core/dataset/pwc_large/pwc_w2v_large_undirec.pt'
+    # path_large_w2v_dir = root + 'core/dataset/pwc_large/pwc_w2v_large_direc.pt'
  
-    path_medium_tfidf_undir = root + 'core/dataset/pwc_medium/pwc_tfidf_medium_undirec.pt'
-    path_medium_w2v_undir = root + 'core/dataset/pwc_medium/pwc_w2v_medium_undirec.pt'
+    # path_medium_tfidf_undir = root + 'core/dataset/pwc_medium/pwc_tfidf_medium_undirec.pt'
+    # path_medium_w2v_undir = root + 'core/dataset/pwc_medium/pwc_w2v_medium_undirec.pt'
    
-    path_small_tfidf_undir = root + 'core/dataset/pwc_small/pwc_tfidf_small_undirec.pt'
-    path_small_w2v_undir = root + 'core/dataset/pwc_small/pwc_w2v_small_undirec.pt'
+    # path_small_tfidf_undir = root + 'core/dataset/pwc_small/pwc_tfidf_small_undirec.pt'
+    # path_small_w2v_undir = root + 'core/dataset/pwc_small/pwc_w2v_small_undirec.pt'
      
-    graph = torch.load(path_large_tfidf_undir)
-    print(f'directed: {graph.is_directed()}')
+    # graph = torch.load(path_large_tfidf_undir)
+    # print(f'directed: {graph.is_directed()}')
     
-    graph = torch.load(path_large_tfidf_dir)
-    print(f'directed: {graph.is_directed()}')
+    # graph = torch.load(path_large_tfidf_dir)
+    # print(f'directed: {graph.is_directed()}')
     
-    graph = torch.load(path_large_w2v_undir)
-    print(f'directed: {graph.is_directed()}')
+    # graph = torch.load(path_large_w2v_undir)
+    # print(f'directed: {graph.is_directed()}')
     
-    graph = torch.load(path_large_w2v_dir)
-    print(f'directed: {graph.is_directed()}')
+    # graph = torch.load(path_large_w2v_dir)
+    # print(f'directed: {graph.is_directed()}')
     
-    graph = torch.load(path_medium_tfidf_undir)
-    print(f'directed: {graph.is_directed()}')
+    # graph = torch.load(path_medium_tfidf_undir)
+    # print(f'directed: {graph.is_directed()}')
     
-    graph = torch.load(path_medium_w2v_undir)
-    print(f'directed: {graph.is_directed()}')
+    # graph = torch.load(path_medium_w2v_undir)
+    # print(f'directed: {graph.is_directed()}')
     
-    graph = torch.load(path_small_tfidf_undir)
-    print(f'directed: {graph.is_directed()}')
+    # graph = torch.load(path_small_tfidf_undir)
+    # print(f'directed: {graph.is_directed()}')
     
-    graph = torch.load(path_small_w2v_undir)
-    print(f'directed: {graph.is_directed()}')
+    # graph = torch.load(path_small_w2v_undir)
+    # print(f'directed: {graph.is_directed()}')
     
-    print('arxiv2023')
-    splits, text, data  = load_taglp_arxiv2023(args.data)
-    print(f'directed: {data.is_directed()}')
-    print(data)
-    print(text[0])
-    print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
-    print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
-    print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
-    
-    print('citationv8')
-    splits, text, data = load_taglp_citationv8(args.data)
-    print(f'directed: {data.is_directed()}')
-    print(data)
-    print(text[0])
-    print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
-    print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
-    print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
+    # print('computers')
+    # splits, text, data  = load_taglp_computers(args.data)
+    # print(f'directed: {data.is_directed()}')
+    # print(data)
+    # print(text[0])
+    # print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
 
-    print('cora')
-    splits, text, data = load_taglp_cora(args.data)
-    print(f'directed: {data.is_directed()}')
-    print(data)
-    print(text[0])
-    print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
-    print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
-    print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
+    # print('photo')
+    # splits, text, data  = load_taglp_photo(args.data)
+    # print(f'directed: {data.is_directed()}')
+    # print(data)
+    # print(text[0])
+    # print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
+
+    # print('arxiv2023')
+    # splits, text, data  = load_taglp_arxiv2023(args.data)
+    # print(f'directed: {data.is_directed()}')
+    # print(data)
+    # print(text[0])
+    # print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
     
-    print('pubmed')
-    splits, text, data = load_taglp_pubmed(args.data)
-    print(f'directed: {data.is_directed()}')
-    print(data)
-    print(text[0])
-    print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
-    print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
-    print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
+    # print('citationv8')
+    # splits, text, data = load_taglp_citationv8(args.data)
+    # print(f'directed: {data.is_directed()}')
+    # print(data)
+    # print(text[0])
+    # print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
+
+    # print('cora')
+    # splits, text, data = load_taglp_cora(args.data)
+    # print(f'directed: {data.is_directed()}')
+    # print(data)
+    # print(text[0])
+    # print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
+    
+    # print('pubmed')
+    # splits, text, data = load_taglp_pubmed(args.data)
+    # print(f'directed: {data.is_directed()}')
+    # print(data)
+    # print(text[0])
+    # print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
 
 
     
-    print(args.data)
-    splits, text, data = load_taglp_ogbn_arxiv(args.data)
-    print(f'directed: {data.is_directed()}')
-    print(data)
-    print(text[0])
-    print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
-    print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
-    print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
+    # print(args.data)
+    # splits, text, data = load_taglp_ogbn_arxiv(args.data)
+    # print(f'directed: {data.is_directed()}')
+    # print(data)
+    # print(text[0])
+    # print(f"train dataset: {splits['train'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"valid dataset: {splits['valid'].pos_edge_label.shape[0]*2} edges.")
+    # print(f"test dataset: {splits['test'].pos_edge_label.shape[0]*2} edges.")
 
 
     # print('product')

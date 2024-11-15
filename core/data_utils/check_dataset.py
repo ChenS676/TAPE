@@ -1,9 +1,7 @@
 import argparse
-
 import torch
-
 from load import load_data_lp
-
+from load_data_lp import token_statistic
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='GraphGym')
     parser.add_argument('--name', type=str, required=False, default='cora')
@@ -15,7 +13,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--device', type=str, required=False, default='cpu')
     return parser.parse_args()
 
-def check_data_leakage(splits):
+def check_data_leakage(splits, log):
     sets = ['train', 'valid', 'test']
     leakage = False
 
@@ -29,41 +27,39 @@ def check_data_leakage(splits):
 
     # Check for leakage
     if train_pos_index & valid_pos_index:
-        print("Data leakage found between train and valid positive samples.")
+        log.write("Data leakage found between train and valid positive samples.\n")
         leakage = True
     if train_pos_index & test_pos_index:
-        print("Data leakage found between train and test positive samples.")
+        log.write("Data leakage found between train and test positive samples.\n")
         leakage = True
     if valid_pos_index & test_pos_index:
-        print("Data leakage found between valid and test positive samples.")
+        log.write("Data leakage found between valid and test positive samples.\n")
         leakage = True
     if train_neg_index & valid_neg_index:
-        print("Data leakage found between train and valid negative samples.")
+        log.write("Data leakage found between train and valid negative samples.\n")
         leakage = True
     if train_neg_index & test_neg_index:
-        print("Data leakage found between train and test negative samples.")
+        log.write("Data leakage found between train and test negative samples.\n")
         leakage = True
     if valid_neg_index & test_neg_index:
-        print("Data leakage found between valid and test negative samples.")
+        log.write("Data leakage found between valid and test negative samples.\n")
         leakage = True
 
     if not leakage:
-        print("No data leakage found.")
+        log.write("No data leakage found.\n")
 
-    return leakage
-
-def check_self_loops(data):
+def check_self_loops(data, log):
     self_loops = (data.edge_index[0] == data.edge_index[1]).nonzero(as_tuple=False)
     if self_loops.size(0) > 0:
-        print("Self-loops found.")
+        log.write("Self-loops found.\n")
     else:
-        print("No self-loops found.")
+        log.write("No self-loops found.\n")
 
-def check_edges_completeness(splits, data):
-    rate = 2*(float(splits['train']['pos_edge_label_index'].size(1) +  splits['test']['pos_edge_label_index'].size(1)
-             + splits['valid']['pos_edge_label_index'].size(1))) / data.edge_index.size(1)
-    print(f"Edges completeness rate: {rate:.4f}")
-
+def check_edges_completeness(splits, data, log):
+    rate = 2 * (float(splits['train']['pos_edge_label_index'].size(1) +
+                     splits['test']['pos_edge_label_index'].size(1) +
+                     splits['valid']['pos_edge_label_index'].size(1))) / data.edge_index.size(1)
+    log.write(f"Edges completeness rate: {rate:.4f}\n")
 
 def check_is_symmetric(edge_index):
     src, dst = edge_index
@@ -85,22 +81,27 @@ def check_is_symmetric(edge_index):
 if __name__ == "__main__":
     args = parse_args()
     args.split_index = [0.8, 0.15, 0.05]
-    for dataset in ['pwc_small', 'cora', 'arxiv_2023', 'pubmed', 'pwc_medium', 'citationv8', 'ogbn-arxiv']:
-        print(f"\n\n\nChecking dataset {dataset} :")
-        args.name = dataset
-        splits, text, data = load_data_lp[dataset](args)
-        check_data_leakage(splits)
-        check_self_loops(data)
-        check_edges_completeness(splits, data)
-        print("Is data.edge_index symmetric?",check_is_symmetric(data.edge_index))
-        print("Is splits['test']['pos_edge_label_index'] symmetric?", check_is_symmetric(splits['test']['pos_edge_label_index']))
-        print("Is splits['valid']['pos_edge_label_index'] symmetric?", check_is_symmetric(splits['valid']['pos_edge_label_index']))
-        print("Is splits['train']['pos_edge_label_index'] symmetric?", check_is_symmetric(splits['train']['pos_edge_label_index']))
-        print("Is splits['test']['neg_edge_label_index'] symmetric?", check_is_symmetric(splits['test']['neg_edge_label_index']))
-        print("Is splits['valid']['neg_edge_label_index'] symmetric?", check_is_symmetric(splits['valid']['neg_edge_label_index']))
-        print("Is splits['train']['neg_edge_label_index'] symmetric?", check_is_symmetric(splits['train']['neg_edge_label_index']))
-        print("Is splits['test']['edge_index'] symmetric?", check_is_symmetric(splits['test']['edge_index']))
-        print("Is splits['valid']['edge_index'] symmetric?", check_is_symmetric(splits['valid']['edge_index']))
-        print("Is splits['train']['edge_index'] symmetric?", check_is_symmetric(splits['train']['edge_index']))
 
+    with open("dataset_report.txt", "w") as log:
+        for dataset in ['computers', 'photo']:
+            log.write(f"\n\n\nChecking dataset {dataset} :\n")
+            args.name = dataset
+            splits, text, data = load_data_lp[dataset](args)
 
+            check_data_leakage(splits, log)
+            check_self_loops(data, log)
+            check_edges_completeness(splits, data, log)
+            
+            token_statistic([dataset], log)
+            log.write(f"Is data.edge_index symmetric? {check_is_symmetric(data.edge_index)}\n")
+            log.write(f"Is splits['test']['pos_edge_label_index'] symmetric? {check_is_symmetric(splits['test']['pos_edge_label_index'])}\n")
+            log.write(f"Is splits['valid']['pos_edge_label_index'] symmetric? {check_is_symmetric(splits['valid']['pos_edge_label_index'])}\n")
+            log.write(f"Is splits['train']['pos_edge_label_index'] symmetric? {check_is_symmetric(splits['train']['pos_edge_label_index'])}\n")
+            log.write(f"Is splits['test']['neg_edge_label_index'] symmetric? {check_is_symmetric(splits['test']['neg_edge_label_index'])}\n")
+            log.write(f"Is splits['valid']['neg_edge_label_index'] symmetric? {check_is_symmetric(splits['valid']['neg_edge_label_index'])}\n")
+            log.write(f"Is splits['train']['neg_edge_label_index'] symmetric? {check_is_symmetric(splits['train']['neg_edge_label_index'])}\n")
+            log.write(f"Is splits['test']['edge_index'] symmetric? {check_is_symmetric(splits['test']['edge_index'])}\n")
+            log.write(f"Is splits['valid']['edge_index'] symmetric? {check_is_symmetric(splits['valid']['edge_index'])}\n")
+            log.write(f"Is splits['train']['edge_index'] symmetric? {check_is_symmetric(splits['train']['edge_index'])}\n")
+
+    print("Report has been saved to 'dataset_report.txt'.")

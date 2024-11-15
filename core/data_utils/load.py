@@ -20,7 +20,9 @@ from data_utils.load_data_lp import (load_taglp_arxiv2023,
                                      load_taglp_citationv8,
                                      load_taglp_pwc_small,
                                      load_taglp_pwc_large,
-                                     load_taglp_pwc_medium,)
+                                     load_taglp_pwc_medium,
+                                     load_taglp_computers,
+                                     load_taglp_photo,)
 from data_utils.load_data_lp import (load_graph_cora, 
                                      load_graph_arxiv23,
                                      load_graph_ogbn_arxiv,
@@ -53,6 +55,8 @@ load_data_lp = {
     'pwc_small': load_taglp_pwc_small,
     'pwc_large': load_taglp_pwc_large,
     'pwc_medium': load_taglp_pwc_medium,
+    'computers': load_taglp_computers,
+    'photo': load_taglp_photo,
 }
 
 load_graph_lp = {

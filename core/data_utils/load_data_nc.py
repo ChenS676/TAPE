@@ -1,7 +1,7 @@
 import os, sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-# import dgl
+
 import torch
 import pandas as pd
 import numpy as np
@@ -20,7 +20,8 @@ from data_utils.lcc import use_lcc
 import torch_geometric.utils as pyg_utils
 import networkx as nx
 
-# import dgl
+import dgl
+from torch_geometric.utils import from_dgl
 
 
 FILE = 'core/dataset/ogbn_products_orig/ogbn-products.csv'
@@ -386,6 +387,7 @@ def load_text_ogbn_arxiv():
 
 
 def load_graph_ogbn_arxiv(use_mask):
+    
     dataset = PygNodePropPredDataset(root='./generated_dataset',
                                      name='ogbn-arxiv', transform=T.ToSparseTensor())
     data = dataset[0]
@@ -442,6 +444,27 @@ def load_tag_product() -> Tuple[Data, List[str]]:
 
     return data, text
 
+def load_tag_computers() -> Tuple[Data, List[str]]:
+    graph = dgl.load_graphs(FILE_PATH + 'core/dataset/computers/Computers.pt')[0][0]
+    graph = dgl.to_bidirected(graph)
+    
+    graph = from_dgl(graph)
+    graph.num_nodes = graph.edge_index.max() + 1
+    text = pd.read_csv(FILE_PATH + 'core/dataset/computers/Computers.csv')
+    text = [f'Description: {cont}\n' for cont in text['text']]
+
+    return graph, text
+
+def load_tag_photo() -> Tuple[Data, List[str]]:
+    graph = dgl.load_graphs(FILE_PATH + 'core/dataset/photo/Photo.pt')[0][0]
+    graph = dgl.to_bidirected(graph)
+    
+    graph = from_dgl(graph)
+    graph.num_nodes = graph.edge_index.max() + 1
+    text = pd.read_csv(FILE_PATH + 'core/dataset/photo/Photo.csv')
+    text = [f'Description: {cont}\n' for cont in text['text']]
+
+    return graph, text
 
 def load_graph_citationv8() -> Data:
     import dgl
@@ -528,6 +551,17 @@ def load_text_pwc_small(method) -> List[str]:
     raw_text = pd.read_csv(FILE_PATH + f'core/dataset/pwc_small/pwc_{method}_small_text.csv')
     return raw_text['feat'].tolist()
 
+def load_text_photo() -> List[str]:
+    text = pd.read_csv(FILE_PATH + 'core/dataset/photo/Photo.csv')
+    text = [f'Description: {cont}\n' for cont in text['text']]
+
+    return text
+
+def load_text_computers() -> List[str]:
+    text = pd.read_csv(FILE_PATH + 'core/dataset/computers/Computers.csv')
+    text = [f'Description: {cont}\n' for cont in text['text']]
+
+    return text
 
 def extract_lcc_pwc_undir() -> Data:
     # return the largest connected components with text attrs
