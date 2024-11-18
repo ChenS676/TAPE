@@ -14,8 +14,8 @@ import torch
 from graphgps.utility.utils import random_sampling
 
 from torch_geometric import seed_everything
-from graphgps.utility.utils import set_cfg, get_git_repo_root_path, custom_set_run_dir, set_printing, run_loop_settings, \
-    create_optimizer, config_device, \
+from graphgps.utility.utils import set_cfg, get_git_repo_root_path, set_printing, \
+    config_device, \
     create_logger
 
 from data_utils.load import load_data_lp, load_graph_lp
@@ -425,5 +425,4 @@ if __name__ == '__main__':
     print_logger.info(f"Results for: {cfg.model.type}")
     print_logger.info(f"Model Params: {trainer.trainable_params}")
     print_logger.info(f"Training time: {eval_time}")
-
 

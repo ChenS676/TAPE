@@ -419,4 +419,3 @@ class GCNClaInfModel(PreTrainedModel):
         loss = self.bert_classifier.model.recon_loss(h, edge_pos, edge_neg)
         pred = self.bert_classifier.model.decoder(h[node_id.T[0]], h[node_id.T[1]])
         return TokenClassifierOutput(loss=loss, logits=pred)
-

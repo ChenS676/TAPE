@@ -1090,10 +1090,19 @@ def save_run_results_to_csv(cfg, loggers, seed, run_id):
     # results.to_csv(unique_file_path, index=False)
 
 
+
 def random_sampling(splits, scale: int):
     print(f"train adj shape: {splits['train'].edge_index.shape[1]}")
 
     for k, data in splits.items():
+<<<<<<< HEAD
+        print(f"{k}: original length {data.pos_edge_label_index.shape[1]}")
+        num_samples = int(data.neg_edge_label_index.shape[1] * scale)
+        sampled_indices = np.random.choice(data.neg_edge_label_index.shape[1], num_samples, replace=False)
+        data.pos_edge_label_index = data.pos_edge_label_index[:, sampled_indices]
+        data.neg_edge_label_index = data.neg_edge_label_index[:, sampled_indices]
+        print(f"{k}: downsampled length {data.pos_edge_label_index.shape[1]}")
+=======
         if k!='train':
             print(f"{k}: original length {data.pos_edge_label_index.shape[1]}")
             num_samples = int(data.neg_edge_label_index.shape[1] * scale)
@@ -1103,6 +1112,7 @@ def random_sampling(splits, scale: int):
             data.neg_edge_label = data.neg_edge_label[sampled_indices]
             data.pos_edge_label = data.pos_edge_label[sampled_indices]
             print(f"{k}: downsampled length {data.pos_edge_label_index.shape[1]}")
+>>>>>>> caa8aff586860fd3c255ceed9bbdca45a0e880f5
 
     return splits
 
