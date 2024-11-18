@@ -246,29 +246,33 @@ class CNLinkPredictor(nn.Module):
                            adj, # adjacency matrix
                            tar_ei, # target edge index
                            filled1: bool = False, # whether to fill the target edge
-                           cndropprobs: Iterable[float] = []): # common neighbor dropout rate
+                           cndropprobs: Iterable[float] = [],
+                           use_cn: bool = True, # whether to use common neighbors
+                           use_xij: bool = True, # whether to use input features
+                           ): # common neighbor dropout rate
         adj = self.dropadj(adj)
         xi = x[tar_ei[0]] # input features for the source node
         xj = x[tar_ei[1]] # input features for the target node
         x = x + self.xlin(x)
-        
-        cn = adjoverlap(adj, adj, tar_ei, filled1, cnsampledeg=self.cndeg) # common neighbors
-        xcns = [spmm_add(cn, x)] # common neighbor features #TODO 
-        xij = self.xijlin(xi * xj)
 
-        return torch.cat(
-            [self.lin(self.xcnlin(xcn) * self.beta + xij) for xcn in xcns], dim=-1
-        )
-        # TODO visualize the node features
-        '''import matplotlib.pyplot as plt 
-        plt.figure(figsize=(12, 8))  # Adjust figsize as needed to fit your page
-        plt.imshow(x.detach().numpy(), cmap='viridis', aspect='auto')
-        plt.colorbar(label='Value')
-        plt.title('Heatmap of a 2708x256 Matrix')
-        plt.xlabel('Column Index')
-        plt.ylabel('Row Index')
-        plt.tight_layout() 
-        plt.savefig('heatmap.png')'''
+
+        if use_cn and use_xij:
+            cn = adjoverlap(adj, adj, tar_ei, filled1, cnsampledeg=self.cndeg) # common neighbors
+            xcns = [spmm_add(cn, x)]
+            xij = self.xijlin(xi * xj)
+
+            return torch.cat(
+                [self.lin(self.xcnlin(xcn) * self.beta + xij) for xcn in xcns], dim=-1
+            )
+        elif use_xij:
+            xij = self.xijlin(xi * xj)
+            return self.lin(xij)
+        else:
+            cn = adjoverlap(adj, adj, tar_ei, filled1, cnsampledeg=self.cndeg)
+            xcns = [spmm_add(cn, x)]
+            return torch.cat(
+                [self.lin(self.xcnlin(xcn) * self.beta) for xcn in xcns], dim=-1
+            )
 
 
     def forward(self, x, adj, tar_ei, filled1: bool = False):

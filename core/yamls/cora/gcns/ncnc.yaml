@@ -33,7 +33,7 @@ model:
   lnnn: True
   res: False
   jk: True
-  hiddim: 256 #
+  hiddim: 256 # [128, 256, 512, 1024]
   gnndp: 0.05 #
   xdp: 0.7 #
   tdp: 0.2 #

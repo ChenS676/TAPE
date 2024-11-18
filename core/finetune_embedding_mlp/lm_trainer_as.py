@@ -23,7 +23,7 @@ from graphgps.utility.utils import save_run_results_to_csv
 from yacs.config import CfgNode as CN
 
 from transformers import AutoTokenizer, AutoModel, TrainingArguments, Trainer, IntervalStrategy
-from model import BertClassifier, BertClaInfModel, NCNClaInfModel, NCNClassifier, GCNClassifier, GCNClaInfModel
+from model_as import BertClassifier, BertClaInfModel, NCNClaInfModel, NCNClassifier, GCNClassifier, GCNClaInfModel
 from finetune_dataset import LinkPredictionDataset
 from utils import init_path, time_logger
 from ogb.linkproppred import Evaluator
@@ -37,6 +37,7 @@ from graphgps.network.heart_gnn import GAT_Variant, GAE_forall, GCN_Variant, \
     SAGE_Variant, GIN_Variant, DGCNN
 
 writer = SummaryWriter()
+
 
 def compute_metrics(p):
     from sklearn.metrics import accuracy_score
@@ -116,6 +117,7 @@ def ft_dataset(data, splits):
     data.full_adj_t = data.full_adj_t.to_symmetric()
     return data
 
+
 class LMTrainer():
     def __init__(self, cfg):
         self.dataset_name = cfg.dataset
@@ -184,7 +186,7 @@ class LMTrainer():
             self.data.x = F.pad(self.data.x, (0, padding_size), "constant", 0)
         elif current_size > hidden_size:
             self.data.x = self.data.x[:, :hidden_size]
-        
+
         for name, param in bert_model.named_parameters():
             if 'encoder.layer.11' in name and 'mpnet' in cfg.lm.model.name:
                 break
@@ -201,7 +203,7 @@ class LMTrainer():
         if self.decoder.model.type == 'MLP':
             self.model = BertClassifier(bert_model, cfg, feat_shrink=self.feat_shrink).to(self.device)
         elif self.decoder.model.type == 'NCN' or self.decoder.model.type == 'NCNC':
-            self.model = NCNClassifier(bert_model, cfg, self.data, self.data.edge_index).to(self.device)
+            self.model = NCNClassifier(bert_model, cfg, self.data, self.data.edge_index, use_cn=args.use_cn, use_xij=args.use_xij, use_gnn=args.use_gnn).to(self.device)
         elif self.decoder.model.type == 'GCN_Variant':
             cfg_model = eval(f'cfg.decoder.model.{args.model}')
             cfg_score = eval(f'cfg.decoder.score.{args.model}')
@@ -217,7 +219,7 @@ class LMTrainer():
             if p.requires_grad:
                 print(f'{n} is trainable.')
         self.trainable_params = sum(p.numel()
-                               for p in self.model.parameters() if p.requires_grad)
+                                    for p in self.model.parameters() if p.requires_grad)
         print(f'Trainable params: {self.trainable_params}')
         self.name_tag = cfg.model.type + '-' + cfg.data.name + '-' + cfg.decoder.model.type
         if self.decoder.model.type == 'GCN_Variant':
@@ -253,7 +255,7 @@ class LMTrainer():
             fp16=True,
             dataloader_drop_last=True,
             max_grad_norm=10.0,
-            ddp_find_unused_parameters = True,
+            ddp_find_unused_parameters=True,
             remove_unused_columns=False if self.decoder.model.type != 'MLP' else True
         )
         self.trainer = Trainer(
@@ -288,7 +290,7 @@ class LMTrainer():
                 self.model, emb, pred, feat_shrink=self.feat_shrink)
         elif self.decoder.model.type == 'NCN' or self.decoder.model.type == 'NCNC':
             inf_model = NCNClaInfModel(
-                self.model, emb, pred, self.data, self.data.edge_index, feat_shrink=self.feat_shrink)
+                self.model, emb, pred, self.data, self.data.edge_index, feat_shrink=self.feat_shrink, use_cn=args.use_cn, use_xij=args.use_xij, use_gnn=args.use_gnn)
         elif self.decoder.model.type == 'GCN_Variant':
             inf_model = GCNClaInfModel(
                 self.model, emb, pred, self.data, self.data.edge_index, feat_shrink=self.feat_shrink)
@@ -348,6 +350,9 @@ def parse_args() -> argparse.Namespace:
                         default=1000)
     parser.add_argument('opts', default=None, nargs=argparse.REMAINDER,
                         help='See graphgym/config.py for remaining options.')
+    parser.add_argument('--use_cn', type=bool, required=False, default=True)
+    parser.add_argument('--use_xij', type=bool, required=False, default=True)
+    parser.add_argument('--use_gnn', type=bool, required=False, default=True)
     parser.add_argument('--decoder', type=str, required=False)
     parser.add_argument('--model', type=str, required=False)
     return parser.parse_args()
@@ -377,6 +382,7 @@ if __name__ == '__main__':
     best_params = {}
     loggers = create_logger(args.repeat)
     start_ft = time.time()
+    cfg.model.type = cfg.model.type+{'True': 'CN', 'False': ''}[str(args.use_cn)]+{'True': 'Xij', 'False': ''}[str(args.use_xij)]+{'True': 'GNN', 'False': ''}[str(args.use_gnn)]
     for run_id in range(args.repeat):
         seed = run_id + args.start_seed
         set_printing(cfg)
