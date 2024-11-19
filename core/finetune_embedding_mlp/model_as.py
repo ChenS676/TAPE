@@ -41,7 +41,11 @@ class NCNClassifier(PreTrainedModel):
                          xdropout=cfg.decoder.model.xdp, taildropout=cfg.decoder.model.tdp,
                          noinputlin=False)
 
-        self.predictor = predfn(cfg.decoder.model.hiddim, cfg.decoder.model.hiddim, 1, cfg.decoder.model.nnlayers,
+        if use_gnn:
+            self.predictor = predfn(cfg.decoder.model.hiddim, cfg.decoder.model.hiddim, 1, cfg.decoder.model.nnlayers,
+                                cfg.decoder.model.predp, cfg.decoder.model.preedp, cfg.decoder.model.lnnn)
+        else:
+            self.predictor = predfn(data.x.size(1), data.x.size(1), 1, cfg.decoder.model.nnlayers,
                                 cfg.decoder.model.predp, cfg.decoder.model.preedp, cfg.decoder.model.lnnn)
 
         init_random_state(seed)

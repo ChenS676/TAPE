@@ -350,9 +350,13 @@ def parse_args() -> argparse.Namespace:
                         default=1000)
     parser.add_argument('opts', default=None, nargs=argparse.REMAINDER,
                         help='See graphgym/config.py for remaining options.')
-    parser.add_argument('--use_cn', type=bool, required=False, default=True)
-    parser.add_argument('--use_xij', type=bool, required=False, default=True)
-    parser.add_argument('--use_gnn', type=bool, required=False, default=True)
+    parser.add_argument('--use_cn', action='store_true', help="Enable CN")
+    parser.add_argument('--no_use_cn', action='store_false', dest='use_cn', help="Disable CN")
+    parser.add_argument('--use_xij', action='store_true', help="Enable Xij")
+    parser.add_argument('--no_use_xij', action='store_false', dest='use_xij', help="Disable Xij")
+    parser.add_argument('--use_gnn', action='store_true', help="Enable GNN")
+    parser.add_argument('--no_use_gnn', action='store_false', dest='use_gnn', help="Disable GNN")
+
     parser.add_argument('--decoder', type=str, required=False)
     parser.add_argument('--model', type=str, required=False)
     return parser.parse_args()
@@ -382,7 +386,10 @@ if __name__ == '__main__':
     best_params = {}
     loggers = create_logger(args.repeat)
     start_ft = time.time()
-    cfg.model.type = cfg.model.type+{'True': 'CN', 'False': ''}[str(args.use_cn)]+{'True': 'Xij', 'False': ''}[str(args.use_xij)]+{'True': 'GNN', 'False': ''}[str(args.use_gnn)]
+    cfg.model.type = (cfg.model.type
+                      + {'True': 'CN', 'False': ''}[str(args.use_cn)]
+                      + {'True': 'Xij', 'False': ''}[str(args.use_xij)]
+                      + {'True': 'GNN', 'False': ''}[str(args.use_gnn)])
     for run_id in range(args.repeat):
         seed = run_id + args.start_seed
         set_printing(cfg)
