@@ -1,0 +1,15 @@
+
+============================= JOB FEEDBACK =============================
+
+NodeName=uc2n487
+Job ID: 24507874
+Cluster: uc2
+User/Group: cc7738/aifb
+State: CANCELLED (exit code 0)
+Nodes: 1
+Cores per node: 10
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 1-12:57:50 core-walltime
+Job Wall-clock time: 03:41:47
+Memory Utilized: 25.40 GB
+Memory Efficiency: 10.16% of 250.00 GB
