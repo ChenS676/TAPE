@@ -260,7 +260,7 @@ class CNLinkPredictor(nn.Module):
             [self.lin(self.xcnlin(xcn) * self.beta + xij) for xcn in xcns], dim=-1
         )
         # TODO visualize the node features
-        import matplotlib.pyplot as plt 
+        '''import matplotlib.pyplot as plt 
         plt.figure(figsize=(12, 8))  # Adjust figsize as needed to fit your page
         plt.imshow(x.detach().numpy(), cmap='viridis', aspect='auto')
         plt.colorbar(label='Value')
@@ -268,7 +268,7 @@ class CNLinkPredictor(nn.Module):
         plt.xlabel('Column Index')
         plt.ylabel('Row Index')
         plt.tight_layout() 
-        plt.savefig('heatmap.png')
+        plt.savefig('heatmap.png')'''
 
 
     def forward(self, x, adj, tar_ei, filled1: bool = False):
