@@ -293,12 +293,13 @@ class Trainer_Triples(Trainer_embedding_LLM):
 
     @torch.no_grad()
     def _evaluate(self, eval_data: Dict[str, torch.Tensor]):
-
-        if type(eval_data[0]) == csr_matrix:
-            eval_data[0] = eval_data[0].toarray()
-
         self.model.eval()
-        preds = self.model(torch.tensor(eval_data[0]).to(self.device))
+        if type(eval_data[0]) == csr_matrix:
+            eval_data_arr = eval_data[0].toarray()
+            preds = self.model(torch.tensor(eval_data_arr).to(self.device))
+        else:
+            preds = self.model(torch.tensor(eval_data[0]).to(self.device))
+            
         pos_pred = preds[eval_data[1] == 1].squeeze().cpu()
         neg_pred = preds[eval_data[1] == 0].squeeze().cpu()
 

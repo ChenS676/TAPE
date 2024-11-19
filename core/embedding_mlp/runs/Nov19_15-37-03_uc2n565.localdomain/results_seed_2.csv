@@ -1,0 +1,2 @@
+model,seed,Hits@1,Hits@3,Hits@10,Hits@20,Hits@50,Hits@100,MRR,mrr_hit1,mrr_hit3,mrr_hit10,mrr_hit20,mrr_hit50,mrr_hit100,AUC,AP
+MLP-tfidf,2,1.61,2.34,6.77,9.92,17.82,24.84,3.55,1.61,2.34,6.77,9.92,17.82,24.84,65.35,67.4

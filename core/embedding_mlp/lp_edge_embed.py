@@ -47,6 +47,10 @@ yaml_file = {
 split_index_data = {
     'pwc_small': 1,
     'cora': 1,
+    # DISCUSS WITH CHEN
+    'photo': 0.1,
+    'history': 0.1,
+    ###########################
     'pubmed': 1,
     'arxiv_2023': 1,
     'pwc_medium': 0.5,

@@ -33,6 +33,7 @@ from graphgps.finetuning import get_final_pretrained_ckpt
 from sklearn.feature_extraction.text import TfidfVectorizer
 import nltk
 from nltk.tokenize import word_tokenize
+nltk.download('punkt_tab')
 import re
 load_dotenv()
 
@@ -341,7 +342,10 @@ class Logger(object):
     def calc_run_stats(self, 
                        run:int =None, 
                        print_mode:bool =True) -> Tuple[float, float, float, float]:
+        # print(self.results[run])
         result = 100 * torch.tensor(self.results[run])
+        if result.shape[0] == 0:
+            return 0, 0, 0, 0
         best_valid_epoch = result[:, 1].argmax().item()
         best_train_valid, _, best_test_valid = result[best_valid_epoch]
 
@@ -1088,7 +1092,8 @@ def save_run_results_to_csv(cfg, loggers, seed, run_id):
         result_dict['model'] = cfg.model.type
         result_dict['seed'] = seed
         _, _, _, test_bvalid = loggers[key].calc_run_stats(run_id)
-        result_dict[key] = test_bvalid
+        if test_bvalid != 0:
+            result_dict[key] = test_bvalid
 
 
     # Convert the result dictionary to a DataFrame
