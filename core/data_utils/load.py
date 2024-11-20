@@ -22,7 +22,8 @@ from data_utils.load_data_lp import (load_taglp_arxiv2023,
                                      load_taglp_pwc_large,
                                      load_taglp_pwc_medium,
                                      load_taglp_computers,
-                                     load_taglp_photo,)
+                                     load_taglp_photo,
+                                     load_taglp_history)
 from data_utils.load_data_lp import (load_graph_cora, 
                                      load_graph_arxiv23,
                                      load_graph_ogbn_arxiv,
@@ -57,6 +58,7 @@ load_data_lp = {
     'pwc_medium': load_taglp_pwc_medium,
     'computers': load_taglp_computers,
     'photo': load_taglp_photo,
+    'history': load_taglp_history
 }
 
 load_graph_lp = {

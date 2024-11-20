@@ -200,7 +200,7 @@ if __name__ == '__main__':
         splits['valid'].edge_features = torch.tensor(splits['valid'].edge_features)
         splits['test'].edge_features = torch.tensor(splits['test'].edge_features)
 
-
+        print('HERE1')
         for run_id in range(args.repeat):
             seed = run_id + args.start_seed
             custom_set_run_dir(cfg, run_id)
@@ -265,6 +265,7 @@ if __name__ == '__main__':
                 from huggingface_hub import HfFolder
 
                 token = os.getenv("HUGGINGFACE_HUB_TOKEN")
+                print(token)
                 HfFolder.save_token(token)
                 model_id = "meta-llama/Meta-Llama-3-8B"
                 tokenizer = AutoTokenizer.from_pretrained(model_id)
@@ -308,7 +309,7 @@ if __name__ == '__main__':
         emb_time = time.time() - start_emb
 
         node_features = torch.tensor(node_features)
-
+        print('HERE2')
         for run_id in range(args.repeat):
             seed = run_id + args.start_seed
             custom_set_run_dir(cfg, run_id)

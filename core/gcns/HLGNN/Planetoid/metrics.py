@@ -1,4 +1,5 @@
 import re
+import os
 import csv
 
 def extract_final_test_results(block):
@@ -29,6 +30,11 @@ def save_to_csv(results, filename='HLGNN/Planetoid/metrics_and_weights/final_tes
     
     existing_rows = set()
     
+    if not os.path.exists(filename):
+        with open(filename, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(header)
+            
     with open(filename, mode='r', newline='') as file:
         reader = csv.reader(file)
         existing_rows = {tuple(row) for row in reader}

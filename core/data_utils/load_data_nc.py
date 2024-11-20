@@ -466,6 +466,17 @@ def load_tag_photo() -> Tuple[Data, List[str]]:
 
     return graph, text
 
+def load_tag_history() -> Tuple[Data, List[str]]:
+    graph = dgl.load_graphs(FILE_PATH + 'core/dataset/history/History.pt')[0][0]
+    graph = dgl.to_bidirected(graph)
+    
+    graph = from_dgl(graph)
+    graph.num_nodes = graph.edge_index.max() + 1
+    text = pd.read_csv(FILE_PATH + 'core/dataset/history/History.csv')
+    text = [f'Description: {cont}\n' for cont in text['text']]
+
+    return graph, text
+
 def load_graph_citationv8() -> Data:
     import dgl
     from pdb import set_trace as st;
@@ -559,6 +570,12 @@ def load_text_photo() -> List[str]:
 
 def load_text_computers() -> List[str]:
     text = pd.read_csv(FILE_PATH + 'core/dataset/computers/Computers.csv')
+    text = [f'Description: {cont}\n' for cont in text['text']]
+
+    return text
+
+def load_text_history() -> List[str]:
+    text = pd.read_csv(FILE_PATH + 'core/dataset/history/History.csv')
     text = [f'Description: {cont}\n' for cont in text['text']]
 
     return text

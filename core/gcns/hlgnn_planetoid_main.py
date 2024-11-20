@@ -365,6 +365,16 @@ def main():
     writer = SummaryWriter()
     beta_values = []
     for run in range(args.runs):
+        
+        random_seed = run
+        print(f"Run {run + 1}/{args.runs}: Use seed {random_seed}")
+
+        # Set different seeds
+        random.seed(random_seed)
+        np.random.seed(random_seed)
+        torch.manual_seed(random_seed)
+        torch.cuda.manual_seed_all(random_seed)
+        
         model.reset_parameters()
         predictor.reset_parameters()
         optimizer = torch.optim.Adam(list(predictor.parameters()) + list(model.parameters()), lr=args.lr)
@@ -423,8 +433,7 @@ def main():
             else:
                 loggers[key].print_statistics_others(run)
     
-    
-    with open(f'HLGNN/Planetoid/metrics_and_weights/results_.txt', 'a') as f:
+    with open(f'/home/kit/aifb/cc7738/scratch/TAPE/core/gcns/HLGNN/Planetoid/metrics_and_weights/results_.txt', 'w') as f:
         f.write(f"Type Heuristic:{args.init}, Dataset: {args.dataset}, Norm function: {args.norm_func}\n")
 
     for key in loggers.keys():
@@ -435,7 +444,7 @@ def main():
     
     
     # visualization_epochs(beta_values, args.dataset)
-    do_csv(f'HLGNN/Planetoid/metrics_and_weights/results_.txt', name)
+    do_csv(f'/home/kit/aifb/cc7738/scratch/TAPE/core/gcns/HLGNN/Planetoid/metrics_and_weights/results_.txt', name)
     writer.close()
     
 if __name__ == "__main__":
