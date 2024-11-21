@@ -455,6 +455,8 @@ def load_tag_computers() -> Tuple[Data, List[str]]:
 
     return graph, text
 
+from sentence_transformers import SentenceTransformer
+
 def load_tag_photo() -> Tuple[Data, List[str]]:
     graph = dgl.load_graphs(FILE_PATH + 'core/dataset/photo/Photo.pt')[0][0]
     graph = dgl.to_bidirected(graph)
@@ -463,7 +465,15 @@ def load_tag_photo() -> Tuple[Data, List[str]]:
     graph.num_nodes = graph.edge_index.max() + 1
     text = pd.read_csv(FILE_PATH + 'core/dataset/photo/Photo.csv')
     text = [f'Description: {cont}\n' for cont in text['text']]
-
+    
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    embeddings = model.encode(text, convert_to_tensor=True)
+    
+    if len(embeddings) != graph.num_nodes:
+        raise ValueError("Number of texts must match the number of nodes in the graph.")
+    
+    graph.x = embeddings
+    
     return graph, text
 
 def load_tag_history() -> Tuple[Data, List[str]]:
@@ -475,6 +485,13 @@ def load_tag_history() -> Tuple[Data, List[str]]:
     text = pd.read_csv(FILE_PATH + 'core/dataset/history/History.csv')
     text = [f'Description: {cont}\n' for cont in text['text']]
 
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    embeddings = model.encode(text, convert_to_tensor=True)
+    
+    if len(embeddings) != graph.num_nodes:
+        raise ValueError("Number of texts must match the number of nodes in the graph.")
+    
+    graph.x = embeddings
     return graph, text
 
 def load_graph_citationv8() -> Data:

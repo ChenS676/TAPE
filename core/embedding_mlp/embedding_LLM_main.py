@@ -77,6 +77,7 @@ if __name__ == '__main__':
     loggers = create_logger(args.repeat)
     cfg.device = args.device
     splits, text, data = load_data_lp[cfg.data.name](cfg.data)
+    print(splits)
     splits = random_sampling(splits, args.downsampling)
     start_emb = time.time()
     if cfg.model.product == 'cross':

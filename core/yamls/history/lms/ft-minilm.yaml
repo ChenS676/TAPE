@@ -1,8 +1,8 @@
-dataset: cora
+dataset: history
 device: 0
 lm:
   model:
-    feat_shrink: 
+    feat_shrink: 768
     name: sentence-transformers/all-MiniLM-L6-v2
   train:
     att_dropout: 0.1
@@ -19,7 +19,7 @@ lm:
 runs: 5
 seed: 0
 data:
-  name: cora
+  name: history
   undirected: True
   include_negatives: True
   val_pct: 0.15

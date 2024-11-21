@@ -52,11 +52,11 @@ num_threads: 11
 wandb:
   use: True
   project: gtblueprint
-  name_tag: ncn-cora
+  name_tag: ncn-history
 
 
 data:
-  name: cora
+  name: history
   undirected: True
   include_negatives: True
   val_pct: 0.15

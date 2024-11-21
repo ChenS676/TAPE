@@ -83,7 +83,7 @@ if __name__ == "__main__":
     args.split_index = [0.8, 0.15, 0.05]
 
     with open("dataset_report.txt", "w") as log:
-        for dataset in ['computers', 'photo']:
+        for dataset in ['history']:
             log.write(f"\n\n\nChecking dataset {dataset} :\n")
             args.name = dataset
             splits, text, data = load_data_lp[dataset](args)

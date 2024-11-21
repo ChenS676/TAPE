@@ -1,0 +1,3 @@
+Name,Average Similarity,Generalized Edge Homophily,Jensen-Shannon Divergence,Hellinger Distance
+history,0.6596807996130905,tensor(0.4451),0.18208012148169195,0.4145813904540048
+photo,0.6116662846665138,tensor(0.3663),0.23858060094544384,0.4712251134180257

@@ -187,6 +187,8 @@ def get_edge_split(data: Data,
 
     ])
     del data.adj_t, data.e_id, data.batch_size, data.n_asin, data.n_id
+    print(data)
+
     train_data, val_data, test_data = transform(data)
     return {'train': train_data, 'valid': val_data, 'test': test_data}
 
@@ -370,10 +372,11 @@ def load_taglp_photo(cfg: CN, lcc_bool: bool = True) -> Tuple[Dict[str, Data], L
     else:
         undirected = data.is_undirected()
 
+    print('Before: ', data)
     if lcc_bool:
         data, lcc, _ = use_lcc(data)
         text = [text[i] for i in lcc]
-
+    print('After: ', data)
     splits = get_edge_split(data,
                             undirected,
                             cfg.device,
