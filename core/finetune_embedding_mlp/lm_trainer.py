@@ -137,7 +137,7 @@ class LMTrainer():
         if self.decoder.model.type == 'NCNC':
             self.lr = 0.001
         elif self.decoder.model.type == 'MLP':
-            self.epochs = 24
+            self.epochs = 1 #24 #CHANGE BACK
             self.batch_size = 9
         elif self.decoder.model.type == 'GCN_Variant':
             self.epochs = 70
@@ -392,9 +392,12 @@ if __name__ == '__main__':
         eval_time = time.time() - start_inf
         result_test = trainer.eval_and_save(trainer.test_dataset)
         result_valid = trainer.eval_and_save(trainer.val_dataset)
-        result_train = trainer.eval_and_save(trainer.train_dataset)
+        
+        # remove eval on train replace train with valid
+        # TODO no more overfitting can be seen
+        # result_train = trainer.eval_and_save(trainer.train_dataset)
         result_all = {
-            key: (result_train[key], result_valid[key], result_test[key])
+            key: (result_valid[key], result_valid[key], result_test[key])
             for key in result_test.keys()
         }
         for key, result in result_all.items():
@@ -411,7 +414,7 @@ if __name__ == '__main__':
 
         trainer.print_logger.info('---')
         save_run_results_to_csv(cfg, loggers, seed, run_id)
-
+        
     print('All runs:')
 
     result_dict = {}

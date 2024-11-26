@@ -14,6 +14,7 @@ import torch_geometric.transforms as T
 from torch_geometric.data import Data
 from torch_geometric.transforms import RandomLinkSplit
 from torch_geometric.utils import to_undirected, coalesce, remove_self_loops
+from sentence_transformers import SentenceTransformer
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 from yacs.config import CfgNode as CN
@@ -21,19 +22,19 @@ from typing import Dict, Tuple, List, Union
 import torch
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
-from gensim.models import Word2Vec
+# from gensim.models import Word2Vec
 from tqdm import tqdm 
 import time
 
 from data_utils.load_data_nc import load_tag_cora, load_tag_pubmed, \
-    load_tag_computers, load_tag_photo, load_tag_product, load_tag_ogbn_arxiv, load_tag_product, \
+    load_tag_computers, load_tag_photo, load_tag_history, load_tag_product, load_tag_ogbn_arxiv, load_tag_product, \
     load_tag_arxiv23, load_graph_cora, load_graph_pubmed, \
     load_graph_arxiv23, load_graph_ogbn_arxiv, load_text_cora, \
     load_text_pubmed, load_text_arxiv23, load_text_ogbn_arxiv, \
     load_text_product, load_text_citeseer, load_text_citationv8, \
     load_graph_citeseer, load_graph_citationv8, load_graph_pwc_large, load_text_pwc_large, \
     load_graph_pwc_medium, load_text_pwc_medium, load_text_pwc_small,  load_graph_pwc_small, \
-    load_embedded_citationv8, load_pyg_citationv8, load_tag_photo, load_tag_history, load_text_computers
+    load_embedded_citationv8, load_pyg_citationv8, load_text_photo, load_text_computers, load_text_history
 from graphgps.utility.utils import get_git_repo_root_path, config_device, init_cfg_test
 from data_utils.lcc import find_scc_direc, use_lcc_direc, use_lcc
 
@@ -91,11 +92,11 @@ def load_taglp_cora(cfg: CN, if_lcc: bool=True, alg_name: str='', node_features=
     
     if node_features is not None:
         data.x = node_features
-    
+    # from IPython import embed;
+    # embed()
+    # coalesce return only one parameter
     edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
-    if torch.__version__ == '2.2.1':
-        edge_index = remove_self_loops(edge_index)[0]
-    
+    edge_index = remove_self_loops(edge_index.T)[0]
     data.edge_index = edge_index
     print(f"original num of nodes: {data.num_nodes}")
     if alg_name.lower() == 'hl-gnn':
@@ -168,6 +169,57 @@ def load_taglp_pwc_large(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
                             )
     return splits, text, data
 
+# from data_utils.unzip_dataset import print_cpu_memory
+def load_taglp_ogbn_papers100M(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
+    # add one default argument
+
+    data = load_graph_ogbn_papers100M(False)
+    print('Finished Data load')
+    print_cpu_memory()
+    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
+    data.edge_index, _ = remove_self_loops(data.edge_index)
+    print('Edge index')
+    print_cpu_memory()
+    # text = load_text_ogbn_arxiv()
+    # undirected = data.is_undirected()
+
+    print(f"original num of nodes: {data.num_nodes}")
+    cfg = config_device(cfg)
+
+    # splits = get_edge_split(data,
+    #                         undirected,
+    #                         cfg.device,
+    #                         cfg.split_index[1],
+    #                         cfg.split_index[2],
+    #                         cfg.include_negatives,
+    #                         cfg.split_labels
+    #                         )
+    print(f"num of nodes after lcc: {data.num_nodes}")
+    print(f"num of edges after lcc: {data.edge_index.shape[1]}")
+    # print(f"num of texts in dataset: {len(text)}")
+    return None, None, data
+
+def load_taglp_pwc_large(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
+    # add one default argument
+
+    data = load_graph_pwc_large(cfg.method)
+    text = load_text_pwc_large()
+    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
+    data.edge_index, _ = remove_self_loops(data.edge_index)
+    undirected = data.is_undirected()
+
+    cfg = config_device(cfg)
+
+    splits = get_edge_split(data,
+                            undirected,
+                            cfg.device,
+                            cfg.split_index[1],
+                            cfg.split_index[2],
+                            cfg.include_negatives,
+                            cfg.split_labels
+                            )
+    return splits, text, data
+
 
 def get_edge_split(data: Data,
                    undirected: bool,
@@ -187,7 +239,8 @@ def get_edge_split(data: Data,
 
     ])
     del data.adj_t, data.e_id, data.batch_size, data.n_asin, data.n_id
-    del data.full_adj_t, data.max_x
+    print(data)
+
     train_data, val_data, test_data = transform(data)
     return {'train': train_data, 'valid': val_data, 'test': test_data}
 
@@ -321,13 +374,21 @@ def load_taglp_computers(cfg: CN, lcc_bool: bool = True) -> Tuple[Dict[str, Data
     print(f"split_test edges: {splits['test'].edge_index.max().tolist() + 1}")
     return splits, text, data
 
-def load_taglp_photo(cfg: CN, lcc_bool: bool = True) -> Tuple[Dict[str, Data], List[str]]:
+def load_taglp_history(cfg: CN, lcc_bool: bool = True) -> Tuple[Dict[str, Data], List[str]]:
     # add one default argument
 
-    data, text = load_tag_photo()
+    data, text = load_tag_history()
 
     print(f"original num of nodes: {data.num_nodes}")
-    print(data)
+    
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    embeddings = model.encode(text, convert_to_tensor=True)
+    
+    if len(embeddings) != data.num_nodes:
+        raise ValueError("Number of texts must match the number of nodes in the graph.")
+    
+    data.x = embeddings
+
     data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
     data.edge_index, _ = remove_self_loops(data.edge_index)
     if data.is_directed() is True:
@@ -340,6 +401,49 @@ def load_taglp_photo(cfg: CN, lcc_bool: bool = True) -> Tuple[Dict[str, Data], L
         data, lcc, _ = use_lcc(data)
         text = [text[i] for i in lcc]
 
+    splits = get_edge_split(data,
+                            undirected,
+                            cfg.device,
+                            cfg.split_index[1],
+                            cfg.split_index[2],
+                            cfg.include_negatives,
+                            cfg.split_labels
+                            )
+    print(f"num of nodes after lcc: {data.num_nodes}")
+    print(f"num of edges after lcc: {data.edge_index.shape[1]}")
+    print(f"num of texts in dataset: {len(text)}")
+    print(f"split_train edges: {splits['train'].edge_index.max().tolist() + 1}")
+    print(f"split_valid edges: {splits['valid'].edge_index.max().tolist() + 1}")
+    print(f"split_test edges: {splits['test'].edge_index.max().tolist() + 1}")
+    return splits, text, data
+
+def load_taglp_photo(cfg: CN, lcc_bool: bool = True) -> Tuple[Dict[str, Data], List[str]]:
+    # add one default argument
+
+    data, text = load_tag_photo()
+
+    print(f"original num of nodes: {data.num_nodes}")
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    embeddings = model.encode(text, convert_to_tensor=True)
+    
+    if len(embeddings) != data.num_nodes:
+        raise ValueError("Number of texts must match the number of nodes in the graph.")
+    
+    data.x = embeddings
+
+    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
+    data.edge_index, _ = remove_self_loops(data.edge_index)
+    if data.is_directed() is True:
+        data.edge_index = to_undirected(data.edge_index)
+        undirected = True
+    else:
+        undirected = data.is_undirected()
+
+    print('Before: ', data)
+    if lcc_bool:
+        data, lcc, _ = use_lcc(data)
+        text = [text[i] for i in lcc]
+    print('After: ', data)
     splits = get_edge_split(data,
                             undirected,
                             cfg.device,
@@ -374,7 +478,7 @@ def load_taglp_citationv8(cfg: CN, lcc_bool: bool=True) -> Tuple[Dict[str, Data]
     if lcc_bool:
         data, lcc, _ = use_lcc(data)
         text = [text[i] for i in lcc]
-    
+    data.edge_index = data.edge_index.t()
     splits = get_edge_split(data,
                             undirected,
                             cfg.device,
@@ -392,74 +496,7 @@ def load_taglp_citationv8(cfg: CN, lcc_bool: bool=True) -> Tuple[Dict[str, Data]
     return splits, text, data
 
 
-def load_taglp_photo(cfg: CN, lcc_bool: bool = True) -> Tuple[Dict[str, Data], List[str]]:
-    # add one default argument
-
-    data, text = load_tag_photo()
-
-    print(f"original num of nodes: {data.num_nodes}")
-    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
-    data.edge_index, _ = remove_self_loops(data.edge_index)
-    if data.is_directed() is True:
-        data.edge_index = to_undirected(data.edge_index)
-        undirected = True
-    else:
-        undirected = data.is_undirected()
-
-    if lcc_bool:
-        data, lcc, _ = use_lcc(data)
-        text = [text[i] for i in lcc]
-
-    splits = get_edge_split(data,
-                            undirected,
-                            cfg.device,
-                            cfg.split_index[1],
-                            cfg.split_index[2],
-                            cfg.include_negatives,
-                            cfg.split_labels
-                            )
-    print(f"num of nodes after lcc: {data.num_nodes}")
-    print(f"num of edges after lcc: {data.edge_index.shape[1]}")
-    print(f"num of texts in dataset: {len(text)}")
-    print(f"split_train edges: {splits['train'].edge_index.max().tolist() + 1}")
-    print(f"split_valid edges: {splits['valid'].edge_index.max().tolist() + 1}")
-    print(f"split_test edges: {splits['test'].edge_index.max().tolist() + 1}")
-    return splits, text, data
-
-def load_taglp_history(cfg: CN, lcc_bool: bool = True) -> Tuple[Dict[str, Data], List[str]]:
-    # add one default argument
-
-    data, text = load_tag_history()
-
-    print(f"original num of nodes: {data.num_nodes}")
-    data.edge_index, _ = coalesce(data.edge_index, None, num_nodes=data.num_nodes)
-    data.edge_index, _ = remove_self_loops(data.edge_index)
-    if data.is_directed() is True:
-        data.edge_index = to_undirected(data.edge_index)
-        undirected = True
-    else:
-        undirected = data.is_undirected()
-
-    if lcc_bool:
-        data, lcc, _ = use_lcc(data)
-        text = [text[i] for i in lcc]
-
-    splits = get_edge_split(data,
-                            undirected,
-                            cfg.device,
-                            cfg.split_index[1],
-                            cfg.split_index[2],
-                            cfg.include_negatives,
-                            cfg.split_labels
-                            )
-    print(f"num of nodes after lcc: {data.num_nodes}")
-    print(f"num of edges after lcc: {data.edge_index.shape[1]}")
-    print(f"num of texts in dataset: {len(text)}")
-    print(f"split_train edges: {splits['train'].edge_index.max().tolist() + 1}")
-    print(f"split_valid edges: {splits['valid'].edge_index.max().tolist() + 1}")
-    print(f"split_test edges: {splits['test'].edge_index.max().tolist() + 1}")
-    return splits, text, data
-
+ 
 def load_taglp_pwc_large(cfg: CN, if_lcc) -> Tuple[Dict[str, Data], List[str]]:
     if hasattr(cfg, 'method'):
         pass
@@ -611,7 +648,8 @@ def load_text_benchmark(data_name: str) -> pd.DataFrame:
         df = load_text_photo()
     if data_name == 'computers':
         df = load_text_computers()
-
+    if data_name == 'history':
+        df = load_text_history()
     if type(df) is list:
         df = pd.DataFrame(df, columns=['text'])
         return df
