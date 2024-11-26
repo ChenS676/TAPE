@@ -4,7 +4,7 @@ We welcome more to share datasets that are valuable for TAGs research.
 
 
 ## Datasets 🔔
-We collect and construct 8 TAG datasets from Cora, Pubmed, Arxiv\_2023, ogbn-paper100M, citationv8, paperwithcode API.
+We collect and construct 8 TAG datasets from Cora, Pubmed, Arxiv\_2023, ogbn-paper100M, citationv8, paperwithcode API, History, Photo.
 Now you can go to the 'Files and version' in [TAG4LP](https://drive.google.com/file/d/15ZWzRESVpNFowt3zfm3v8-5DGdnMjFzk/view?usp=drive_link) to find the datasets we upload! 
 In each dataset folder, you can find the **csv** file (which save the text attribute of the dataset), **pt** file (which represent the pyg graph file).
 You can use the node initial feature we created, and you also can extract the node feature from our code under core/data_utils. 
