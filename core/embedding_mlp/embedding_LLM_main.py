@@ -21,7 +21,6 @@ from torch_geometric.graphgym.utils.comp_budget import params_count
 from data_utils.load import load_data_lp, load_graph_lp
 from graphgps.train.embedding_LLM_train import Trainer_embedding_LLM, Trainer_embedding_LLM_Cross
 from graphgps.utility.utils import save_run_results_to_csv, random_sampling
-from graphgps.utility.utils import random_sampling
 from graphgps.score.custom_score import LinkPredictor, mlp_decoder
 
 

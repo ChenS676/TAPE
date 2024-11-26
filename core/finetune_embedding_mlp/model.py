@@ -27,7 +27,9 @@ class BertClassifier(PreTrainedModel):
         self.dropout = nn.Dropout(dropout)
         self.feat_shrink = feat_shrink
         hidden_dim = model.config.hidden_size
+        print(feat_shrink)
         if feat_shrink:
+            print('I am here')
             self.feat_shrink_layer = nn.Linear(
                 model.config.hidden_size, int(feat_shrink), bias=cla_bias)
             hidden_dim = int(feat_shrink)
@@ -81,11 +83,14 @@ class BertClassifier(PreTrainedModel):
 
 
 class BertClaInfModel(PreTrainedModel):
-    def __init__(self, model, emb, pred, feat_shrink=''):
+    def __init__(self, model, emb, pred, cla_bias=True, feat_shrink=''):
         super().__init__(model.config)
         self.bert_classifier = model
         self.emb, self.pred = emb, pred
         self.feat_shrink = feat_shrink
+        if feat_shrink:
+            self.feat_shrink_layer = nn.Linear(
+                model.config.hidden_size, int(feat_shrink), bias=cla_bias)
 
     @torch.no_grad()
     def forward(self,
@@ -224,6 +229,7 @@ class NCNClassifier(PreTrainedModel):
         pos_outs = self.predictor.multidomainforward(h, adj, edge_pos)  # get the prediction
         pos_loss = -F.logsigmoid(pos_outs).mean()
         neg_outs = self.predictor.multidomainforward(h, adj, edge_neg)
+        # print(neg_outs)
         neg_loss = -F.logsigmoid(-neg_outs).mean()
         loss = neg_loss + pos_loss
         return TokenClassifierOutput(loss=loss, logits=torch.cat((pos_outs, neg_outs)))

@@ -1,6 +1,7 @@
 import copy
 import os, sys
 
+os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True'
 from torch_sparse import SparseTensor
 from torch_geometric.graphgym import params_count
 
@@ -23,7 +24,7 @@ from data_utils.load import load_data_lp, load_graph_lp
 from graphgps.train.ncn_train import Trainer_NCN
 from graphgps.utility.utils import save_run_results_to_csv
 
-
+from graphgps.utility.utils import random_sampling
 
 
 def parse_args() -> argparse.Namespace:
@@ -52,6 +53,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--epochs', dest='epoch', type=int, required=True,
                         default=400,
                         help='data name')
+    parser.add_argument('--downsampling', type=float, default=1,
+                        help='Downsampling rate.')
     parser.add_argument('--wandb', dest='wandb', required=False, 
                         help='data name')
     parser.add_argument('--mark_done', action='store_true',
@@ -117,7 +120,9 @@ if __name__ == "__main__":
         cfg = config_device(cfg)
         start = time.time()
         splits, __, data = load_data_lp[cfg.data.name](cfg.data)
-        saved_features_path = './' + args.embedder + cfg.data.name + 'saved_node_features.pt'
+        splits = random_sampling(splits, args.downsampling)
+        # saved_features_path = './' + args.embedder + '_' + cfg.data.name + '_' + 'saved_node_features.pt'
+        saved_features_path = '/hkfs/work/workspace/scratch/cc7738-rebuttal/TAPE_german/TAPE/core/gcns/' + args.embedder + '_' + cfg.data.name + '_' + 'saved_node_features.pt'
         if os.path.exists(saved_features_path):
             node_features = torch.load(saved_features_path, map_location=torch.device('cpu'))
             data.x = node_features

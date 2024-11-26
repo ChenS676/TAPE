@@ -1,6 +1,6 @@
 import os, sys
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import torch
 import pandas as pd
 import numpy as np
@@ -111,8 +111,7 @@ def load_graph_cora(use_mask) -> Data:
     idx = np.array(data_citeid, dtype=np.dtype(str))
     idx_map = {j: i for i, j in enumerate(idx)}
     edges_unordered = np.genfromtxt(f"{path}.cites", dtype=np.dtype(str))
-    edges = np.array(list(map(idx_map.get, edges_unordered.flatten()))).reshape(
-        edges_unordered.shape)
+    edges = np.array(list(map(idx_map.get, edges_unordered.flatten()))).reshape(edges_unordered.shape)
     data_edges = np.array(edges[~(edges == None).max(1)], dtype='int')
     data_edges = np.vstack((data_edges, np.fliplr(data_edges)))
 
@@ -222,8 +221,7 @@ def load_graph_product():
 
 def load_text_product() -> List[str]:
     text = pd.read_csv(FILE_PATH + 'core/dataset/ogbn_products_orig/ogbn-products_subset.csv')
-    text = [f'Product:{ti}; Description: {cont}\n' for ti,
-    cont in zip(text['title'], text['content'])]
+    text = [f'Product:{ti}; Description: {cont}\n' for ti, cont in zip(text['title'], text['content'])]
     return text
 
 
@@ -231,38 +229,11 @@ def load_text_product() -> List[str]:
 def load_tag_product() -> Tuple[Data, List[str]]:
     data = torch.load(FILE_PATH + 'core/dataset/ogbn_products_orig/ogbn-products_subset.pt')
     text = pd.read_csv(FILE_PATH + 'core/dataset/ogbn_products_orig/ogbn-products_subset.csv')
-    text = [f'Product:{ti}; Description: {cont}\n' for ti,
-    cont in zip(text['title'], text['content'])]
+    text = [f'Product:{ti}; Description: {cont}\n' for ti, cont in zip(text['title'], text['content'])]
 
     data.edge_index = data.adj_t.to_symmetric()
 
     return data, text
-
-
-def load_tag_history() -> Tuple[Data, List[str]]:
-    import dgl
-    graph = dgl.load_graphs(FILE_PATH + 'core/dataset/History/History.pt')[0][0]
-    graph = dgl.to_bidirected(graph)
-    from torch_geometric.utils import from_dgl
-    graph = from_dgl(graph)
-    graph.num_nodes = graph.edge_index.max() + 1
-    text = pd.read_csv(FILE_PATH + 'core/dataset/History/History.csv')
-    text = [f'Description: {cont}\n' for cont in text['text']]
-
-    return graph, text
-
-
-def load_tag_photo() -> Tuple[Data, List[str]]:
-    import dgl
-    graph = dgl.load_graphs(FILE_PATH + 'core/dataset/Photo/Photo.pt')[0][0]
-    graph = dgl.to_bidirected(graph)
-    from torch_geometric.utils import from_dgl
-    graph = from_dgl(graph)
-    graph.num_nodes = graph.edge_index.max() + 1
-    text = pd.read_csv(FILE_PATH + 'core/dataset/Photo/Photo.csv')
-    text = [f'Description: {cont}\n' for cont in text['text']]
-
-    return graph, text
 
 
 def parse_pubmed():
@@ -417,7 +388,66 @@ def load_text_ogbn_arxiv():
         for ti, ab in zip(df['title'], df['abs'])
     ]
 
+from torch_sparse import SparseTensor
+# from data_utils.unzip_dataset import print_cpu_memory
+def load_graph_ogbn_papers100M(use_mask):
+    dataset = PygNodePropPredDataset(root='./generated_dataset',
+                                     name='ogbn-papers100M', transform=T.ToSparseTensor())
+    print('Dataset Downloaded')
+    print_cpu_memory()
+    # from IPython import embed;
+    # embed()
+    data = dataset[0]
+    print('Dataset[0]')
+    print_cpu_memory()
+    if data.adj_t.is_symmetric():
+        is_symmetric = True
+    else:
+        print('Adj')
+        # edge_index = data.adj_t.to_symmetric()
+        data.adj_t = data.adj_t.to_symmetric()
+        print_cpu_memory()
+    print('Start')
+    
+    x = torch.tensor(data.x).float()
+    print_cpu_memory()
+    print('X prepared')
+    
+    edge_index_coo = data.adj_t.coo()  # Convert PyG SparseTensor to COO format
+    row, col, _ = edge_index_coo
+    edge_index_coo = SparseTensor(row=row, col=col, sparse_sizes=(data.num_nodes, data.num_nodes))
+    edge_index = torch.stack([edge_index_coo.storage.row(), edge_index_coo.storage.col()], dim=0)
+    print_cpu_memory()
+    # edge_index = edge_index_coo.coalesce()#.indices()#torch.LongTensor(edge_index.to_torch_sparse_coo_tensor().coalesce().indices()).long()
+    print('SparseTensor Created')
+    num_nodes = data.num_nodes
 
+    if use_mask:
+        y = torch.tensor(data.y).long()
+        train_mask, val_mask, test_mask = get_node_mask_ogb(data.num_nodes, dataset.get_idx_split())
+        
+        return Data(x=x,
+                    edge_index=edge_index,
+                    y=y,
+                    num_nodes=num_nodes,
+                    train_mask=train_mask,
+                    test_mask=test_mask,
+                    val_mask=val_mask,
+                    node_attrs=x,
+                    edge_attrs=None,
+                    graph_attrs=None
+                    )
+
+    else:
+        print('Data here')
+        return Data(x=x,
+                    edge_index=edge_index,
+                    num_nodes=num_nodes,
+                    node_attrs=x,
+                    edge_attrs=None,
+                    graph_attrs=None
+                    )
+        
 def load_graph_ogbn_arxiv(use_mask):
     
     dataset = PygNodePropPredDataset(root='./generated_dataset',
@@ -495,12 +525,23 @@ def load_tag_photo() -> Tuple[Data, List[str]]:
     graph.num_nodes = graph.edge_index.max() + 1
     text = pd.read_csv(FILE_PATH + 'core/dataset/photo/Photo.csv')
     text = [f'Description: {cont}\n' for cont in text['text']]
+    
+    return graph, text
+
+def load_tag_history() -> Tuple[Data, List[str]]:
+    graph = dgl.load_graphs(FILE_PATH + 'core/dataset/history/History.pt')[0][0]
+    graph = dgl.to_bidirected(graph)
+    
+    graph = from_dgl(graph)
+    graph.num_nodes = graph.edge_index.max() + 1
+    text = pd.read_csv(FILE_PATH + 'core/dataset/history/History.csv')
+    text = [f'Description: {cont}\n' for cont in text['text']]
 
     return graph, text
 
 def load_graph_citationv8() -> Data:
     import dgl
-    from pdb import set_trace as st
+    from pdb import set_trace as st;
     st()
     graph = dgl.load_graphs(FILE_PATH + 'core/dataset/citationv8/Citation-2015.pt')[0][0]
     graph = dgl.to_bidirected(graph)
@@ -591,6 +632,12 @@ def load_text_photo() -> List[str]:
 
 def load_text_computers() -> List[str]:
     text = pd.read_csv(FILE_PATH + 'core/dataset/computers/Computers.csv')
+    text = [f'Description: {cont}\n' for cont in text['text']]
+
+    return text
+
+def load_text_history() -> List[str]:
+    text = pd.read_csv(FILE_PATH + 'core/dataset/history/History.csv')
     text = [f'Description: {cont}\n' for cont in text['text']]
 
     return text
